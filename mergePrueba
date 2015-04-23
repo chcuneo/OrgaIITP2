@@ -1,33 +1,54 @@
 ; void ASM_merge1(uint32_t w, uint32_t h, uint8_t* data1, uint8_t* data2, float value)
 global ASM_merge1
-ASM_merge1:
+
 
 ;value--> xmm0
 
-mov r12D, edi
-mov r13D, esi
-mov r14, rdx
-mov r15, rcx
+
+
+section .data
+uno: dd 0.0, 0.0, 0.0, 0.1
+
+
+section .text
+
+
+ASM_merge1:
+
 
 xorps xmm5, xmm5
 
 ;mov rcx, w*h cantidad de pixeles
 
+;mov eax, esi
+;mov ecx, edi
+;imul rcx, rax
+
+;xor r8, r8
+;mov r8, 1
+
+mov rcx, 65536
+;cvtsi2ss xmm2, r8
+
+movdqu xmm2, [uno]
+
+
+
 xorps xmm1, xmm1        ; xmm1 = 0 | 0 | 0 | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 0 | 0 | value
-pslldq xmm1, 4          ; xmm1 = 0 | 0 | value | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 0 | value | value
-pslldq xmm1, 4          ; xmm1 = 0 | value | value | 0
-addss xmm1, xmm0        ; xmm1 = 0 | value | value | value
-pslldq xmm1, 4          ; xmm1 = value | value | value | 0
-addss xmm1, xmm0        ; xmm1 = value | value | value | value
+addss xmm1, xmm2        ; xmm1 = 0 | 0 | 0 | 1
+pslldq xmm1, 4          ; xmm1 = 0 | 0 | 1 | 0
+addss xmm1, xmm0        ; xmm1 = 0 | 0 | 1 | value
+pslldq xmm1, 4          ; xmm1 = 0 | 1 | value | 0
+addss xmm1, xmm0        ; xmm1 = 0 | 1 | value | value
+pslldq xmm1, 4          ; xmm1 = 1 | value | value | 0
+addss xmm1, xmm0        ; xmm1 = 1 | value | value | value
 
 
 
 
 .ciclo:
 
-	movups xmm3, [r14]
+	movdqu xmm3, [rdx]
 	movdqu xmm4, xmm3
 	punpcklbw xmm4, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
 	movdqu xmm6, xmm4     ; los 8 numeros de la parte baja en 32 bit
@@ -40,8 +61,6 @@ addss xmm1, xmm0        ; xmm1 = value | value | value | value
 	movdqu xmm8, xmm7     ; los 8 numeros de la parte alta en 32 bit
 	punpcklwd xmm7,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-baja.
 	punpckhwd xmm8,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-alta.
-
-	;falta aplicar mascara para no variar la transparencia
 	
 	
 	cvtdq2ps xmm4,xmm4    ; convertimos a float		
@@ -62,9 +81,11 @@ addss xmm1, xmm0        ; xmm1 = value | value | value | value
 
 
 
-	movups [r14], xmm9
-	add r14, 16
+	movdqu [rdx], xmm9
+	add rdx, 16
 	
 	loop .ciclo
+	
+	
 
  ret
