@@ -1,3 +1,10 @@
+; ************************************************************************* ;
+; Organizacion del Computador II                                            ;
+;                                                                           ;
+;   Implementacion de la funcion Merge 1                                    ;
+;                                                                           ;
+; ************************************************************************* ;
+
 ; void ASM_merge1(uint32_t w, uint32_t h, uint8_t* data1, uint8_t* data2, float value)
 global ASM_merge1
 
@@ -7,7 +14,7 @@ global ASM_merge1
 
 
 section .data
-uno: dd 0.0, 0.0, 0.0, 0.1
+uno: dd 0.1, 0.0, 0.0, 0.0
 
 
 section .text
@@ -27,7 +34,7 @@ xorps xmm5, xmm5
 ;xor r8, r8
 ;mov r8, 1
 
-mov rcx, 65536
+mov r12, 65536
 ;cvtsi2ss xmm2, r8
 
 movdqu xmm2, [uno]
@@ -66,9 +73,30 @@ addss xmm1, xmm0        ; xmm1 = 1 | value | value | value
 	cvtdq2ps xmm4,xmm4    ; convertimos a float		
 	mulps xmm4,xmm1       ; multiplicamos por value
 	cvtps2dq xmm4, xmm4   ; lo volvemos a convertir en enteros de 32
-
 	packssdw xmm4,xmm4    ; xmm4 = primeros 4 resultados
 	packuswb xmm4,xmm4    ; los devolvemos a byte
+	
+
+	cvtdq2ps xmm6,xmm6    ; convertimos a float		
+	mulps xmm6,xmm1       ; multiplicamos por value
+	cvtps2dq xmm6, xmm6   ; lo volvemos a convertir en enteros de 32
+	packssdw xmm6,xmm6    ; xmm4 = primeros 4 resultados
+	packuswb xmm6,xmm6    ; los devolvemos a byte
+
+	cvtdq2ps xmm7,xmm7    ; convertimos a float		
+	mulps xmm7,xmm1       ; multiplicamos por value
+	cvtps2dq xmm7, xmm7   ; lo volvemos a convertir en enteros de 32
+	packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
+	packuswb xmm7,xmm7    ; los devolvemos a byte
+
+
+
+	cvtdq2ps xmm8,xmm8    ; convertimos a float		
+	mulps xmm8,xmm1       ; multiplicamos por value
+	cvtps2dq xmm8, xmm8   ; lo volvemos a convertir en enteros de 32
+	packssdw xmm8,xmm8    ; xmm4 = primeros 4 resultados
+	packuswb xmm8,xmm8    ; los devolvemos a byte
+	
 
 	xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
 	paddb xmm9, xmm4        ; xmm9 = 0 | 0 | 0 | baja-baja
@@ -84,8 +112,15 @@ addss xmm1, xmm0        ; xmm1 = 1 | value | value | value
 	movdqu [rdx], xmm9
 	add rdx, 16
 	
-	loop .ciclo
+	
+	
+	
+	dec r12
+	cmp r12, 0
+	jne .ciclo
 	
 	
 
  ret
+
+
