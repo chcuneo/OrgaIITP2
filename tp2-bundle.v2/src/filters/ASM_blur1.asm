@@ -23,14 +23,14 @@ ASM_blur1:
 	push R14
 	push R15
 	sub rsp, 8
-	ldmxcsr [_floor]
-	mov edi, edi 	; Extiendo ceros
+	ldmxcsr [_floor] 	; Algo de redondeo
+	mov edi, edi 		; Extiendo ceros
 	mov esi, esi 	
 	
+	; Malloceo memoria temp (push y pop para no perder cosas importantes)
 	push rdi
 	push rsi
 	push rdx
-
 	mov r12d, edi
 	mov r13d, esi
 	mov rax, r12
@@ -45,7 +45,7 @@ ASM_blur1:
 	
 	mov r8, rdi 	; r8 = w 		Copio tamaños para calcular direcciones
 	mov r9, rsi 	; r9 = h
-	mov eax, elimprim
+	mov eax, elimprim ; eax = 0 dword, lo voy a usar para borrar el pixel que agarro de mas
 	dec rdi 		; rdi = w-1 : Limite del loop de pixeles en fila
 	dec rsi 		; rsi = h-1 : Limite del loop de filas
 	mov rbx, 1 		; rbx = 1 : "iw" itera pixeles en fila
@@ -53,15 +53,15 @@ ASM_blur1:
 	movdqu xmm9, [divs] 	; xmm9 = | 9.0 | 9.0 | 9.0 | 9.0 |
 	movdqu xmm10, [shuf] 	; Shuffle para pasar dword int a byte int
 	mov r15, rdi 			
-	dec r15 				; Limite ultimo pixel w
+	dec r15 				; Limite ultimo pixel w 
 	mov r14, rsi 			
 	dec r14 				; Limite ultimo pixel h 
-	; d es data
-
+							; Al cargar los datos para el ultimo pixel, el pixel "de mas" no existe, sino que es espacio de memoria
+							; que no se supone que puedo acceder. R15 y R14 es para detectar cuando llego a esta posicion
 	loopw:
 		movdqu xmm1, [rdx + rbx*4 - 4] 		; xmm1 = |d[0][iw+2]|d[0][iw+1]|d[0][iw]|d[0][iw-1]| d son 4 bytes A R G y B
-		lea r12, [rdx + r8*4]
-		lea r12, [r12 + rbx*4 - 4]
+		lea r12, [rdx + r8*4] 
+		lea r12, [r12 + rbx*4 - 4] 			; r12 apunta a la misma columna de la siguiente fila
 		movdqu xmm3, [r12]	; xmm3 = |d[1][iw+2]|d[1][iw+1]|d[1][iw]|d[1][iw-1]|
 		pinsrd xmm1, eax, 03h 		; xmm1 = | 	0 		|d[0][iw+1]|d[0][iw]|d[0][iw-1]|
 		pinsrd xmm3, eax, 03h  		; xmm3 = | 	0 		|d[1][iw+1]|d[1][iw]|d[1][iw-1]|
@@ -82,13 +82,13 @@ ASM_blur1:
 		paddw xmm3, xmm4 			; xmm3 = | X 		|d[1][iw-1]+d[1][iw+1]+d[1][iw]| 
 		movdqu xmm2, xmm3 			; xmm2 = xmm3 
 		lea r13, [r10 + r8*4]
-		lea r13, [r13 + rbx*4]	; posicion del pixel a calcular
+		lea r13, [r13 + rbx*4]		; posicion del pixel a calcular
 		lea r12, [r12 + r8*4] 		; posicion del pixel de la fila siguiente a procesar
 		looph:
-			movdqu xmm0, xmm1 				;xmm0 suma pixeles fila anterior
-			movdqu xmm1, xmm2 				;xmm1 suma pixeles fila actual
-			movdqu xmm2, [r12] 		; xmm2 = |d[ih+1][iw+2] |d[ih+1][iw+1]|d[ih+1][iw]|d[ih+1][iw -1]|
-			pinsrd xmm2, eax, 03h  			; xmm2 = | 	0 			|d[ih+1][iw+1]|d[ih+1][iw]|d[ih+1][iw -1]|
+			movdqu xmm0, xmm1 			;xmm0 suma pixeles fila anterior
+			movdqu xmm1, xmm2 			;xmm1 suma pixeles fila actual
+			movdqu xmm2, [r12] 			; xmm2 = |d[ih+1][iw+2] |d[ih+1][iw+1]|d[ih+1][iw]|d[ih+1][iw -1]|
+			pinsrd xmm2, eax, 03h  		; xmm2 = | 	0 			|d[ih+1][iw+1]|d[ih+1][iw]|d[ih+1][iw -1]|
 			contlastpixel:
 			movdqu xmm3, xmm2 			; xmm3 = xmm2
 			punpcklbw xmm2, xmm8 		; xmm2 = |d[ih+1][iw]	|d[ih+1][iw-1]|  d ahora son 4 words A R G y B extendidos con ceros
@@ -108,13 +108,13 @@ ASM_blur1:
 			lea r13, [r13 + r8*4]
 			lea r12, [r12 + r8*4]
 
-			inc rcx
-			cmp rbx, r15
-			jne cont
-			cmp rcx, r14
-			je lastpixel
+			inc rcx 			; incremento ih
+			cmp rbx, r15  		; Me fijo si llegue a la ultima columna a procesar
+			jne cont 			
+			cmp rcx, r14 		; En caso de estar en ultima columna a procesar, me fijo si llegue a ultima fila a procesar
+			je lastpixel 		; Salto a ultimo caso especial (ultimo pixel)
 			cont:
-			cmp rcx, rsi
+			cmp rcx, rsi 		; Me fijo si llegue a ultima linea, loop normal
 			jne looph
 		mov rcx, 1
 		inc rbx
@@ -129,53 +129,34 @@ ASM_blur1:
 	psrldq xmm2, 4 				; xmm2 = |  0 		 	|d[ih+1][iw+1]	|d[ih+1][iw]	|d[ih+1][iw -1]|
 	jmp contlastpixel
 
+	; Copio todo lo procesado a la imagen original
 	copy:
-	mov r12, r10
-	mov r14, rdx
-	xor rcx, rcx	; rcx = 0 countx 
-	xor rbx, rbx 	; rbx = 0 county
-	mov r15, r8
-	dec r9
-	sub r15, 1
+	lea r12, [r10 + r8*4] 	; r12 apunta a data temporal, desde segunda linea
+	lea r14, [rdx + r8*4]	; r14 apunta a data original, desde segunda linea
+	xor rcx, rcx			; rcx = 0 countx 
+	mov rbx, 1 				; rbx = 1 county (no paso por borde superior)
+	mov r15, r8 			; r15 = w
+	dec r15 				; r15 = w-1 (para ver si llego al borde, los bordes no se cambian)
+	dec r9 					; r9 = h-1 (idem)
 	copywhile:
-		cmp rcx, 0
+		cmp rcx, 0 			; Borde izquierdo
 		je borde
-		cmp rbx, 0
+		cmp rcx, r15 		; Borde derecho
 		je borde
-		cmp rcx, r15
-		je borde
-		mov r11d, [r12]
-		mov [r14], r11d
-		borde:
-		inc rcx
-		add r14, 4
-		add r12, 4
-		cmp rcx, r8
-		jne copywhile
-		mov rcx, 0
-		inc rbx
-		cmp rbx, r9
+		mov r11d, [r12] 	; Copy
+		mov [r14], r11d 	; Paste
+		borde:				; Si vengo aca salteo la copia
+		inc rcx  			; inc x
+		add r14, 4 			; Avanzo
+		add r12, 4 			; *
+		cmp rcx, r8 		; Termino la fila
+		jne copywhile 
+		mov rcx, 0 
+		inc rbx 			; inc y
+		cmp rbx, r9 		; Borde inferior
 		jne copywhile
 
-	; mov r12, r10
-	; mov r14, rdx
-	; mov rax, r8
-	; mul r9
-	; shl rax, 2
-
-	;   mov rcx, 0x0
-	; .copyLoop:
-	;   cmp rcx, rax
-	;   je .endF
-	;   cmp rcx, 
-	;   mov bl, [r12 + rcx]
-	;   mov [r14 + rcx], bl
-	;   .borde
-	;   inc rcx
-	;   jmp .copyLoop
-
-	; .endF
-
+	; Freeo la data temporal
 	mov rdi, r10
 	call free
 
