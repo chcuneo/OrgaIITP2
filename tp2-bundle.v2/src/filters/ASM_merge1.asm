@@ -4,118 +4,223 @@
 ;   Implementacion de la funcion Merge 1                                    ;
 ;                                                                           ;
 ; ************************************************************************* ;
-extern malloc
+
+; void ASM_merge1(uint32_t w, uint32_t h, uint8_t* data1, uint8_t* data2, float value)
 global ASM_merge1
 
-%define PIXEL_SIZE			4
-%define OFFSET_RED   		0
-%define OFFSET_GREEN 		1
-%define OFFSET_BLUE  		2
-%define OFFSET_TRANSPARENCY 3
+
+;value--> xmm0
+
+
+
+section .data
+unMedio: dd 0.5, 0.0, 0.0, 0.0
+
 
 section .text
 
-; void ASM_merge1(uint32_t w, uint32_t h, uint8_t* data1, uint8_t* data2, float value)
-ASM_merge1: ;edi = w, esi = h, rdx = data1, rcx = data2, xmm0 = value
-	push rbp
-	mov  rbp, rsp
-	push rbx
-	push r12
-	push r13
-	push r14
-	push r15
-	sub  rsp, 8
 
-	;limpio parte alta
-	mov edi, edi
-	mov esi, esi
-
-	;guardo a registros seguros
-	mov rbx, rdi ; rbx = w
-	mov r12, rsi ; r12 = h
-	mov r13, rdx ; r13 = data1
-	mov r14, rcx ; r14 = data2
-
-	;jmp .CrearMatriz
-	;.CrearMatriz:
-	mov  rax, r12
-	mul  rdi      ; rdi = w * h
-	mov  r12, rdi ; r12 = w * h
-	;call malloc   ; rax = *mat
-	;mov  r15, rax ; r15 = *mat
-	jmp  .CargarMerge
-
-	.CargarMerge:
-	;cargo 1-value
-	mov    r9, 1 	  ; r9   = 1
-	movq   xmm1, r9   ; xmm1 = 1
-	subss  xmm1, xmm0 ; xmm1 = 1 - value
-
-	;?????? esto no funca, hay que cambiarlo
-	;phaddd xmm1, xmm1 ; xmm1 = 1 - value | 1 - value
-	;phaddd xmm0, xmm0 ; xmm0 =   value 	 |   value 
-	;?????? 
-
-	xor r8, r8
+ASM_merge1:
 
 
-	.cicloCarga:
-	;guardo de a 4 pixeles
-	movdqu   xmm2, [r13 + r8 * PIXEL_SIZE] ; xmm2 = pixel3 | pixel2 | pixel1 | pixel0
-	cvtps2pd xmm3, xmm2  				   ; xmm3 = pixel1 | pixel0
-	psrldq   xmm2, 8     				   ; xmm2 =   0	   |	0   | pixel3 | pixel2
-	cvtps2pd xmm4, xmm2 				   ; xmm4 = pixel3 | pixel2
+xorps xmm5, xmm5
+
+;mov rcx, w*h cantidad de pixeles
+
+;mov eax, esi
+;mov ecx, edi
+;imul rcx, rax
+
+;xor r8, r8
+;mov r8, 1
+
+mov r12, 65536
+;cvtsi2ss xmm2, r8
+
+xorps xmm2, xmm2
+movdqu xmm2, [unMedio]
+
+
+
+xorps xmm1, xmm1        ; xmm1 = 0 | 0 | 0 | 0
+addss xmm1, xmm2        ; xmm1 = 0 | 0 | 0 | 1/2
+pslldq xmm1, 4          ; xmm1 = 0 | 0 | 1/2 | 0
+addss xmm1, xmm0        ; xmm1 = 0 | 0 | 1/2 | value
+pslldq xmm1, 4          ; xmm1 = 0 | 1/2 | value | 0
+addss xmm1, xmm0        ; xmm1 = 0 | 1/2 | value | value
+pslldq xmm1, 4          ; xmm1 = 1/2 | value | value | 0
+addss xmm1, xmm0        ; xmm1 = 1/2 | value | value | value
+
+
+
+;movq   xmm1, r9  		 ; xmm1 = 1
+
+
+
+xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 0 | 0 | 1/2
+
+mov    r9d, 1 
+xorps xmm2, xmm2			 
+cvtsi2ss xmm2, r9d
+subss  xmm2, xmm0 ; xmm1 = 1 - value
+
+pslldq xmm9, 4          ; xmm9 = 0 | 0 | 1/2 | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 0 | 1/2 | 1-value
+pslldq xmm9, 4          ; xmm9 = 0 | 1/2 | 1-value | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 1/2 | 1-value |1- value
+pslldq xmm9, 4          ; xmm9 = 1/2 | 1-value | 1-value | 0
+addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
+
+
+.ciclo:
+
+	movdqu xmm3, [rdx]
+	movdqu xmm4, xmm3
+	punpcklbw xmm4, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
+	movdqu xmm6, xmm4     ; los 8 numeros de la parte baja en 32 bit
+	punpcklwd xmm4,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-baja.
+	punpckhwd xmm6,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-alta.
+
+
+	movdqu xmm7, xmm3
+	punpckhbw xmm7, xmm5  ; extendemos a 16 bits los 8 numeros de la parte alta.
+	movdqu xmm8, xmm7     ; los 8 numeros de la parte alta en 32 bit
+	punpcklwd xmm7,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-baja.
+	punpckhwd xmm8,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-alta.
 	
-	;multiplico por value
-	mulpd 	 xmm3, xmm0					   ; xmm3 = pixel1 * value | pixel0 * value 
-	mulpd 	 xmm4, xmm0					   ; xmm4 = pixel3 * value | pixel2 * value 
 	
-	;guardo de a 4 pixeles
-	movdqu   xmm5, [r14 + r8 * PIXEL_SIZE] ; xmm5 = pixel3' | pixel2' | pixel1' | pixel0'
-	cvtps2pd xmm6, xmm5  				   ; xmm6 = pixel1' | pixel0'
-	psrldq   xmm5, 8     				   ; xmm5 =   0 	|    0    | pixel3' | pixel2'
-	cvtps2pd xmm7, xmm5 				   ; xmm7 = pixel3' | pixel2'
+	cvtdq2ps xmm4,xmm4    ; convertimos a float		
+	mulps xmm4,xmm1       ; multiplicamos por value
+	
+	;packssdw xmm4,xmm5    ; xmm4 = primeros 4 resultados
+	;packuswb xmm4,xmm5    ; los devolvemos a byte
+	
 
-	;multiplico por 1-value
-	mulpd 	 xmm6, xmm1					   ; xmm6 = pixel1' * (1-value) | pixel0' * (1-value) 
-	mulpd 	 xmm7, xmm1					   ; xmm7 = pixel3' * (1-value) | pixel2' * (1-value) 
+	cvtdq2ps xmm6,xmm6    ; convertimos a float		
+	mulps xmm6,xmm1       ; multiplicamos por value
+	;packssdw xmm6,xmm5    ; xmm4 = primeros 4 resultados
+	;packuswb xmm6,xmm5    ; los devolvemos a byte
 
-    ;sumo los elementos
-    movq      xmm8, xmm3				   ; xmm8 = pixel1 * value | pixel0 * value 
-    movq      xmm9, xmm3				   ; xmm9 = pixel1 * value | pixel0 * value 
-	punpckhbw xmm8, xmm6			       ; xmm8 = A1 | A1' | B1 | B1' | G1 | G1' | R1 | R1' |
-    punpcklbw xmm9, xmm6			       ; xmm9 = A0 | A0' | B0 | B0' | G0 | G0' | R0 | R0' |
-	phaddw	  xmm8, xmm9				   ; xmm8 = pixel1rec | pixel0 rec
+	cvtdq2ps xmm7,xmm7    ; convertimos a float		
+	mulps xmm7,xmm1       ; multiplicamos por value
+	
+	;packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
+	;packuswb xmm7,xmm7    ; los devolvemos a byte
 
-    movq      xmm9 , xmm4				   ; xmm9  = pixel3 * value | pixel2 * value
-    movq      xmm10, xmm4				   ; xmm10 = pixel3 * value | pixel2 * value
-	punpckhbw xmm9 , xmm7				   ; xmm9  = A3 | A3' | B3 | B3' | G3 | G3' | R3 | R3' |
-    punpcklbw xmm10, xmm7				   ; xmm10 = A2 | A2' | B2 | B2' | G2 | G2' | R2 | R2' |
-	phaddw	  xmm9 , xmm10				   ; xmm9  = pixel3rec | pixel2 rec
 
-	;convierto a ps y los coloco juntos
-	cvtpd2ps xmm9 , xmm9				   ; xmm9  = 0 | 0 | pixel1recalc | pixel0recalc
-	cvtpd2ps xmm10, xmm10				   ; xmm10 = 0 | 0 | pixel3recalc | pixel2recalc
-	pslldq   xmm10, 8					   ; xmm10 = pixel3recalc | pixel2recalc |  0  |  0  |
-	addss	 xmm10, xmm9				   ; xmm10 = pixel3recalc | pixel2recalc | pixel1recalc | pixel0recalc
-	movdqu  [r13 + r8 * PIXEL_SIZE], xmm10
 
-	jmp .proximo
+	cvtdq2ps xmm8,xmm8    ; convertimos a float		
+	mulps xmm8,xmm1       ; multiplicamos por value
+;	packssdw xmm8,xmm8    ; xmm4 = primeros 4 resultados
+;	packuswb xmm8,xmm8    ; los devolvemos a byte
+	
 
-	.proximo:
-	cmp r8, r12
-	jge .termine
-	add r8, PIXEL_SIZE * 4
-	jmp .cicloCarga
+	
 
-	.termine:
-	mov rax, r15
+	movdqu xmm10, [rcx]
+	movdqu xmm11, xmm10
+	punpcklbw xmm11, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
+	movdqu xmm12, xmm11     ; los 8 numeros de la parte baja en 32 bit
+	punpcklwd xmm11,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-baja.
+	punpckhwd xmm12,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-alta.
 
-	add rsp, 8
-	pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop rbx
-	pop rbp
-  	ret
+
+	movdqu xmm13, xmm10
+	punpckhbw xmm13, xmm5  ; extendemos a 16 bits los 8 numeros de la parte alta.
+	movdqu xmm14, xmm13     ; los 8 numeros de la parte alta en 32 bit
+	punpcklwd xmm13,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-baja.
+	punpckhwd xmm14,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-alta.
+	
+	
+	cvtdq2ps xmm11,xmm11    ; convertimos a float		
+	mulps xmm11,xmm9       ; multiplicamos por 1- value
+	
+	;packssdw xmm4,xmm5    ; xmm4 = primeros 4 resultados
+	;packuswb xmm4,xmm5    ; los devolvemos a byte
+	
+
+	cvtdq2ps xmm12,xmm12    ; convertimos a float		
+	mulps xmm12,xmm9       ; multiplicamos por value
+	;packssdw xmm6,xmm5    ; xmm4 = primeros 4 resultados
+	;packuswb xmm6,xmm5    ; los devolvemos a byte
+
+	cvtdq2ps xmm13,xmm13    ; convertimos a float		
+	mulps xmm13,xmm9       ; multiplicamos por value
+	
+	;packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
+	;packuswb xmm7,xmm7    ; los devolvemos a byte
+
+
+
+	cvtdq2ps xmm14,xmm14    ; convertimos a float		
+	mulps xmm14,xmm9       ; multiplicamos por value
+;	packssdw xmm8,xmm8    ; xmm4 = primeros 4 resultados
+;	packuswb xmm8,xmm8    ; los devolvemos a byte
+
+	addps xmm4, xmm11
+	addps xmm6, xmm12
+	addps xmm7, xmm13
+	addps xmm8, xmm14
+
+
+
+
+
+; proceso de empaquetado:
+
+
+	cvtps2dq xmm4, xmm4   ; lo volvemos a convertir en enteros de 32
+	cvtps2dq xmm6, xmm6   ; lo volvemos a convertir en enteros de 32
+	cvtps2dq xmm7, xmm7   ; lo volvemos a convertir en enteros de 32
+	cvtps2dq xmm8, xmm8   ; lo volvemos a convertir en enteros de 32
+
+
+
+	packusdw xmm4, xmm6 
+	packusdw xmm7, xmm8 
+
+	packuswb xmm4, xmm7
+
+
+	;xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
+	;paddb xmm9, xmm4        ; xmm9 = 0 | 0 | 0 | baja-baja
+	;pslldq xmm9, 4          ; xmm9 = 0 | 0 | baja-baja | 0
+	;paddb xmm9, xmm6        ; xmm9 = 0 | 0 | baja-baja | baja-alta
+	;pslldq xmm9, 4          ; xmm9 = 0 | baja-baja | baja-alta | 0
+	;paddb xmm9, xmm7        ; xmm9 = 0 | baja-baja | baja-alta | alta-baja
+	;pslldq xmm9, 4          ; xmm9 = baja-baja | baja-alta | alta-baja | 0
+	;paddb xmm9, xmm8        ; xmm9 = baja-baja | baja-alta | alta-baja | alta-alta
+
+
+
+	movdqu [rdx], xmm4
+	add rdx, 16
+	add rcx, 16
+	
+	dec r12
+	cmp r12, 0
+	jne .ciclo
+	
+	
+
+ ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
