@@ -77,7 +77,7 @@ int run_merge(int c, char* src1, char* src2, char* dst, float value){
     free(data2C);
   }
   bmp_save(dst,bmp1);  
-  bmp_delete(bmp);
+  bmp_delete(bmp1);
   return 0;
 }
 
