@@ -14,68 +14,81 @@ global ASM_merge1
 
 
 section .data
-unMedio: dd 0.5, 0.0, 0.0, 0.0
-
+uno: dd 1.0, 0.0, 0.0, 0.0
 
 section .text
 
 
 ASM_merge1:
+	push rbp
+	mov  rbp, rsp
+	push rbx
+	push r12
+	push r13
+	push r14
+	push r15
+	sub  rsp, 8
+
+
+
+	mov r13, rdx ; r13 = data1
+	mov r14, rcx ; r14 = data2
+
+
+
+	;limpio parte alta
+	mov edi, edi
+	mov esi, esi
+
+	mov r12d, edi
+	mov r15d, esi
+	mov rax, r12
+	mul r15
+	shr rax, 2
+	xor r12, r12
+	mov r12, rax
+
+;mov r12, 65536
+;cvtsi2ss xmm2, r8
 
 
 xorps xmm5, xmm5
 
-;mov rcx, w*h cantidad de pixeles
-
-;mov eax, esi
-;mov ecx, edi
-;imul rcx, rax
-
-;xor r8, r8
-;mov r8, 1
-
-mov r12, 65536
-;cvtsi2ss xmm2, r8
-
 xorps xmm2, xmm2
-movdqu xmm2, [unMedio]
+movdqu xmm2, [uno]
 
 
 
 xorps xmm1, xmm1        ; xmm1 = 0 | 0 | 0 | 0
-addss xmm1, xmm2        ; xmm1 = 0 | 0 | 0 | 1/2
-pslldq xmm1, 4          ; xmm1 = 0 | 0 | 1/2 | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 0 | 1/2 | value
-pslldq xmm1, 4          ; xmm1 = 0 | 1/2 | value | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 1/2 | value | value
-pslldq xmm1, 4          ; xmm1 = 1/2 | value | value | 0
-addss xmm1, xmm0        ; xmm1 = 1/2 | value | value | value
+addss xmm1, xmm0        ; xmm1 = 0 | 0 | 0 | value
+pslldq xmm1, 4          ; xmm1 = 0 | 0 | value | 0
+addss xmm1, xmm0        ; xmm1 = 0 | 0 | value | value
+pslldq xmm1, 4          ; xmm1 = 0 | value | value | 0
+addss xmm1, xmm0        ; xmm1 = 0 | value | value | value
+pslldq xmm1, 4          ; xmm1 = value | value | value | 0
+addss xmm1, xmm2        ; xmm1 = value | value | value | 1
 
 
-
-;movq   xmm1, r9  		 ; xmm1 = 1
-
-
-
-xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 0 | 0 | 1/2
 
 mov    r9d, 1 
 xorps xmm2, xmm2			 
 cvtsi2ss xmm2, r9d
 subss  xmm2, xmm0 ; xmm1 = 1 - value
 
-pslldq xmm9, 4          ; xmm9 = 0 | 0 | 1/2 | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 0 | 1/2 | 1-value
-pslldq xmm9, 4          ; xmm9 = 0 | 1/2 | 1-value | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 1/2 | 1-value |1- value
-pslldq xmm9, 4          ; xmm9 = 1/2 | 1-value | 1-value | 0
-addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
+
+xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 0 | 0 | 1-value
+pslldq xmm9, 4          ; xmm9 = 0 | 0 | 1-value | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 0 | 1-value |1- value
+pslldq xmm9, 4          ; xmm9 = 0 | 1-value | 1-value | 0
+addss xmm9, xmm2        ; xmm9 = 0 | 1-value | 1-value | 1-value
+pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
+
 
 
 .ciclo:
 
-	movdqu xmm3, [rdx]
+	movdqu xmm3, [r13]
 	movdqu xmm4, xmm3
 	punpcklbw xmm4, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
 	movdqu xmm6, xmm4     ; los 8 numeros de la parte baja en 32 bit
@@ -118,7 +131,7 @@ addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
 
 	
 
-	movdqu xmm10, [rcx]
+	movdqu xmm10, [r14]
 	movdqu xmm11, xmm10
 	punpcklbw xmm11, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
 	movdqu xmm12, xmm11     ; los 8 numeros de la parte baja en 32 bit
@@ -146,7 +159,7 @@ addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
 	;packuswb xmm6,xmm5    ; los devolvemos a byte
 
 	cvtdq2ps xmm13,xmm13    ; convertimos a float		
-	mulps xmm13,xmm9       ; multiplicamos por value
+	mulps xmm13,xmm9       ; multiplicamos por 1-value
 	
 	;packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
 	;packuswb xmm7,xmm7    ; los devolvemos a byte
@@ -182,6 +195,13 @@ addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
 
 	packuswb xmm4, xmm7
 
+	;packusdw xmm6, xmm4 
+	;packusdw xmm8, xmm7
+
+	;packuswb xmm8, xmm6
+
+
+
 
 	;xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
 	;paddb xmm9, xmm4        ; xmm9 = 0 | 0 | 0 | baja-baja
@@ -194,15 +214,24 @@ addss xmm9, xmm2        ; xmm9 = 1/2 | 1-value | 1-value | 1-value
 
 
 
-	movdqu [rdx], xmm4
-	add rdx, 16
-	add rcx, 16
+	movdqu [r13], xmm4
+	add r13, 16
+	add r14, 16
 	
 	dec r12
 	cmp r12, 0
-	jne .ciclo
+	je .fin
+	jmp .ciclo
 	
-	
+	.fin:
+
+	add rsp, 8
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop rbx
+	pop rbp
 
  ret
 
