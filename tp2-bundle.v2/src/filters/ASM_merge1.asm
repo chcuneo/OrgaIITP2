@@ -11,10 +11,10 @@ global ASM_merge1
 
 ;value--> xmm0
 
-
-
 section .data
 uno: dd 1.0, 0.0, 0.0, 0.0
+mask_ordenar: db 0x00, 0x04,0x08, 0x0c, 0x01, 0x05, 0x09, 0x0d, 0x02,0x06, 0x0a, 0x0e, 0x03, 0x07, 0x0b, 0x0f
+mak_vovler: db 0x00, 
 
 section .text
 
@@ -28,7 +28,6 @@ ASM_merge1:
 	push r14
 	push r15
 	sub  rsp, 8
-
 
 
 	mov r13, rdx ; r13 = data1
@@ -48,47 +47,26 @@ ASM_merge1:
 	xor r12, r12
 	mov r12, rax
 
-;mov r12, 65536
-;cvtsi2ss xmm2, r8
-
-
 xorps xmm5, xmm5
 
-xorps xmm2, xmm2
-movdqu xmm2, [uno]
 
-
-
-xorps xmm1, xmm1        ; xmm1 = 0 | 0 | 0 | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 0 | 0 | value
-pslldq xmm1, 4          ; xmm1 = 0 | 0 | value | 0
-addss xmm1, xmm0        ; xmm1 = 0 | 0 | value | value
-pslldq xmm1, 4          ; xmm1 = 0 | value | value | 0
-addss xmm1, xmm0        ; xmm1 = 0 | value | value | value
-pslldq xmm1, 4          ; xmm1 = value | value | value | 0
-addss xmm1, xmm2        ; xmm1 = value | value | value | 1
+movss xmm1, xmm0
+shufps xmm1, xmm1 , 00h ; xmm9 = value | value | value | value
 
 
 
 mov    r9d, 1 
-xorps xmm2, xmm2			 
-cvtsi2ss xmm2, r9d
-subss  xmm2, xmm0 ; xmm1 = 1 - value
-
-
-xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 0 | 0 | 1-value
-pslldq xmm9, 4          ; xmm9 = 0 | 0 | 1-value | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 0 | 1-value |1- value
-pslldq xmm9, 4          ; xmm9 = 0 | 1-value | 1-value | 0
-addss xmm9, xmm2        ; xmm9 = 0 | 1-value | 1-value | 1-value
-pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
-
+xorps xmm9, xmm9			 
+cvtsi2ss xmm9, r9d ; xmm9 = 1
+subss  xmm9, xmm0 ; xmm9 = 1 - value
+shufps xmm9, xmm9 , 00h ; xmm9 = 1-value | 1-value | 1-value | 1-value
 
 
 .ciclo:
 
-	movdqu xmm3, [r13]
+	movdqu xmm3, [r13]     ;en xmm3 4 pixeles a procesar
+	movdqu xmm2, [mask_ordenar]
+	pshufb xmm3, xmm2
 	movdqu xmm4, xmm3
 	punpcklbw xmm4, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
 	movdqu xmm6, xmm4     ; los 8 numeros de la parte baja en 32 bit
@@ -101,41 +79,25 @@ pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
 	movdqu xmm8, xmm7     ; los 8 numeros de la parte alta en 32 bit
 	punpcklwd xmm7,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-baja.
 	punpckhwd xmm8,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-alta.
-	
-	
-	cvtdq2ps xmm4,xmm4    ; convertimos a float		
-	mulps xmm4,xmm1       ; multiplicamos por value
-	
-	;packssdw xmm4,xmm5    ; xmm4 = primeros 4 resultados
-	;packuswb xmm4,xmm5    ; los devolvemos a byte
-	
 
 	cvtdq2ps xmm6,xmm6    ; convertimos a float		
 	mulps xmm6,xmm1       ; multiplicamos por value
-	;packssdw xmm6,xmm5    ; xmm4 = primeros 4 resultados
-	;packuswb xmm6,xmm5    ; los devolvemos a byte
 
 	cvtdq2ps xmm7,xmm7    ; convertimos a float		
 	mulps xmm7,xmm1       ; multiplicamos por value
-	
-	;packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
-	;packuswb xmm7,xmm7    ; los devolvemos a byte
-
 
 
 	cvtdq2ps xmm8,xmm8    ; convertimos a float		
 	mulps xmm8,xmm1       ; multiplicamos por value
-;	packssdw xmm8,xmm8    ; xmm4 = primeros 4 resultados
-;	packuswb xmm8,xmm8    ; los devolvemos a byte
-	
 
-	
+
 
 	movdqu xmm10, [r14]
+	pshufb xmm10, xmm2
 	movdqu xmm11, xmm10
 	punpcklbw xmm11, xmm5  ; extendemos a 16 bits los 8 numeros de la parte baja.
 	movdqu xmm12, xmm11     ; los 8 numeros de la parte baja en 32 bit
-	punpcklwd xmm11,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-baja.
+	;punpcklwd xmm11,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-baja.
 	punpckhwd xmm12,xmm5   ; extendemos a 32 bits los 4 numeros de la parte baja-alta.
 
 
@@ -146,32 +108,21 @@ pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
 	punpckhwd xmm14,xmm5   ; extendemos a 32 bits los 4 numeros de la parte alta-alta.
 	
 	
-	cvtdq2ps xmm11,xmm11    ; convertimos a float		
-	mulps xmm11,xmm9       ; multiplicamos por 1- value
-	
-	;packssdw xmm4,xmm5    ; xmm4 = primeros 4 resultados
-	;packuswb xmm4,xmm5    ; los devolvemos a byte
-	
 
 	cvtdq2ps xmm12,xmm12    ; convertimos a float		
 	mulps xmm12,xmm9       ; multiplicamos por value
-	;packssdw xmm6,xmm5    ; xmm4 = primeros 4 resultados
-	;packuswb xmm6,xmm5    ; los devolvemos a byte
+
 
 	cvtdq2ps xmm13,xmm13    ; convertimos a float		
 	mulps xmm13,xmm9       ; multiplicamos por 1-value
 	
-	;packssdw xmm7,xmm7    ; xmm4 = primeros 4 resultados
-	;packuswb xmm7,xmm7    ; los devolvemos a byte
 
 
 
 	cvtdq2ps xmm14,xmm14    ; convertimos a float		
 	mulps xmm14,xmm9       ; multiplicamos por value
-;	packssdw xmm8,xmm8    ; xmm4 = primeros 4 resultados
-;	packuswb xmm8,xmm8    ; los devolvemos a byte
 
-	addps xmm4, xmm11
+
 	addps xmm6, xmm12
 	addps xmm7, xmm13
 	addps xmm8, xmm14
@@ -182,11 +133,10 @@ pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
 
 ; proceso de empaquetado:
 
-
-	cvtps2dq xmm4, xmm4   ; lo volvemos a convertir en enteros de 32
-	cvtps2dq xmm6, xmm6   ; lo volvemos a convertir en enteros de 32
-	cvtps2dq xmm7, xmm7   ; lo volvemos a convertir en enteros de 32
-	cvtps2dq xmm8, xmm8   ; lo volvemos a convertir en enteros de 32
+ ; lo volvemos a convertir en enteros de 32
+	cvtps2dq xmm6, xmm6  
+	cvtps2dq xmm7, xmm7  
+	cvtps2dq xmm8, xmm8  
 
 
 
@@ -195,24 +145,8 @@ pslldq xmm9, 4          ; xmm9 = 1-value | 1-value | 1-value | 0
 
 	packuswb xmm4, xmm7
 
-	;packusdw xmm6, xmm4 
-	;packusdw xmm8, xmm7
 
-	;packuswb xmm8, xmm6
-
-
-
-
-	;xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
-	;paddb xmm9, xmm4        ; xmm9 = 0 | 0 | 0 | baja-baja
-	;pslldq xmm9, 4          ; xmm9 = 0 | 0 | baja-baja | 0
-	;paddb xmm9, xmm6        ; xmm9 = 0 | 0 | baja-baja | baja-alta
-	;pslldq xmm9, 4          ; xmm9 = 0 | baja-baja | baja-alta | 0
-	;paddb xmm9, xmm7        ; xmm9 = 0 | baja-baja | baja-alta | alta-baja
-	;pslldq xmm9, 4          ; xmm9 = baja-baja | baja-alta | alta-baja | 0
-	;paddb xmm9, xmm8        ; xmm9 = baja-baja | baja-alta | alta-baja | alta-alta
-
-
+	pshufb xmm4, xmm2
 
 	movdqu [r13], xmm4
 	add r13, 16
