@@ -39,6 +39,8 @@ void rgbTOhsl(uint8_t *src, float *dst) {
   dst[1] = h;
   dst[2] = s;
   dst[3] = l;
+//  printf("1: %f 2: %f 3 : %f \n", dst[1], dst[2], dst[3]);
+
 }
 
 void hslTOrgb(float *src, uint8_t *dst) {
@@ -95,7 +97,7 @@ int min(int a, int b, int c) {
 }
 
 void rgbTOhsl2(uint8_t *src, float *dst) {
-  //printf("puntero: %p", src);
+  printf("sizeof(float): %i puntero: %p",sizeof(float), src);
   int i;
   for(i=0; i<3; i++){
     int r = (int)(src+1) [1];
