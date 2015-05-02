@@ -31,7 +31,7 @@ function run_test {
     ret=0; return;
 }
 
-for imp in c asm1 asm2; do
+for imp in asm1 asm2; do
 
   # BLUR
   for s in ${SIZES[*]}; do
