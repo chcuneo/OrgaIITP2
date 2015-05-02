@@ -15,7 +15,6 @@ global ASM_merge2
 section .data
 mask_ordenar: db 0x00, 0x04,0x08, 0x0c, 0x01, 0x05, 0x09, 0x0d, 0x02,0x06, 0x0a, 0x0e, 0x03, 0x07, 0x0b, 0x0f
 v256: dd 256.0, 0.0, 0.0, 0.0
-r256: dd 256.0, 256.0, 256.0, 256.0
 
 section .text
 
@@ -217,44 +216,14 @@ pxor xmm6, xmm6
 
 ;dividimos por 256 PREGUNTAR COMO
 	
-
-	pxor xmm6, xmm6
-	movdqu xmm6, [r256]
-	cvtdq2ps xmm4, xmm4
-	cvtdq2ps xmm7, xmm7
-	cvtdq2ps xmm8, xmm8
-
-	divps xmm4, xmm6
-	divps xmm7, xmm6
-	divps xmm8, xmm6
-
-	cvtps2dq xmm4, xmm4
-	cvtps2dq xmm7, xmm7
-	cvtps2dq xmm8, xmm8
+	psrld xmm4, 8
+	psrld xmm7, 8
+	psrld xmm8, 8
 
 
-
-	cvtdq2ps xmm11, xmm11
-	cvtdq2ps xmm12, xmm12
-	cvtdq2ps xmm13, xmm13
-
-	divps xmm11, xmm6
-	divps xmm12, xmm6
-	divps xmm13, xmm6
-
-	cvtps2dq xmm11, xmm11
-	cvtps2dq xmm12, xmm12
-	cvtps2dq xmm13, xmm13
-
-
-;	psrldq xmm4, 1
-;	psrldq xmm7, 1
-;	psrldq xmm8, 1
-
-
-;	psrldq xmm11, 1
-;	psrldq xmm12, 1
-;	psrldq xmm13, 1
+	psrld xmm11, 8
+	psrld xmm12, 8
+	psrld xmm13, 8
 
 	paddd xmm4, xmm11
 	paddd xmm7, xmm12
