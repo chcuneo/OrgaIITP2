@@ -15,8 +15,9 @@ extern rgbTOhsl
 %define OFFSET_G   2h
 %define OFFSET_B   3h
 
-lemask: dd 0.0, 360.0, 1.0, 1.0, ; 1 | 1 | 360 | 0
-divs:	dd 225.0001, 0.0, 0.0, 0.0 ; 0 | 0 | 0 | 255.0001
+lemask: dd 0.0, 360.0, 1.0, 1.0 ; 1 | 1 | 360 | 0
+divS:	dd 255.0001, 0.0, 0.0, 0.0 ; 0 | 0 | 0 | 255.0001
+divL:   dd 510.0, 0.0, 0.0, 0.0
 
 ; void ASM_hsl2(uint32_t w, uint32_t h, uint8_t* data, float hh, float ss, float ll)
 global ASM_hsl2
@@ -69,9 +70,9 @@ ASM_hsl2:
 		call rgbTOhsl3		   ;rsi = pixel en hsl ;pixel en registro = l s h a
 		;call rgbTOhsl
 		movdqu 	 xmm11, [r12]   ;xmm11 = l | s | h | a 
+		.h:
 
-		;el ultimo "else" se toma como implicito y se buscan las modificaciones hacia los otros casos de ser necesario,
-		;esto se logra gracias a que son casos disjuntos
+		;el ultimo "else" se toma como implicito y se buscan las modificaciones hacia los otros casos de ser necesarias,
 
 		;primer if
 		pxor   xmm5 , xmm5
@@ -159,37 +160,37 @@ rgbTOhsl3:
 
 	.calcMax:
 	mov r15, rbx  ;r15 = b (max actual)
-	cmp r15, rax ;maxactual < r 
-	jl	.maxr
-	.max2:
 	cmp r15, rcx ;maxactual < g 
-	jl  .maxg
+	jl	.maxg
+	.max2:
+	cmp r15, rax ;maxactual < r 
+	jl  .maxr
 	jge .calcMin
 	
-	.maxr:
-	mov r15, rax ;maxactual = r
-	jmp .max2
-
 	.maxg:
 	mov r15, rcx ;maxactual = g
+	jmp .max2
+
+	.maxr:
+	mov r15, rax ;maxactual = r
 	jmp .calcMin
 
 
 	.calcMin:
-	mov r14, rax ;r14 = r (min actual)
-	cmp r14, rbx ;minactual > b
-	jg	.minb
-	.min2:
+	mov r14, rbx ;r14 = b (min actual)
 	cmp r14, rcx ;minactual > g
-	jg  .ming
+	jg	.ming
+	.min2:
+	cmp r14, rax ;minactual > r
+	jg  .minr
 	jle .calcD
 
-	.minb:
-	mov r14, rbx ;minactual = b
+	.ming:
+	mov r14, rcx ;minactual = g
 	jmp .min2
 
-	.ming:
-	mov r14, rbx ;minactual = g
+	.minr:
+	mov r14, rax ;minactual = r
 	jmp .calcD
 
 
@@ -284,8 +285,6 @@ rgbTOhsl3:
 	pslldq   xmm0, 12
 	psrldq   xmm0, 12
 
-	;hasta aca va barbaro
-
 	.calcL:
 	pxor xmm1, xmm1
 	pxor xmm2, xmm2
@@ -293,10 +292,7 @@ rgbTOhsl3:
 	add  r8, r14  ;r8 = max + min
 	movq xmm1, r8 ;xmm1 = max + min
 	cvtdq2ps xmm1, xmm1
-	mov   r8, 510 
-	movq  xmm2, r8 ;xmm2 = 510
-	cvtdq2ps xmm2, xmm2
-	divps xmm1, xmm2 ;xmm1 = ( max + min ) / 510
+	divps xmm1, [divL] ;xmm1 = ( max + min ) / 510
 	pslldq   xmm1, 12
 	psrldq   xmm1, 12
 
@@ -316,8 +312,6 @@ rgbTOhsl3:
 	mov  	 r8, -1
 	movq 	 xmm10, r8
 	cvtdq2ps xmm10, xmm10 ;xmm10 = -1.0
-	movd 	 xmm5, [divs]
-
 	
 	movdqu   xmm3, xmm4 ;xmm3 = 1.0
 	addps    xmm3, xmm3 ;xmm3 = 2.0
@@ -334,7 +328,7 @@ rgbTOhsl3:
 
 	subps    xmm4, xmm3 ;xmm4 = 1 - abs( 2*l - 1 )
 	divps	 xmm2, xmm4 ;xmm4 = d / ( 1 - fabs( 2*l - 1 ) )
-	divps    xmm2, xmm5 ;xmm2 = d / ( 1 - fabs( 2*l - 1 ) ) / 255.0001
+	divps    xmm2, [divS] ;xmm2 = d / ( 1 - fabs( 2*l - 1 ) ) / 255.0001
 	pslldq   xmm2, 12
 	psrldq   xmm2, 12
 
@@ -343,14 +337,11 @@ rgbTOhsl3:
 	movq xmm10, rdx
 	cvtdq2ps xmm10, xmm10
 	
-	pslldq xmm1, 4    ;xmm1 = 0 | 0 | l | 0
-	addps  xmm1, xmm2 ;xmm1 = 0 | 0 | l | s
-	pslldq xmm1, 4    ;xmm1 = 0 | l | s | 0
-	addps  xmm1, xmm0 ;xmm1 = 0 | l | s | h
-	pslldq xmm1, 4    ;xmm1 = l | s | h | 0
-	addps  xmm1, xmm10 ;xmm1 = l | s | h | a
+	punpckldq xmm0, xmm1  ;xmm1  = 0 | 0 | l | h
+	punpckldq xmm10, xmm2 ;xmm2  = 0 | 0 | s | a
+	punpckldq xmm10, xmm0 ;xmm10 = l | s | h | a
 
-	movdqu [r13], xmm1
+	movdqu [r13], xmm10
 
 	add rbp, 8
 	pop r15
