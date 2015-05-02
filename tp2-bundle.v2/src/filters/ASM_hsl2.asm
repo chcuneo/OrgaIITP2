@@ -211,6 +211,11 @@ rgbTOhsl3:
 	pxor xmm4, xmm4
 
 	;se toma el caso h=0 como implicito en caso de no entrar en nungun je
+	
+
+	cmp r15, 0
+	je .Hcaso0
+
 	cmp rbx, r8  ;if(max == r)
 	je .Hcaso1				  
 	cmp rbx, r10 ;if(max == g)
@@ -285,6 +290,12 @@ rgbTOhsl3:
 	subps    xmm0, xmm2 ;xmm0 = h o h-360
 	pslldq   xmm0, 12
 	psrldq   xmm0, 12
+
+	jmp .calcL
+
+	.Hcaso0:
+
+	xorps xmm0, xmm0
 
 	.calcL:
 	pxor xmm1, xmm1
