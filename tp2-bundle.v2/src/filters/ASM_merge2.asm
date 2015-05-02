@@ -6,6 +6,7 @@
 ; ************************************************************************* ;
 
 ; void ASM_merge2(uint32_t w, uint32_t h, uint8_t* data1, uint8_t* data2, float value)
+
 global ASM_merge2
 
 
@@ -14,6 +15,7 @@ global ASM_merge2
 section .data
 mask_ordenar: db 0x00, 0x04,0x08, 0x0c, 0x01, 0x05, 0x09, 0x0d, 0x02,0x06, 0x0a, 0x0e, 0x03, 0x07, 0x0b, 0x0f
 v256: dd 256.0, 0.0, 0.0, 0.0
+r256: dd 256.0, 256.0, 256.0, 256.0
 
 section .text
 
@@ -122,99 +124,152 @@ pxor xmm6, xmm6
 	movdqu xmm3, [r13]     ;en xmm3 4 pixeles a procesar
 
 	pshufb xmm3, xmm14 ;xmm3= r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
-	
+	;(*) ojo el nombre de los colores b y r esta invertido, pero solo es imporante la posicion de a
+
+
 	;desempaquetamos
 	movdqu xmm4, xmm3      ;xmm4=r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
 	punpcklbw xmm4, xmm5   ;xmm4 = 0b|0b|0b|0b|0a|0a|0a|0a 8 numeros de 16 bit
 	pxor xmm2, xmm2 
 	movdqu xmm2, xmm4 
-	pslldq xmm2, 8         ; limpio parte alta de xmm2     
+	
+	; limpio parte alta de xmm2  
+	pslldq xmm2, 8           
 	psrldq xmm2, 8 					 ; xmm2 = 0|0|0|0|0a|0a|0a|0a
+	
+	punpcklwd xmm2, xmm5   ; xmm2= 000a|000a|000a|000a| 8 numeros de 16 bit
+
+
 	movdqu xmm7, xmm3
 	punpckhbw xmm7, xmm5   ; xmm7= 0r|0r|0r|0r|0g|0g|0g|0g| 8 numeros de 16 bit
-
-	punpcklbw xmm2, xmm5   ; xmm2= 000a|000a|000a|000a| 8 numeros de 16 bit
-
 
 	movdqu xmm6, xmm7
 
 	;mutiplicamos los enteros de 16 bit de xmm7
 
 	pmullw xmm7, xmm1 ; parte baja de la multiplicacion de xmm7 con xmm1
-	pmulhw xmm6, xmm1 ; parte alta de la multiplicacion de xmm7 con xmm1
+	pmulhuw xmm6, xmm1 ; parte alta de la multiplicacion de xmm7 con xmm1
 
 	movdqu xmm8, xmm7
 
-;0xb3a7a59e665a58514a3e3e37ffffffff
 	punpcklwd xmm7, xmm6  ;  xmm7= 0g*value*256|0g*value*256|0g*value*256|0g*value*256|
 	punpckhwd xmm8, xmm6  ;  xmm8= 0r*value*256|0r*value*256|0r*value*256|0r*value*256
 
-
+	; tambien multiplicamos a b
 	psrldq xmm4, 8      ;xmm4 = 00|00|00|00|0b|0b|0b|0b 8 numeros de 16 bit
 	movdqu xmm6, xmm4
+
+
 	pmullw xmm4, xmm1 ; parte baja de la multiplicacion de xmm4 con xmm1
-	pmulhw xmm6, xmm1 ; parte alta de la multiplicacion de xmm4 con xmm1
+	pmulhuw xmm6, xmm1 ; parte alta de la multiplicacion de xmm4 con xmm1
 
 
 	punpcklwd xmm4, xmm6 ; xmm4= 0b*value*256|0b*value*256|0b*value*256|0b*value*256|
 
 
 	; para la segunda imagen
-	movdqu xmm10, [r14]
-	pshufb xmm10, xmm14
-	movdqu xmm11, xmm10    ;xmm11=r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
-	punpcklbw xmm11, xmm5  ;xmm11 = 0b|0b|0b|0b|0a|0a|0a|0a 8 numeros de 16 bit
+
+
+	pxor xmm10, xmm10
+	movdqu xmm10, [r14]     ;en xmm10 4 pixeles a procesar
+
+	pshufb xmm10, xmm14 ;xmm10= r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
+	;(*) ojo el nombre de los colores b y r esta invertido, pero solo es imporante la posicion de a
+
+
+	;desempaquetamos
+	movdqu xmm11, xmm10     ;xmm11=r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
+	punpcklbw xmm11, xmm5   ;xmm11 = 0b|0b|0b|0b|0a|0a|0a|0a 8 numeros de 16 bit
+	pxor xmm15, xmm15
+	movdqu xmm15, xmm11
 	
-	;pxor xmm3, xmm3
-	;movss xmm3, xmm11       ; xmm3 = 00|00|00|00|0a|0a|0a|0a
+	; limpio parte alta de xmm15  
+	pslldq xmm15, 8           
+	psrldq xmm15, 8 					 ; xmm15 = 0|0|0|0|0a|0a|0a|0a
 	
+	punpcklwd xmm15, xmm5   ; xmm15= 000a|000a|000a|000a| 8 numeros de 16 bit
+
+
 	movdqu xmm12, xmm10
-	punpckhbw xmm12, xmm5   ; xmm7= 0r|0r|0r|0r|0g|0g|0g|0g| 8 numeros de 16 bit
-	
+	punpckhbw xmm12, xmm5   ; xmm12= 0r|0r|0r|0r|0g|0g|0g|0g| 8 numeros de 16 bit
 
+	;mutiplicamos los enteros de 16 bit de xmm12
 	movdqu xmm6, xmm12
-
-	;mutiplicamos los enteros de 16 bit de xmm7
-
-	pmullw xmm12, xmm9 ; parte baja de la multiplicacion de xmm12 con xmm9
-	pmulhw xmm6, xmm9 ; parte alta de la multiplicacion de xmm12 con xmm9
+	pmullw xmm12, xmm9 ; parte baja de la multiplicacion de xmm12 con xmm1
+	pmulhuw xmm6, xmm9 ; parte alta de la multiplicacion de xmm12 con xmm1
 
 	movdqu xmm13, xmm12
-	punpcklwd xmm12, xmm6  ;  xmm7= 0g*(256-value*256)|0g*(256-value*256)|0g*(256-value*256)|0g*(256-value*256)|
-	punpckhwd xmm13, xmm6  ;  xmm8= 0r*(256-value*256)|0r*value*256|0r*value*256|0r*value*256
 
+	punpcklwd xmm12, xmm6  ;  xmm12= 0g*value*256|0g*value*256|0g*value*256|0g*value*256|
+	punpckhwd xmm13, xmm6  ;  xmm13= 0r*value*256|0r*value*256|0r*value*256|0r*value*256
 
-
-	psrldq xmm11, 8   ;xmm4 = 00|00|00|00|0b|0b|0b|0b
+	; tambien multiplicamos a b
+	psrldq xmm11, 8      ;xmm11 = 00|00|00|00|0b|0b|0b|0b 8 numeros de 16 bit
 	movdqu xmm6, xmm11
+
+
 	pmullw xmm11, xmm9 ; parte baja de la multiplicacion de xmm4 con xmm1
-	pmulhw xmm6, xmm9 ; parte alta de la multiplicacion de xmm4 con xmm1
-
-	punpcklwd xmm11, xmm6 ; xmm11= 0b*(256-value*256)|0b*(256-value*256)|0b*(256-value*256)|0b*(256-value*256)|
+	pmulhuw xmm6, xmm9 ; parte alta de la multiplicacion de xmm4 con xmm1
 
 
+	punpcklwd xmm11, xmm6 ; xmm4= 0b*value*256|0b*value*256|0b*value*256|0b*value*256|
+
+
+;dividimos por 256 PREGUNTAR COMO
+	
+
+	pxor xmm6, xmm6
+	movdqu xmm6, [r256]
+	cvtdq2ps xmm4, xmm4
+	cvtdq2ps xmm7, xmm7
+	cvtdq2ps xmm8, xmm8
+
+	divps xmm4, xmm6
+	divps xmm7, xmm6
+	divps xmm8, xmm6
+
+	cvtps2dq xmm4, xmm4
+	cvtps2dq xmm7, xmm7
+	cvtps2dq xmm8, xmm8
+
+
+
+	cvtdq2ps xmm11, xmm11
+	cvtdq2ps xmm12, xmm12
+	cvtdq2ps xmm13, xmm13
+
+	divps xmm11, xmm6
+	divps xmm12, xmm6
+	divps xmm13, xmm6
+
+	cvtps2dq xmm11, xmm11
+	cvtps2dq xmm12, xmm12
+	cvtps2dq xmm13, xmm13
+
+
+;	psrldq xmm4, 1
+;	psrldq xmm7, 1
+;	psrldq xmm8, 1
+
+
+;	psrldq xmm11, 1
+;	psrldq xmm12, 1
+;	psrldq xmm13, 1
 
 	paddd xmm4, xmm11
 	paddd xmm7, xmm12
 	paddd xmm8, xmm13
 
-	;dividimos por 256
-	psrldq xmm4, 8
-	psrldq xmm7, 8
-	psrldq xmm8, 8
-
-
+	
 
 
 ; proceso de empaquetado:
 
 	packusdw xmm2, xmm4
-	packusdw xmm7, xmm8 
-
+	packusdw xmm7, xmm8
 	packuswb xmm2, xmm7
-
-
 	pshufb xmm2, xmm14
+
 
 	movdqu [r13], xmm2
 	add r13, 16
