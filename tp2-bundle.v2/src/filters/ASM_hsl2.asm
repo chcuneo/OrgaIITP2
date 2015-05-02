@@ -67,7 +67,7 @@ ASM_hsl2:
 	.ciclo:
 		mov rsi, r12
 		lea rdi, [r13 + r15]
-		call rgbTOhsl3		   ;rsi = pixel en hsl ;pixel en registro = l s h a
+		call rgbTOhsl3	   ;rsi = pixel en hsl ;pixel en registro = l s h a
 		;call rgbTOhsl
 		movdqu 	 xmm11, [r12]   ;xmm11 = l | s | h | a 
 		.h:
@@ -158,9 +158,13 @@ rgbTOhsl3:
 	mov  cl, bl	     ;rcx = g
 	shrd rbx, r14, 8 ;rbx = b
 
+
+
 mov r9, rbx
 mov rbx, rax
 mov rax, r9
+
+xor r9, r9
 
 	.calcMax:
 	mov r15, rbx  ;r15 = b (max actual)
@@ -214,18 +218,40 @@ mov rax, r9
 	pxor xmm1, xmm1
 	pxor xmm2, xmm2
 
-	cmp rbx, r8  ;if(max == r)
-	je .Hcaso1				  
+	
+
+
+	cmp r15, 0
+	je .Hcaso0
+	
+	; arreglarle el orden a los pixeles, nose cual es cual
 	cmp rbx, r10  ;if(max == g)
-	je .Hcaso2				  
+	je .Hcaso2
+
+	cmp rbx, r8  ;if(max == r)
+	je .Hcaso1	
 	cmp rbx, r9 ;if(max == b)
-	je .Hcaso3				  
+	je .Hcaso3
+
+
+	
+
+
+
+				  
+					  
 	jmp .calcL
 
 	.Hcaso1:
+		pxor xmm0, xmm0
+	pxor xmm1, xmm1
+	pxor xmm2, xmm2
+	pxor xmm3, xmm3
+	pxor xmm4, xmm4
 	movq xmm0, r10 ;xmm0 = g
 	movq xmm1, r9  ;xmm1 = b
 	movq xmm2, r15 ;xmm2 = d
+	xor r11, r11
 	mov  r11 , 60
 	movq xmm3, r11 ;xmm3 = 60
 	mov  r11 , 6
@@ -239,9 +265,16 @@ mov rax, r9
 	jmp .Hoperar
 
 	.Hcaso2:
+	
+	pxor xmm0, xmm0
+	pxor xmm1, xmm1
+	pxor xmm2, xmm2
+	pxor xmm3, xmm3
+	pxor xmm4, xmm4
 	movq xmm0, r9  ;xmm0 = b
 	movq xmm1, r8  ;xmm1 = r
 	movq xmm2, r15 ;xmm2 = d
+	xor r11, r11
 	mov  r11 , 60
 	movq xmm3, r11 ;xmm3 = 60
 	mov  r11 , 2
@@ -255,9 +288,15 @@ mov rax, r9
 	jmp .Hoperar
 
 	.Hcaso3:
+	pxor xmm0, xmm0
+	pxor xmm1, xmm1
+	pxor xmm2, xmm2
+	pxor xmm3, xmm3
+	pxor xmm4, xmm4
 	movq xmm0, r8  ;xmm0 = r
 	movq xmm1, r10 ;xmm1 = g
 	movq xmm2, r15 ;xmm2 = d
+	xor r11, r11
 	mov  r11 , 60
 	movq xmm3, r11 ;xmm3 = 60
 	mov  r11 , 4
@@ -288,15 +327,36 @@ mov rax, r9
 	subps    xmm0, xmm2 ;xmm0 = h o h-360
 	pslldq   xmm0, 12
 	psrldq   xmm0, 12
+	jmp .calcL
+
+	.Hcaso0:
+
+	xorps xmm0, xmm0
+
+
+
 
 	.calcL:
 	pxor xmm1, xmm1
 	pxor xmm2, xmm2
 	mov  r8, rbx  ;r8 = max
-	add  r8, r14  ;r8 = max + min
+	movq xmm2, r14
+	cvtdq2ps xmm2, xmm2
+
+	divss xmm2, [divL] ;xmm2 = ( min ) / 510
+
+
+
+
+;	add  r8, r14  ;r8 = max + min
 	movq xmm1, r8 ;xmm1 = max + min
 	cvtdq2ps xmm1, xmm1
-	divps xmm1, [divL] ;xmm1 = ( max + min ) / 510
+	divss xmm1, [divL] ;xmm1 = ( max ) / 510
+
+	addss xmm1, xmm2
+
+
+
 	pslldq   xmm1, 12
 	psrldq   xmm1, 12
 
@@ -309,13 +369,14 @@ mov rax, r9
 	;else
 	movq xmm2, r15 ;xmm2 = d
 	cvtdq2ps xmm2, xmm2
-	
+	xor r8, r8
 	mov  	 r8, 1
 	movq 	 xmm4, r8
 	cvtdq2ps xmm4, xmm4 ;xmm4 = 1.0
-	mov  	 r8, -1
-	movq 	 xmm10, r8
-	cvtdq2ps xmm10, xmm10 ;xmm10 = -1.0
+	xor r8, r8
+	mov  	 r8d, 1
+	movd 	 xmm10, r8d
+	cvtdq2ps xmm10, xmm10 ;xmm10 = 1.0
 	
 	movdqu   xmm3, xmm4 ;xmm3 = 1.0
 	addps    xmm3, xmm3 ;xmm3 = 2.0
@@ -326,8 +387,8 @@ mov rax, r9
 	cmpltps  xmm12, xmm1  ;xmm11 = 2*l - 1 < 0
 	pand     xmm10, xmm12 ;xmm10 = -1 o 0
 	movdqu   xmm12, xmm4  ;xmm12 = 1
-	addps    xmm10, xmm10 ;xmm10 = -2 o 0
-	addps    xmm12, xmm10 ;xmm12 = 1 o -1
+	addss    xmm10, xmm10 ;xmm10 = 2 o 0
+	subss    xmm12, xmm10 ;xmm12 = 1 o -1
 	mulps    xmm3 , xmm12 ;xmm3 = abs(2*l - 1)
 
 	subps    xmm4, xmm3 ;xmm4 = 1 - abs( 2*l - 1 )
@@ -354,4 +415,4 @@ mov rax, r9
 	pop r12
 	pop rbx
 	pop rbp
-ret
+	ret
