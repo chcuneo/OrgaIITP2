@@ -158,6 +158,10 @@ rgbTOhsl3:
 	mov  cl, bl	     ;rcx = g
 	shrd rbx, r14, 8 ;rbx = b
 
+mov r9, rbx
+mov rbx, rax
+mov rax, r9
+
 	.calcMax:
 	mov r15, rbx  ;r15 = b (max actual)
 	cmp r15, rcx ;maxactual < g 
