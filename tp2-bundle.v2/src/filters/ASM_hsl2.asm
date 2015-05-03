@@ -17,14 +17,13 @@ extern rgbTOhsl
 
 lemask:  dd 0.0, 360.0, 1.0, 1.0 ; 1 | 1 | 360 | 0
 absmask: dd 0x7FFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF
-shuf: db 0x00,0x04,0x08,0x0C, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+shuf: 	 db 0x00,0x04,0x08,0x0C, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 divS:	 dd 255.0001, 0.0, 0.0, 0.0 ; 0 | 0 | 0 | 255.0001
 divL:    dd 510.0, 0.0, 0.0, 0.0
 one:     dd 1.0 , 0.0, 0.0, 0.0
-cEscala:  dd 0.0 , 255.0, 255.0, 255.0
-cRGB:     dd 120.0, 0.0, 0.0, 0.0
-c000: 	dd 0.0, 0.0, 0.0, 0.0
-c060: 	dd 60.0, 0.0, 0.0, 0.0
+cEscala: dd 0.0 , 255.0, 255.0, 255.0
+cRGB:    dd 120.0, 0.0, 0.0, 0.0
+c060: 	 dd 60.0, 0.0, 0.0, 0.0
 
 
 ; void ASM_hsl2(uint32_t w, uint32_t h, uint8_t* data, float hh, float ss, float ll)
@@ -449,120 +448,67 @@ hslTOrgb3: ; rdi = float *src rsi = uint8_t *dst
 
 	;Cálculo de RGB
 	.calcRGB:
-	; movdqu xmm12, xmm4
-	; punpckldq xmm5, xmm4 	;xmm5  = 0 | 0 | c | x
-	; pslldq    xmm5, 8    	;xmm5  = c | x | 0 | 0
-	pxor      xmm12, xmm12
-
+	pxor   xmm12, xmm12
 	movdqu xmm11, [c060]
-	addss xmm12, xmm11 		;xmm12 = 60
+	addss  xmm12, xmm11 		;xmm12 = 60
+	addss  xmm12, xmm11 		;xmm12 = 120
+
 
 	.mayig0:
-	comiss xmm2, xmm12 		
-	jl .men60
-	addss xmm12, xmm11	 	;xmm12 = 120
+	movd   r10d, xmm5 		;r10   = x
+	addss  xmm12, xmm11	 	;xmm12 = 120
 	comiss xmm2, xmm12
-	jl .men120
-	addss xmm12, xmm11	 	;xmm12 = 180
+	jl  .men120
+	addss  xmm12, xmm12	 	;xmm12 = 240
 	comiss xmm2, xmm12
-	jl .men180
-	addss xmm12, xmm11	 	;xmm12 = 240
-	comiss xmm2, xmm12
-	jl .men240
-	addss xmm12, xmm11	 	;xmm12 = 300
-	comiss xmm2, xmm12
-	jl .men300
-	addss xmm12, xmm11	 	;xmm12 = 360
-	comiss xmm2, xmm12
-	jl .men360
+	jl  .men240
+	jge .men360
+
+	.men120:
+	subss  xmm12, xmm11 ;xmm12 = 60
+	comiss xmm2, xmm12	
+	jl  .men60
+	jge .mayig60
+
+	.men240:
+	subss xmm12, xmm11 ;xmm12 = 180
+	jl  .men180
+	jge .mayig180
+
+	.men360:
+	addss xmm12, xmm11 ;xmm12 = 300
+	jl  .men300
+	jge .mayig300
 
 	.men60:
-	pslldq xmm4, 12 	;xmm4 = c | 0 | 0 | 0
-	movd r10d, xmm5 		;r10 = x
+	pslldq xmm4, 12 	 ;xmm4 = c | 0 | 0 | 0
 	pinsrd xmm4, r10d, 2 ;xmm4 = c | x | 0 | 0
 	jmp .calcEscala
 
-	.men120:
-	pslldq xmm4, 8 		;xmm4 = 0 | c | 0 | 0
-	movd r10d, xmm5 		;r10 = x
+	.mayig60:
+	pslldq xmm4, 8 		 ;xmm4 = 0 | c | 0 | 0
 	pinsrd xmm4, r10d, 3 ;xmm4 = x | c | 0 | 0
 	jmp .calcEscala
-
+	
 	.men180:
-	pslldq xmm4, 8 		;xmm4 = 0 | c | 0 | 0
-	movd r10d, xmm5 		;r10 = x
+	pslldq xmm4, 8 		 ;xmm4 = 0 | c | 0 | 0
 	pinsrd xmm4, r10d, 1 ;xmm4 = 0 | c | x | 0
 	jmp .calcEscala
 
-	.men240:
-	pslldq xmm4, 4 		;xmm4 = 0 | 0 | c | 0
-	movd r10d, xmm5 		;r10 = x
+	.mayig180:
+	pslldq xmm4, 4 		 ;xmm4 = 0 | 0 | c | 0
 	pinsrd xmm4, r10d, 2 ;xmm4 = 0 | x | c | 0
 	jmp .calcEscala
 
 	.men300:
-	pslldq xmm4, 4 		;xmm4 = 0 | 0 | c | 0
-	movd r10d, xmm5 		;r10 = x
+	pslldq xmm4, 4 		 ;xmm4 = 0 | 0 | c | 0
 	pinsrd xmm4, r10d, 3 ;xmm4 = x | 0 | c | 0
 	jmp .calcEscala
 
-	.men360:
-	pslldq xmm4, 12		;xmm4 = c | 0 | 0 | 0
-	movd r10d, xmm5 		;r10 = x
+	.mayig300:
+	pslldq xmm4, 12		 ;xmm4 = c | 0 | 0 | 0
 	pinsrd xmm4, r10d, 1 ;xmm4 = c | 0 | x | 0
 	jmp .calcEscala
-	
-
-	; mov  r9, 120  ;r9 = 120
-	; movq r8, xmm2 ;r8 = h
-	; cmp  r8, r9   ;if (h<120)
-	; jl  .Hcaso1
-	; add  r9, r9	  ;r9 = 240
-	; cmp  r8, r9   ;if (h<240)
-	; jl  .Hcaso2
-	; jge .Hcaso3
-
-	; .Hcaso1:
-	; mov r10, 60 ;r10 = 60
-	; cmp r10, r8 ;if(h<60)
-	; jl  .Hcaso1A
-	; jge .Hcaso1B
-
-	; .Hcaso1A:
-	; movdqu xmm4, xmm5 ;xmm4 = c | x | 0 | 0
-	; jmp .calcEscala
-
-	; .Hcaso1B:
-	; pshufd xmm4, xmm5, 30 ; 30 = 00011110
-	; jmp .calcEscala
-
-	; .Hcaso2:
-	; mov r10, 180 ;r10 = 180
-	; cmp r10, r8  ;if(h<180)
-	; jl  .Hcaso2A
-	; jge .Hcaso2B
-
-	; .Hcaso2A:
-	; pshufd xmm4, xmm5, 54 ;54 = 00110110
-	; jmp .calcEscala
-	
-	; .Hcaso2B:
-	; pshufd xmm4, xmm5, 57 ;57 = 00111001
-	; jmp .calcEscala
-
-	; .Hcaso3:
-	; mov r10, 300 ;r10 = 300
-	; cmp r10, r8  ;if(h<300)
-	; jl  .Hcaso3A
-	; jge .Hcaso3B
-
-	; .Hcaso3A:
-	; pshufd xmm4, xmm5, 45 ;45 = 00101101
-	; jmp .calcEscala
-
-	; .Hcaso3B:
-	; pshufd xmm4, xmm5, 39 ;39 = 00100111
-	; jmp .calcEscala
 
 	;Cálculo de escala
 	.calcEscala:
@@ -575,15 +521,15 @@ hslTOrgb3: ; rdi = float *src rsi = uint8_t *dst
 
 	movdqu xmm13, [cEscala] ;xmm13 = 255 | 255 | 255 | 0
 
-	addps xmm4, xmm12 ;xmm4 = r+m | g+m | b+m | X
-	mulps xmm4, xmm13 ;xmm4 = (r+m)*255 | (g+m)*255 | (b+m)*255 | 0
-	movd r10d, xmm3
-	pinsrd xmm4, r10d, 0  ;xmm4 = (r+m)*255 | (g+m)*255 | (b+m)*255 | a
+	addps  xmm4, xmm12 ;xmm4 = r+m | g+m | b+m | X
+	mulps  xmm4, xmm13 ;xmm4 = (r+m)*255 | (g+m)*255 | (b+m)*255 | 0
+	movd   r10d, xmm3
+	pinsrd xmm4, r10d, 0 ;xmm4 = (r+m)*255 | (g+m)*255 | (b+m)*255 | a
 	cvtps2dq xmm4, xmm4
 
 	movdqu xmm10, [shuf] 	; Shuffle para pasar dword int a byte int
-	pshufb xmm4, xmm10 			; xmm4 = |	0	| 	0	| 0 	|R|G|B|A|
-	PEXTRD [r13], xmm4, 00b 	; grabo a memoria
+	pshufb xmm4 , xmm10 	; xmm4 = |	0	| 	0	| 0 	|R|G|B|A|
+	PEXTRD [r13], xmm4, 00b ; grabo a memoria
 	.terminar:
 
 	add rbp, 8
