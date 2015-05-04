@@ -6,8 +6,6 @@
 ; ************************************************************************* ;
 extern malloc
 extern free  
-extern hslTOrgb
-extern rgbTOhsl
 
 %define PIXEL_SIZE 4h
 %define OFFSET_A   0h
@@ -23,6 +21,7 @@ divL:    dd 510.0, 0.0, 0.0, 0.0
 one:     dd 1.0 , 0.0, 0.0, 0.0
 cEscala:  dd 0.0 , 255.0, 255.0, 255.0
 cRGB:     dd 120.0, 0.0, 0.0, 0.0
+cmod2: dd 2.0, 0.0, 0.0, 0.0
 c000: 	dd 0.0, 0.0, 0.0, 0.0
 c060: 	dd 60.0, 0.0, 0.0, 0.0
 
@@ -421,15 +420,15 @@ hslTOrgb3: ; rdi = float *src rsi = uint8_t *dst
 
 	movdqu xmm5 , xmm15 ;xmm5  = 1
 	movdqu xmm13, xmm5  ;xmm13 = 1
-	movdqu xmm12, xmm11 ;xmm12 = h/60 
-	addss  xmm5 , xmm5  ;xmm5  = 2
-	divss  xmm12, xmm5  ;xmm11 = h/60/2
-	
-	cvtps2dq xmm12, xmm12
-	cvtdq2ps xmm12, xmm12 ;xmm12 = parteentera(h/60/2)
+	movdqu xmm12, [cmod2]
+	comiss xmm11, xmm12
+	jb .finloop
+	.modresta:
+	subss xmm11, xmm12
+	comiss xmm12, xmm11
+	jbe .modresta
 
-	mulss xmm12, xmm5  ;xmm12 = parteentera(h/60/2) * 2
-	subss xmm11, xmm12 ;xmm11 = mod(h/60 , 2)
+	.finloop:
 	subss xmm11, xmm13  ;xmm11 = mod(h/60 , 2) - 1
 
 	movdqu xmm12, [absmask]
@@ -458,23 +457,23 @@ hslTOrgb3: ; rdi = float *src rsi = uint8_t *dst
 	addss xmm12, xmm11 		;xmm12 = 60
 
 	.mayig0:
-	comiss xmm2, xmm12 		
-	jl .men60
+	comiss xmm2, xmm12
+	jb .men60
 	addss xmm12, xmm11	 	;xmm12 = 120
 	comiss xmm2, xmm12
-	jl .men120
+	jb .men120
 	addss xmm12, xmm11	 	;xmm12 = 180
 	comiss xmm2, xmm12
-	jl .men180
+	jb .men180
 	addss xmm12, xmm11	 	;xmm12 = 240
 	comiss xmm2, xmm12
-	jl .men240
+	jb .men240
 	addss xmm12, xmm11	 	;xmm12 = 300
 	comiss xmm2, xmm12
-	jl .men300
+	jb .men300
 	addss xmm12, xmm11	 	;xmm12 = 360
 	comiss xmm2, xmm12
-	jl .men360
+	jb .men360
 
 	.men60:
 	pslldq xmm4, 12 	;xmm4 = c | 0 | 0 | 0
