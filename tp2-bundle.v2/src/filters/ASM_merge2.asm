@@ -14,6 +14,7 @@ global ASM_merge2
 
 section .data
 mask_ordenar: db 0x00, 0x04,0x08, 0x0c, 0x01, 0x05, 0x09, 0x0d, 0x02,0x06, 0x0a, 0x0e, 0x03, 0x07, 0x0b, 0x0f
+mask_shuf: db  0x00, 0x01,0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00,0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01
 v256: dd 256.0, 0.0, 0.0, 0.0
 
 section .text
@@ -67,54 +68,10 @@ sub r15d, ebx
 xorps xmm9, xmm9			 
 movd xmm9, r15d   ; xmm9 = 256 entero -value*256
 
+movdqu xmm14, [mask_shuf]
 
-movdqu xmm6, xmm9
-
-xorps xmm9, xmm9        ; xmm9 = 0 | 0 | 0 | 0
-paddw xmm9, xmm6        ; xmm9 = 0 | 0 | 0 | min
-pslldq xmm9, 2          ; xmm9 = 0 | 0 | min | 0
-paddw xmm9, xmm6        ; xmm9 = 0 | 0 | min | min
-pslldq xmm9, 2         ; xmm9 = 0 | min | min | 0
-paddw xmm9, xmm6        ; xmm9 = 0 | min | min | min
-pslldq xmm9, 2          ; xmm9 = min | min | min | 0
-paddw xmm9, xmm6        ; xmm9 = min | min | min | min
-pslldq xmm9, 2          ; xmm9 = 0 | 0 | min | 0
-paddw xmm9, xmm6        ; xmm9 = 0 | 0 | min | min
-pslldq xmm9, 2          ; xmm9 = 0 | min | min | 0
-paddw xmm9, xmm6        ; xmm9 = 0 | min | min | min
-pslldq xmm9, 2          ; xmm9 = min | min | min | 0
-paddw xmm9, xmm6        ; xmm9 = min | min | min | min
-pslldq xmm9, 2          ; xmm9 = min | min | min | 0
-paddw xmm9, xmm6        ; xmm9 = min | min | min | min
-
-
-
-movdqu xmm6, xmm1
-xorps xmm1, xmm1       ; xmm9 = 0 | 0 | 0 | 0
-paddw xmm1, xmm6        ; xmm9 = 0 | 0 | 0 | min
-pslldq xmm1, 2         ; xmm9 = 0 | 0 | min | 0
-paddw xmm1, xmm6        ; xmm9 = 0 | 0 | min | min
-pslldq xmm1, 2          ; xmm9 = 0 | min | min | 0
-paddw xmm1, xmm6        ; xmm9 = 0 | min | min | min
-pslldq xmm1, 2          ; xmm9 = min | min | min | 0
-paddw xmm1, xmm6        ; xmm9 = min | min | min | min
-pslldq xmm1, 2         ; xmm9 = 0 | 0 | min | 0
-paddw xmm1, xmm6        ; xmm9 = 0 | 0 | min | min
-pslldq xmm1, 2         ; xmm9 = 0 | min | min | 0
-paddw xmm1, xmm6        ; xmm9 = 0 | min | min | min
-pslldq xmm1, 2          ; xmm9 = min | min | min | 0
-paddw xmm1, xmm6        ; xmm9 = min | min | min | min
-pslldq xmm1, 2         ; xmm9 = min | min | min | 0
-paddw xmm1, xmm6        ; xmm9 = min | min | min | min
-
-pxor xmm6, xmm6
-
-
-;pshuflw xmm9, xmm9 , 0h ; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
-;pshufhw xmm9, xmm9 , 0h ; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
-
-;pshuflw xmm1, xmm1 , 0h ; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
-;pshufhw xmm1, xmm1 , 0h ; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
+pshufb xmm9, xmm14; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
+pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
 
 	movdqu xmm14, [mask_ordenar]
 .ciclo:
