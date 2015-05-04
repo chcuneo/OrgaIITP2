@@ -225,7 +225,7 @@ rgbTOhsl3:
 
 	.Hcaso0:
 	xorps xmm0, xmm0
-	jmp .Hoperar
+	jmp .calcL
 
 	.Hcaso1:
 	movq xmm0, r10 ;xmm0 = g
