@@ -67,7 +67,7 @@ movdqu xmm14, [mask_shuf]
 pshufb xmm9, xmm14; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
 pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
 
-	movdqu xmm14, [mask_ordenar]
+movdqu xmm14, [mask_ordenar]
 .ciclo:
 
 	pxor xmm3, xmm3
@@ -165,8 +165,8 @@ pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*
 	punpcklwd xmm11, xmm6 ; xmm4= 0b*value*256|0b*value*256|0b*value*256|0b*value*256|
 
 
-;dividimos por 256 PREGUNTAR COMO
-	
+;dividimos por 256 
+
 	psrld xmm4, 8
 	psrld xmm7, 8
 	psrld xmm8, 8
@@ -175,6 +175,8 @@ pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*
 	psrld xmm11, 8
 	psrld xmm12, 8
 	psrld xmm13, 8
+
+;sumamos
 
 	paddd xmm4, xmm11
 	paddd xmm7, xmm12

@@ -124,7 +124,7 @@ En este trabajo practico se realizan implementaciones en asembler..
 
 El merge nos permite a partir de dos imágenes y un valor entre cero y uno, obtener una combinación de estas ultimas según la proporción indicada por el valor.
 
-\subsubsection{Implementación 1}
+\subsubsection{Implementación en Assembler 1}
 
 Se recibe por parámetro dos punteros a dos imágenes almacenadas en memoria como una matriz de pixeles. Como los pixeles de estas imágenes ocupan 4 byte, y la cantidad de pixeles de las mismas es multiplo de 4,  utilizando los registros xmm podemos traer de a 4 pixeles. Luego incrementamos los punteros a la imagen en 16 bytes y volvemos a traer los pixeles de memoria. De esta manera tenemos un ciclo principal cuya cantidad de iteraciones es la cantidad de pixeles dividido cuatro. Cada una de estas consiste en levantar de memoria cuatro pixeles y almacenarlos en un registro xmm, cuyo contenido puede verse en la figura \ref{primerXmm}
 
@@ -181,6 +181,9 @@ Se repite el procedimiento para la segunda imagen, excepto que no se desempaquet
 \subsubsection{Implementación 2}
 
 
+
+
+\subsubsection{Implementación }
 
 
 \section{Conclusiones y trabajo futuro}
