@@ -180,7 +180,17 @@ Se repite el procedimiento para la segunda imagen, excepto que no se desempaquet
 
 \subsubsection{Implementación 2}
 
-Es analoga a la implementación anterior, pero en este caso se hacen las multiplicaciones y sumas en numeros enteros
+Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño.
+
+Antes de empezar el ciclo, multiplicamos en punto flotante 256 y value, y al resultado lo convertimos a enteros. En este proceso se pierden decimales. Como value es un numero entre cero y uno, al multiplicar por 256 y pasarlo a enteros, tenemos un valor entre 0 y 256, con lo que ocupa menos de un byte de tamaño. Utilizando la instrucción pshufb  una mascara, almacenamos en un registro xmm 8 replicas de este valor. Luego hacemos la resta en enteros entre 256 y el valor obtenido en la multiplicación. Nuevamente tenemos un valor entero entre 0 y 256 que entra en un byte, almacenamos 8 replicas del mismo en un registro xmm tal como se ve en la figura \ref{256value}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/256value.png}
+\caption{Contenido de los registros utilizados para multiplicar}
+\label{256value}
+\end{figure}
+
 
 
 \subsubsection{Implementación en C}

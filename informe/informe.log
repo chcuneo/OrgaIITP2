@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  5 MAY 2015 14:39
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  5 MAY 2015 16:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -654,9 +654,9 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \verbatim@out=\write5
-runsystem(touch /tmp/w18-test-201555879.tex)...disabled (restricted).
+runsystem(touch /tmp/w18-test-201555986.tex)...disabled (restricted).
 
-runsystem(rm -f /tmp/w18-test-201555879.tex)...disabled (restricted).
+runsystem(rm -f /tmp/w18-test-201555986.tex)...disabled (restricted).
 
 
 
@@ -845,10 +845,16 @@ File: imagenes/value.png Graphic file (type png)
  <use imagenes/value.png>
 Package pdftex.def Info: imagenes/value.png used on input line 171.
 (pdftex.def)             Requested size: 329.55162pt x 31.47762pt.
-LaTeX Info: Redefining \. on input line 189.
-LaTeX Info: Redefining \% on input line 189.
 
-[6 <./imagenes/value.png>] (./informe.aux
+<imagenes/256value.png, id=37, 533.995pt x 47.377pt>
+File: imagenes/256value.png Graphic file (type png)
+
+<use imagenes/256value.png>
+Package pdftex.def Info: imagenes/256value.png used on input line 189.
+(pdftex.def)             Requested size: 427.19658pt x 37.90163pt.
+LaTeX Info: Redefining \. on input line 202.
+LaTeX Info: Redefining \% on input line 202.
+ [6 <./imagenes/value.png> <./imagenes/256value.png>] (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
 LaTeX Info: Redefining \% on input line 7.
 )
@@ -857,10 +863,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 12617 strings out of 494969
- 228188 string characters out of 6179592
- 280273 words of memory out of 5000000
- 15527 multiletter control sequences out of 15000+600000
+ 12624 strings out of 494969
+ 228321 string characters out of 6179592
+ 280281 words of memory out of 5000000
+ 15533 multiletter control sequences out of 15000+600000
  21604 words of font info for 38 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
  56i,12n,55p,818b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -869,10 +875,10 @@ e/texmf-dist/fonts/type1/bitstrea/charter/bchb8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/bitstrea/charter/bchr8a.pfb></usr/share/texlive/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmtt10.pfb>
-Output written on informe.pdf (6 pages, 441673 bytes).
+Output written on informe.pdf (6 pages, 454971 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
+ 58 PDF objects out of 1000 (max. 8388607)
  31 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 48 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 53 words of extra memory for PDF output out of 10000 (max. 10000000)
 
