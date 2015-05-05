@@ -51,12 +51,6 @@ ASM_merge2:
 xorps xmm5, xmm5 ; xmm5=0|0|0|0
 movdqu xmm15, [v256]
 
-;movss xmm1, xmm0 ; xmm1=0|0|0|value
-;mulss xmm1, xmm15 ; xmm1=0|0|0|value*256
-;cvtss2si ebx, xmm1 ; lo convertimo a enteros ebx=value*256
-;packusdw xmm1, xmm15 ; lo empaquetamos en 16 bit ya que es un numero que entra en un byte
-
-
 mov r15d, 256
 ;pxor xmm15, xmm15
 ;cvtsi2ss xmm15, r15d ; xmm9 = 256 float
@@ -66,7 +60,7 @@ pxor xmm1, xmm1
 movd xmm1, ebx   ; xmm1= value*256
 sub r15d, ebx
 xorps xmm9, xmm9			 
-movd xmm9, r15d   ; xmm9 = 256 entero -value*256
+movd xmm9, r15d   ; xmm9 = 256 -value*256(entero)
 
 movdqu xmm14, [mask_shuf]
 
@@ -80,7 +74,7 @@ pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*
 	movdqu xmm3, [r13]     ;en xmm3 4 pixeles a procesar
 
 	pshufb xmm3, xmm14 ;xmm3= r|r|r|r|g|g|g|g|b|b|b|b|a|a|a|a
-	;(*) ojo el nombre de los colores b y r esta invertido, pero solo es imporante la posicion de a
+	;(*) ojo el nombre de los colores b y r esta invertido(es decir que nos referimos con r al azul y con b al rojo) , pero solo es imporante la posicion de a
 
 
 	;desempaquetamos

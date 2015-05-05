@@ -3,6 +3,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{charter}   % tipografia
 \usepackage{graphicx}
+
+\usepackage{subfig}
+\usepackage{float}
 %\usepackage{makeidx}
 
 %\usepackage{float}
@@ -21,6 +24,11 @@
 \usepackage{underscore}
 \usepackage{caratulaV}
 \usepackage{url}
+\usepackage{alltt}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{gnuplottex}
+\usepackage{verbatim}
 
 
 % ******************************************************** %
@@ -40,16 +48,20 @@
 
 
 
+
+
+
 \begin{document}
 
 
 \thispagestyle{empty}
 \materia{Organización del Computador II}
-\submateria{Primer Cuatrimestre de 2014}
+\submateria{Primer Cuatrimestre - 2015}
 \titulo{Trabajo Práctico II}
-\subtitulo{subtitulo del trabajo}
-\integrante{Nombre}{XXX/XX}{mail}
-\integrante{Nombre}{XXX/XX}{mail}
+\subtitulo{Filtros de Imagen}
+\integrante{Christian Cuneo}{755/13}{chriscuneo93@gmail.com}
+\integrante{Ignacio Lebrero}{751/13}{ignaciolebrero@gmail.com}
+\integrante{Jorge Porto}{376/11}{cuanto.p.p@gmail.com}
 
 \maketitle
 \newpage
@@ -57,7 +69,11 @@
 \thispagestyle{empty}
 \vfill
 \begin{abstract}
-En el presente trabajo se describe la problemática de ...
+Los filtros de imagen son una herramienta poderosa a la hora de retocar una imagen, usados ampliamente en fotografia, publicidad, videojuegos, etc.
+Su uso brinda una gamma de opciones para modificar las imagenes de manera que sea mas flexible su edicion o analisis.\\
+En este trabajo practico presentamos los metodos blur, merge y hsl ya existentes y los implementamos en lenguaje de ensamblador.
+Damos dos implementaciones de cada filtro siendo la segunda una optimizacion de la primera en merge y blur, y una variacion de implementacion C/Assembler a Assembler en hsl.\\
+Nuestros experimentos demuestran.....
 \end{abstract}
 
 \thispagestyle{empty}
@@ -65,31 +81,24 @@ En el presente trabajo se describe la problemática de ...
 \tableofcontents
 \newpage
 
+\thispagestyle{empty}
+\vfill
+
+
+\thispagestyle{empty}
+\vspace{3cm}
+\tableofcontents
+\newpage
+
+\begin{abstract}
+En el presente trabajo se describe la problemática de ...
+\end{abstract}
 
 %\normalsize
 \newpage
 
-\section{Objetivos generales}
 
-El objetivo de este Trabajo Práctico es ...
-
-
-\section{Contexto}
-
-\begin{figure}
-  \begin{center}
-	\includegraphics[scale=0.66]{imagenes/logouba.jpg}
-	\caption{Descripcion de la figura}
-	\label{nombreparareferenciar}
-  \end{center}
-\end{figure}
-
-
-\paragraph{\textbf{Titulo del parrafo} } Bla bla bla bla.
-Esto se muestra en la figura~\ref{nombreparareferenciar}.
-
-
-
+\begin{comment}
 \begin{codesnippet}
 \begin{verbatim}
 
@@ -101,10 +110,78 @@ struct Pepe {
 
 \end{verbatim}
 \end{codesnippet}
+\end{comment}
+
+\section{Intoducción}
+
+El lenguaje C es uno de los más eficientes en cuestión de performance, pero esto no quiere decir que..
+
+En este trabajo practico se realizan implementaciones en asembler..
+
+\section{Desarollo}
+
+\subsection{Merge}
+
+El merge nos permite a partir de dos imágenes y un valor entre cero y uno, obtener una combinación de estas ultimas según la proporción indicada por el valor.
+
+\subsubsection{Implementación 1}
+
+Se recibe por parámetro dos punteros a dos imágenes almacenadas en memoria como una matriz de pixeles. Como los pixeles de estas imágenes ocupan 4 byte, y la cantidad de pixeles de las mismas es multiplo de 4,  utilizando los registros xmm podemos traer de a 4 pixeles. Luego incrementamos los punteros a la imagen en 16 bytes y volvemos a traer los pixeles de memoria. De esta manera tenemos un ciclo principal cuya cantidad de iteraciones es la cantidad de pixeles dividido cuatro. Cada una de estas consiste en levantar de memoria cuatro pixeles y almacenarlos en un registro xmm, cuyo contenido puede verse en la figura \ref{primerXmm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/primerXmm.png}
+\caption{Contenido del registro xmm al levantar de memoria cuatro pixeles}
+\label{primerXmm}
+\end{figure}
+
+Luego utilizando la instrucción pshufb y una masara apropiada ordenamos su contenido para que quede como se muestra en la figura \ref{segundoXmm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/segundoXmm.png}
+\caption{Contenido del registro xmm luego de utilizar la instruccion pshufb}
+\label{segundoXmm}
+\end{figure}
+
+Utilizamos las instrucciones de desempaquetado de SIMD y un registro xmm lleno de ceros, para desempaquetar la parte alta y baja, obteniendo registros xmm con el contenido como se muestra en la figura \ref{tercerXmm}.
 
 
-\section{Enunciado y solucion} 
-\input{enunciado}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/tecerXmm.png}
+\caption{Contenido resultante de desempaquetar parte alta y baja}
+\label{tercerXmm}
+\end{figure}
+
+Luego volvemos a desempaquetar parte alta y baja de los dos registros obtenidos, y obtenemos cuatro registros xmm como se indica en la figura \ref{cuartoXmm}.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/cuartoXmm.png}
+\caption{Contenido resultante de desempaquetar parte alta y baja nuevamente}
+\label{cuartoXmm}
+\end{figure}
+
+Utilizando la instrucción cvtdq2ps convertimos los cuatro valores de los registros \ref{cuartoXmm}, excepto el que contiene los bytes de trasparencia(A), a tipo flotante. El objetivo es multiplicar cada color por value. Para hacer esto, previo al ciclo, utilizando la instrucción shufps, conseguimos en un registro xmm cuatro valores de tipo flotante con el valor que indica el índice de combinación de imágenes pasado por parametro, y en otro cuatro valores con 1-value tal como se indica en la figura \ref{value}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/value.png}
+\caption{Contenido de los registros utilizados para multiplicar por value los colores}
+\label{value}
+\end{figure}
+
+
+Utilizando la instrucción de simd mulps, multiplicamos los colores transformados a tipo flotante por value.
+
+Se repite el procedimiento para la segunda imagen, excepto que no se desempaqueta el byte de trasparencia(A), ya que solo interesa el byte de trasparencia de la primera imagen. En este caso multiplicamos por 1-value. Sumamos con la instruccion addps los valores obtenidos en la multiplicación, para los colores azul, verde y rojo. Luego convertimos a enteros de 32 bit, y con la instrucciones packusdw, y packuswb empaquetamos de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Este ultimo se consideran los bytes de la primera imagen almacenados en un registro xmm como se muestra la figura \ref{cuartoXmm}. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
+
+\subsubsection{Implementación 2}
+
+
+
 
 \section{Conclusiones y trabajo futuro}
 
