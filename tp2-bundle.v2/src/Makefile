@@ -8,6 +8,7 @@
 all: makes tp2
 
 CFLAGS=-Wall -Wextra -pedantic -O0 -ggdb -lm -std=c99
+CFLAGS3=-Wall -Wextra -pedantic -O3 -ggdb -lm -std=c99
 
 makes:
 	make -C bmp
@@ -17,9 +18,13 @@ makes:
 %.o: %.c run.h 
 	gcc $(CFLAGS) -c -o $@ $<
 	
-tp2: run.o tp2.o makes
+tp2: run.o tp2.o tests.o runtest.o makes
 	gcc $(CFLAGS) tp2.o run.o filters/*.o bmp/*.o -o tp2 -lm
+	gcc $(CFLAGS) tests.o runtest.o filters/*.o bmp/*.o -o runtestO0 -lm
+	gcc $(CFLAGS3) tests.o runtest.o filters/*.o bmp/*.o -o runtestO3 -lm
 	cp tp2 ../bin/
+	cp runtestO0 ../Testing/
+	cp runtestO3 ../Testing/
 	
 clean:
 	make -C bmp clean
