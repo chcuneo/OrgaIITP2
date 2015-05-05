@@ -48,26 +48,24 @@ ASM_merge2:
 	xor r12, r12
 	mov r12, rax
 
-xorps xmm5, xmm5 ; xmm5=0|0|0|0
-movdqu xmm15, [v256]
+	xorps xmm5, xmm5 ; xmm5=0|0|0|0
+	movdqu xmm15, [v256]
 
-mov r15d, 256
-;pxor xmm15, xmm15
-;cvtsi2ss xmm15, r15d ; xmm9 = 256 float
-mulss xmm15, xmm0 ; xmm15=0|0|0|value*256
-cvtss2si ebx, xmm15 ; lo convertimo a enteros ebx=value*256
-pxor xmm1, xmm1
-movd xmm1, ebx   ; xmm1= value*256
-sub r15d, ebx
-xorps xmm9, xmm9			 
-movd xmm9, r15d   ; xmm9 = 256 -value*256(entero)
+	mov r15d, 256
+	mulss xmm15, xmm0 ; xmm15=0|0|0|value*256
+	cvtss2si ebx, xmm15 ; lo convertimos a enteros de 32 bit ebx=value*256, pero como el numero es menor a 256 lo podemos pensar como un entero de 16 bit
+	pxor xmm1, xmm1
+	movd xmm1, ebx   ; xmm1= value*256
+	sub r15d, ebx
+	xorps xmm9, xmm9			 
+	movd xmm9, r15d   ; xmm9 = 256 -value*256(entero)
 
-movdqu xmm14, [mask_shuf]
+	movdqu xmm14, [mask_shuf]
 
-pshufb xmm9, xmm14; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
-pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
+	pshufb xmm9, xmm14; xmm9 = 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 | 256-value*256 
+	pshufb xmm1, xmm14; xmm1 = value*256 | value*256 | value*256 | value*256 |value*256 | value*256 | value*256 | value*256
 
-movdqu xmm14, [mask_ordenar]
+	movdqu xmm14, [mask_ordenar]
 .ciclo:
 
 	pxor xmm3, xmm3
