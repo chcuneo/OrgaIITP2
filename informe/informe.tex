@@ -433,10 +433,16 @@ En este punto nos queda calcular M y luego ordenar lo que ya calculamos, empecem
 \newline
 Ahora vamos a calcular RGB, en esta parte nos dedicamos a ver a que valor(r, g o b) corresponden X y C respectivamente, para esto preguntamos linealmente, aumentando de a 60 en que caso cae H, sumandole 60 y comparando contra H con comiss para luego efectuar un jb de ser necesario. Dentro de cada caso se tiene un registro xmm que contiene a c y un registro de proposito general que contiente a X y, dependiendo del caso, se shiftea c hasta el lugar que corresponda a la componente a la que debe ir y luego se aplica pinsrd para insertar X en la posicion que le corresponda.
 \newline
-Finalmente nos queda calcular la escala, para esto primero colocamos M en un registro xmm y lo copiamos dentro de si mismo hasta que queden tres valores iguales empaquetados en la posiciones donde deben ir r, g y b, a continuacion se suma este registro con addps al que contenia a C y X y se lo multiplica por 255 contra un registro que previamente habia levantado ese valor de memoria, para lograr (X + m) * 255 en cada una de las componentes. Luego se inserta A en la ultima posicion y se convierte a entero truncando el valor.
+Finalmente nos queda calcular la escala, para esto primero colocamos M en un registro xmm y lo copiamos dentro de si mismo hasta que queden tres valores iguales empaquetados en la posiciones donde deben ir r, g y b, a continuacion se suma este registro con addps al que contenia a C y X y se lo multiplica por 255 contra un registro que previamente habia levantado ese valor de memoria, para lograr (X + m) * 255 en cada una de las componentes. Luego se inserta A en la ultima posicion y se convierte a entero truncando el valor, se tomo esta decisión ya que la conversión normal redondeaba al entero más cercano.
 \newline
-finalmente se aplica pshufb sobre el registro que contiene RGBA para pasarlos a valores de 1B en sus posiciones adecuadas y se lo mueve a memoria. 
+finalmente aplicamos pshufb sobre el registro que contiene RGBA para pasar dichos valores a 1B en sus posiciones finales y lo movemos a memoria(figura 14).
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/shufle.png}
+\caption{Uso de pshufB}
+\label{lshValue}
+\end{figure}
 
 \section{Conclusiones y trabajo futuro}
 
