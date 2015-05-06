@@ -144,7 +144,7 @@ ASM_blur2:
 			divps xmm11, xmm13 			; xmm11 = |	B/9	| 	G/9	| R/9 	| A/9 	|
 			CVTPS2DQ xmm11, xmm11			; xmm11 = |	B'	| 	G'	| R' 	| A' 	| 	En enteros
 			pshufb xmm11, xmm14 			; xmm11 = |	0	| 	0	| 0 	|B|G|R|A|
-			PEXTRD [r13 + 8], xmm11, 00b 	; grabo a memoria segundo pixel 
+			PEXTRD [r13 + 8], xmm11, 00b 	; grabo a memoria tercer pixel 
 
 			movdqu xmm11, xmm2
 			punpckhwd xmm11, xmm15 		; xmm11= |sum(d[x][iw+4])x={ih-1, ih, ih+1}	|
@@ -154,7 +154,7 @@ ASM_blur2:
 			divps xmm12, xmm13 			; xmm12 = |	B/9	| 	G/9	| R/9 	| A/9 	|
 			CVTPS2DQ xmm12, xmm12			; xmm12 = |	B'	| 	G'	| R' 	| A' 	| 	En enteros
 			pshufb xmm12, xmm14 			; xmm12 = |	0	| 	0	| 0 	|B|G|R|A|
-			PEXTRD [r13 + 12], xmm12, 00b 	; grabo a memoria segundo pixel 
+			PEXTRD [r13 + 12], xmm12, 00b 	; grabo a memoria cuarto pixel 
 
 			lea r13, [r13 + r8*4]
 			lea r12, [r12 + r8*4]
