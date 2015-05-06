@@ -6,7 +6,7 @@ if(len(sys.argv) != 3):
     print("few arguments")
     quit()
 TESTSET = sys.argv[1]
-TESTIMG = sys.argv[1]
+TESTIMG = sys.argv[2]
 
 directory = "./testimgs/" + TESTSET
 if not os.path.exists(directory):
