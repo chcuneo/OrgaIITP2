@@ -29,6 +29,36 @@
 \usepackage{color}
 % \usepackage{gnuplottex}
 \usepackage{verbatim}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  numbers=left,
+  xleftmargin=2em,
+  frame=single,
+  framexleftmargin=2em,
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\small\color{gray} % the style that is used for the line-numbers
+ }
+
 
 
 % ******************************************************** %
@@ -123,6 +153,100 @@ En este trabajo practico se realizan implementaciones en asembler..
 \newpage 
 
 \section{Desarollo}
+
+%
+% BLUR
+%
+\subsection{Blur}
+
+El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus pixeles vecinos y se guarda ese resultado en el mismo pixel.
+
+\subsubsection{Implementación en Assembler 1}
+
+El principio basico de la implementacion en assembler es que el barrido que se le hace a la imagen se realiza de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
+
+% \begin{algorithm}%[t]
+% \caption{Blur}
+% \label{alg:insert}
+% \begin{algorithmic}[1]
+% \For { $x = 1 to (n - 2)$ }
+% \State	$xmm1  \leftarrow  img[x-1][0] , img[x][0] , img[x+1][0] , img[x+2][0]$
+% \State	$xmm2  \leftarrow  img[x-1][1] , img[x][1] , img[x+1][1] , img[x+2][1]$
+% \State	$xmm1  \leftarrow  borrarprimero(xmm1)$
+% \State	$xmm2  \leftarrow  borrarprimero(xmm2)$
+% \State	$xmm1  \leftarrow  sumapixeles(xmm1)$
+% \State	$xmm2  \leftarrow  sumapixeles(xmm2)$
+% \For { $y = 1 to (n - 2):$ }
+% \State		$xmm0  \leftarrow  xmm1$
+% \State		$xmm1  \leftarrow  xmm2$
+% \State		$xmm3  \leftarrow  img[x-1][y+1] , img[x][y+1] , img[x+1][y+1] , img[x+2][y+1]$
+% \State		$xmm3  \leftarrow  borrarprimero(xmm3)$
+% \State		$xmm3  \leftarrow  sumapixeles(xmm3)$
+% \State		$xmm0  \leftarrow  xmm0 + xmm1 + xmm2$
+% \State		$xmm0  \leftarrow  promedio(xmm0)$
+% \State		$img[x][y]  \leftarrow  xmm0$
+% \EndFor
+% \EndFor
+% \end{algorithmic}
+% \end{algorithm}
+
+\begin{lstlisting}
+for (x = 1 to n - 2):
+	xmm1  <--  img[x-1][0] , img[x][0] , img[x+1][0] , img[x+2][0]
+	xmm2  <--  img[x-1][1] , img[x][1] , img[x+1][1] , img[x+2][1]
+	xmm1  <--  borrarprimero(xmm1)
+	xmm2  <--  borrarprimero(xmm2)
+	xmm1  <--  sumapixels(xmm1)
+	xmm2  <--  sumapixels(xmm2)
+	for (y = 1 to n - 2): 
+		xmm0  <--  xmm1
+		xmm1  <--  xmm2
+		xmm3  <--  img[x-1][y+1] , img[x][y+1] , img[x+1][y+1] , img[x+2][y+1]
+		xmm3  <--  borrarprimero(xmm3)
+		xmm3  <--  sumapixels(xmm3)
+		xmm0  <--  xmm0 + xmm1 + xmm2
+		xmm0  <--  promedio(xmm0)
+		img[x][y]  <--  xmm0
+	end
+end
+\end{lstlisting}
+
+Cada pixel contiene 4 valores de 1 byte (R, G, B y A), por lo tanto entran 4 pixels en un registro xmm, entonces cargo directamente 4 pixels de memoria. Hay que tener en cuenta que se cargan los pixels del [x-1] al [x+2], pero en el registro van a quedar al revez, siendo primero el [x+2].
+\newline
+
+La funcion "borrarprimero" va a utilizar la instruccion PINSRD para insertar 0 en los primeros 4 bytes, eliminando asi los datos de el primer pixel en el registro, que seria el pixel x+2, ya que es el pixel que no nos interesa, porque solo hay que promediar con los vecinos del pixel img[x][y], es decir los pixeles img[i][j] con i$\in$(x-1, x , x+1) y j$\in$(y-1, y , y+1).
+\newline
+
+La funcion "sumarpixels" va a sumar los pixeles dentro del registro por valor (R, G, B y A). Para lograr esto sin saturacion se necesita extender (con ceros) los valores de 1 byte a 2 bytes, para poder representar sin nungun problema la suma de todos los valores posibles. Para esto se utiliza la instruccion PUNPCKLBW y PUNPCKHBW (ambas con un registro nulo como source), para guardar en un registro los 2 pixels menos significativos y los 2 pixels mas significativos respectivamente. Se necesita guardar en dos registros ya que al ocupar cada dato el doble, van a entrar la mitad de datos en el registro. Luego de extender los valores se procede a sumar horizontalmente cada registro y luego se suman de forma empaquetada a word los dos registros, y nos queda en el qword menos significativo el pixel suma de los pixels que habia originalmente en el registro.
+\newline
+
+La funcion "promedio", dado un registro con la suma (de todos los pixeles a promediar) en el qword menos significativo, va a devolver un pixel con cada valor original dividido por 9, y va a devolver este pixel de forma que quede listo para ser grabado a memoria (quiere decir los R, G, B y A de 1 byte cada uno y ordenados). Para ello primero extiende (con ceros) de word a dword cada valor del pixel, utilizando la instruccion PUNPCKLWD con un registro nulo como source. Luego se convierte cada valor de entero de 32 bits a single-precision floating point, que es tambien de 32 bits, con la instruccion CVTDQ2PS. Entonces se procede a dividirlos por 9 en forma empaquetada utilizando la instruccion DIVPS, usando como source un registro previamente cargado con cuatro "9" en float. Luego se van a convertir de nuevo a enteros utilizando la instruccion CVTPS2DQ. En este punto ya sabemos que no importe que valores hayan tenido los 9 pixeles sumados, al promediarlos van a dar numeros entre 255 y 0 unicamente, entonces al convertirlos de nuevo a enteros sabemos que van a quedar valores que van a ocupar como mucho los 8 bits menos significativos de cada dword. Teniendo en cuenta esa informacion se puede proceder a hacer un shuffle (con la instruccion PSHUFB) para mover cada byte menos significativo de cada dword a la posicion correcta del registro, quedando en el dword menos significativo del registro el pixel a guardar, con sus valores en el orden correcto. En esta instruccion se utiliza una mascara especifica que se puede ver en la implementacion.
+\newline
+
+Finalmente se graba a memoria el resultado utilizando la instruccion PEXTRD [mmx], xmm, 00b, siendo mmx el puntero al destino donde guardar los datos y xmm el resultado del promedio, se utiliza "00b" para marcar que se extrae el dword menos significativo, que es donde quedo guardado el resultado de calcular el promedio.
+\newline
+
+Una cuestion a tener en cuenta de esta implementacion es que, al ser el array "img" la imagen a procesar y el destino donde guardar el resultado, se tuvo que asignar un espacio de igual tamaño al de "img" para guardar el resultado en ese espacio, ya que si se guarda en el mismo "img" se estarian promediando los pixels con pixels que son un promedio de por si. Entonces se guarda el resultado en este espacio pedido usando malloc, y luego de procesar toda la image, se copia todo el contenido de este resultado a la imagen original usando un loop construido con jumps condicionales, y luego se hace un free de esta memoria.
+
+\subsubsection{Implementación 2}
+
+Es...
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/256value.png}
+\caption{Contenido de los registros utilizados para multiplicar}
+\label{256value}
+\end{figure}
+
+El...
+
+
+
+\subsubsection{Implementación en C}
+%
+% BLUR
+%
 
 \subsection{Merge}
 

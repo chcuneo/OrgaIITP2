@@ -16,19 +16,24 @@ outpdir = os.path.expanduser('~') + "/outputdata/"
 def main():
   if not os.path.exists(outpdir):
     os.makedirs(outpdir)
-  processblur("normal")
-  processblur("black")
-  processblur("white")
+  # processblur("normal")
+  # processblur("black")
+  # processblur("white")
 
-  processmerge("white", "0.5")
-  processmerge("black", "0.5")
+  # processmerge("white", "0.5")
+  # processmerge("black", "0.5")
 
-  for x in xrange(0, 11, 1):
-    processmerge("normal", str(x/10.0))
+  # for x in xrange(0, 11, 1):
+  #   processmerge("normal", str(x/10.0))
 
   #HSL Cambiando H
-  # for x in xrange(0, 361, 60):
-    # processhsl("normal", str(x), "1", "0.1")
+  processhsl("black", "0", "1", "0.1")
+  processhsl("white", "0", "1", "0.1")
+  processhsl("black", "360", "1", "0.1")
+  processhsl("white", "360", "1", "0.1")
+  for x in xrange(0, 361, 60):
+    processhsl("normal", str(x), "1", "0.1")
+  
 
 def trimmean(arr, percent):
     n = len(arr)
@@ -60,7 +65,7 @@ def processblur(folder):
 def processmerge(folder, val):
     ou = open(outpdir + "merge-"+ folder + "-" + val.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
-    total = len(listfile)*3 
+    total = len(listfile)*len(IMPLEMENTACIONES) 
     done = 0
     #Para cada implementacion
     for impl in IMPLEMENTACIONES:
@@ -84,7 +89,7 @@ def processmerge(folder, val):
 def processhsl(folder, h, s, l):
     ou = open(outpdir + "hsl-"+ folder + "-" + h.replace('.', '_') + "-" + s.replace('.', '_') + "-" + l.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
-    total = len(listfile)*3 
+    total = len(listfile)*len(IMPLEMENTACIONES)
     done = 0
     #Para cada implementacion
     for impl in IMPLEMENTACIONES:
