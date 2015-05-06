@@ -15,7 +15,7 @@ global ASM_merge2
 section .data
 mask_ordenar: db 0x00, 0x04,0x08, 0x0c, 0x01, 0x05, 0x09, 0x0d, 0x02,0x06, 0x0a, 0x0e, 0x03, 0x07, 0x0b, 0x0f
 mask_shuf: db  0x00, 0x01,0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00,0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01
-v256: dd 65536.0, 0.0, 0.0, 0.0
+v256: dd 256.0, 0.0, 0.0, 0.0
 
 section .text
 
@@ -51,7 +51,7 @@ ASM_merge2:
 	xorps xmm5, xmm5 ; xmm5=0|0|0|0
 	movdqu xmm15, [v256]
 
-	mov r15d, 65536
+	mov r15d, 256
 	mulss xmm15, xmm0 ; xmm15=0|0|0|value*256
 	cvtss2si ebx, xmm15 ; lo convertimos a enteros de 32 bit ebx=value*256, pero como el numero es menor a 256 lo podemos pensar como un entero de 16 bit
 	pxor xmm1, xmm1
@@ -82,8 +82,8 @@ ASM_merge2:
 	movdqu xmm2, xmm4 
 	
 	; limpio parte alta de xmm2  
-	;pslldq xmm2, 8           
-	;psrldq xmm2, 8 					 ; xmm2 = 0|0|0|0|0a|0a|0a|0a
+	pslldq xmm2, 8           
+	psrldq xmm2, 8 					 ; xmm2 = 0|0|0|0|0a|0a|0a|0a
 	
 	punpcklwd xmm2, xmm5   ; xmm2= 000a|000a|000a|000a| 8 numeros de 16 bit
 
@@ -132,8 +132,8 @@ ASM_merge2:
 	movdqu xmm15, xmm11
 	
 	; limpio parte alta de xmm15  
-	;pslldq xmm15, 8           
-;	psrldq xmm15, 8 					 ; xmm15 = 0|0|0|0|0a|0a|0a|0a
+	pslldq xmm15, 8           
+	psrldq xmm15, 8 					 ; xmm15 = 0|0|0|0|0a|0a|0a|0a
 	
 	punpcklwd xmm15, xmm5   ; xmm15= 000a|000a|000a|000a| 8 numeros de 16 bit
 
@@ -165,14 +165,14 @@ ASM_merge2:
 
 ;dividimos por 256 
 
-	psrld xmm4, 16
-	psrld xmm7, 16
-	psrld xmm8, 16
+	psrld xmm4, 8
+	psrld xmm7, 8
+	psrld xmm8, 8
 
 
-	psrld xmm11, 16
-	psrld xmm12, 16
-	psrld xmm13, 16
+	psrld xmm11, 8
+	psrld xmm12, 8
+	psrld xmm13, 8
 
 ;sumamos
 
