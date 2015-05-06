@@ -337,10 +337,69 @@ Se repite el procedimiento para la segunda imagen, pero sin guardar los bytes de
 
 \subsection{HSL}
 El espacio RGB que usamos hasta ahora esta dado por un cubo donde cada componente corresponde a la intensidad de los colores primarios de la luz(rojo, verde y azul), para este filtro nos trasladamos al espacio HSL, este esta dado por tres componentes: HUE(color), Saturation(Saturación) y Lightness(Luminosidad). Este espacio se representa graficamente como un bicono donde cada punto esta determinado con: altura de la circunferencia a la que pertenece, radio de dicha circunferencia y ángulo dentro de la circunferencia, donde el color corresponde al ángulo, la saturacion al radio y la luminosidad a la altura.
-El filtro consta de 3 etapas: (a)Transformación del espacio RGB a HSL del pixel, (b)suma de componentes y (c)transformacion del espacio HSL a RGB cuyas formulas iremos viendo a lo largo de las implementaciones.
+El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel, (2)suma de componentes y (3)transformacion del espacio HSL a RGB cuyas formulas son las siguientes:
+\newline
+\begin{enumerate}
+	\item 
+		H: \newline
+		0 si $cmax = cmin$\newline
+		$60 * ( (g-b)/d + 6 )$ si $cmax = r$\newline
+		$60 * ( (b-r)/d + 2 )$ si $cmax = g$\newline
+		$60 * ( (r-g)/d + 4 )$ si $cmax = b$\newline
+		por ultimo si $h >= 360$ entonces $h = h - 360$\newline
+
+		L: ( cmax + cmin ) / 510\newline
+
+		S:\newline
+		$0$ si $cmax == cmin$\newline
+		$d / ( 1 - fabs( 2*l - 1 ) ) / 255.0001f$ caso contrario\newline
+	  para este caso se debe dividir contra 255.0001f para evitar que s supere 1, evitando la propagación de errores.\newline
+
+		Donde $cmax = max(b,g,r)$, $min = min(b,g,r)$ y $d = cmax - cmin$\newline
+	
+	\item 
+		H:\newline
+		$h + hh + 360$ si $h+hh >= 360$\newline
+		$h + hh - 360$ si $h+hh < 0$\newline
+		$h + hh$ caso contrario\newline
+
+		S:\newline
+		0 si $s+ss < 0$\newline
+		1 si $s+ss >= 1$\newline
+		$s + ss$ caso contrario\newline
+
+		L:\newline
+		0 si $l+ll < 0$\newline
+		1 si $l+ll >= 1 $\newline
+		$l+ll$ caso contrario\newline
+
+		donde hh, ll y ss son valores pasados por parametro
+		\newpage
+
+	\item
+		RGB:\newline
+			r=c g=x b=0 si $0<=h$ y $h<60$\newline
+			r=x g=c b=0 si $60<=h$ y $h<120$\newline
+			r=0 g=c b=x si $120<=h$ y $h<180$\newline
+			r=0 g=x b=c si $180<=h$ y $h<240$\newline
+			r=x g=0 b=c si $240<=h$ y $h<300$\newline
+			r=c g=0 b=x si $300<=h$ y $h<360$\newline
+
+		Escala:\newline
+		$b = (b+n) * 255$\newline
+		$g = (g+n) * 255$\newline
+		$r = (r+n) * 255$\newline
+
+		donde:\newline
+		$c = ( 1 - fabs( 2*l - 1 )) * s;$\newline
+		$x = c * ( 1 - fabs( fmod( h/60, 2 ) - 1 ) )$\newline
+		$m = l - c / 2$\newline
+
+
+\end{enumerate}
 
 \subsubsection{Implementacion 1}
-OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (b), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 3).
+OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 3).
 
 \newline
 
@@ -354,7 +413,7 @@ Primero acomodamos los datos de entrada de manera que nos queden dentro de un re
 \label{lshValue}
 \end{figure}
 
-A continuación movemos a un registro xmm el valor que usaremos como limite superior de la suma para 'h' por un lado y 's' y 'l' por otro ya que las modificaciones seran diferentes para los dos casos, como limite inferior simplemente colocaremos 0 en un registro usando pxor.
+A continuación movemos a un registro xmm el valor que usaremos como limite superior de la suma para h por un lado y s y l por otro ya que las modificaciones seran diferentes para los dos casos, como limite inferior simplemente colocaremos 0 en un registro usando pxor.
 
 \newline
 
@@ -367,7 +426,7 @@ Dado que la imagen está representada linealmente en memoria vamos a recorrerla 
 \label{lshValue}
 \end{figure}
 
-Ahora sumaremos los valores hsl con los que teniamos como parametro con addps(1) para luego revisar los limites.
+Ahora sumamos los valores hsl con los que teniamos como parametro con addps(a) para luego revisar los limites.
 
 \begin{figure}[H]
 \centering
@@ -376,7 +435,7 @@ Ahora sumaremos los valores hsl con los que teniamos como parametro con addps(1)
 \label{lshValue}
 \end{figure}
 
-Para realizar las comparaciones correspondientes primero generaremos los vectores que sumados o restados nos den los resultados que queremos en cada caso, para esto tomamos por un lado un registro con el valor 360(2) en la posicion de h y procedemos al primer caso de h, para esto aplicamos cmpleps para crear una mascara(3) en donde si h es mayor a 360 nos quedaran 1s en los valores donde se deberia ubicar h o 0s en caso contrario, luego aplicamos pand usando (2) y (3) para finalmente restarselo a (1), dando como resultado h + hh ó h + hh - 360 dependiendo del caso, a continuacion veremos como se aplica esta idea a s y a l.
+Para realizar las comparaciones correspondientes primero generamos los vectores que sumados o restados nos den los resultados que queremos en cada caso, para esto tomamos por un lado un registro con el valor 360(b) en la posicion de h y procedemos al primer caso de h, para esto aplicamos cmpleps para crear una mascara(c) en donde si h es mayor a 360 nos quedaran 1s en los valores donde se deberia ubicar h o 0s en caso contrario, luego aplicamos pand usando (b) y (c) para finalmente restarlo a (a), dando como resultado h + hh ó h + hh - 360 dependiendo del caso, a continuacion veremos como se aplica esta idea a s y a l.
 
 \begin{figure}[H]
 \centering
@@ -385,10 +444,10 @@ Para realizar las comparaciones correspondientes primero generaremos los vectore
 \label{lshValue}
 \end{figure}
 
-Para 's' y 'l' como su resultado debe ser 1 en caso de pasar el limite, simplemente colocamos s+ss-1 y l+ll-1 empaquetados en un registro aparte pero en las mismas posiciones que s+ss y l+ll respectivamente, luego efectuamos la misma idea que en la figura 10 pero comparando contra 1 en lugar de 360 y finalmente sumando s+ss-1 o l l+ll-1 segun corresponda para lograr que quede 1 ó s+ss/l+ll en los valores finales. Estos casos son analogos para los limites inferiores que se realizan inmediatamente despues en el codigo, dando una sucesion de estados con la cual al llegar al final, (1) tendra los valores l+ll ó 1 ó 0, s+ss ó 1 ó 0,  h+hh ó h+hh+360 ó h+hh-360, 0 en sus posiciones empaquetadas.
+Para s y l, como su resultado debe ser 1 en caso de pasar el limite, simplemente colocamos s+ss-1 y l+ll-1 empaquetados en un registro aparte pero en las mismas posiciones que s+ss y l+ll respectivamente, luego aplicamos la misma idea que en la figura 10 pero comparando contra 1 en lugar de 360 y finalmente sumando s+ss-1 o l l+ll-1 según corresponda para lograr que quede 1 ó s+ss/l+ll en los valores finales. Los casos de los limites inferiores que se realizan inmediatamente despues en el codigo son analogos pero comparando contra 0s, dando una sucesion de estados con la cual al llegar al final, (1) tendra los valores l+ll ó 1 ó 0, s+ss ó 1 ó 0,  h+hh ó h+hh+360 ó h+hh-360 y 0 respectivamente en sus posiciones empaquetadas.
 
 \subsubsection{implementación 2}
-Para esta implementación reutilizamos el codigo de la primera y nos concentramos en implementar (a) y (c), cuyas reglas son las siguientes:
+Para esta implementación reutilizamos el codigo de la primera y nos concentramos en implementar (1) y (3), cuyas reglas son las siguientes:
 \newline\newline
 reglas.....
 \newline\newline
@@ -415,7 +474,7 @@ Despues calculamos H, para esto separamos los casos posibles en donde simplement
  \newline
 Ahora calculamos L, para esto tomamos el maximo y le sumamos el minimo, lo pasamos a un registros xmm, lo convertimos y aplicamos una division contra una posicion en memoria que contiene 510.
 \newline
-Por ultimo queda calcular S, en caso de que sea igual al minimo simplemente lo seteamos en 0, caso contrario pasamos a efectuar las cuentas. Movemos d a un registro xmm y lo convertimos a punto flotante y usamos addps, mulps y subps para llegar a 2*l - 1 donde aplicamos pand contra una mascara que contiene todos 1 excepto en el bit mas significativo, de esta manera seteamos en 0 el bit de signo de la representación del float que contiene 2*l - 1, convirtiendolo en abs(2*l - 1). Finalmente dividimos a d por abs(2*l - 1) y luego por 255.0001 desde una direccion en memoria que lo contiene.
+Por ultimo queda calcular S, en caso de que sea igual al minimo simplemente lo seteamos en 0, caso contrario pasamos a efectuar las cuentas. Movemos d a un registro xmm y lo convertimos a punto flotante, luego usamos addps, mulps y subps para llegar a 2*l - 1 donde aplicamos pand contra una mascara que contiene todos 1 excepto en el bit mas significativo, de esta manera seteamos en 0 el bit de signo de la representación del float que contiene 2*l - 1, convirtiendolo en abs(2*l - 1). Finalmente dividimos a d por abs(2*l - 1) y luego por 255.0001 desde una direccion en memoria que lo contiene.
 \newline
 
 \begin{figure}[H]
@@ -441,10 +500,16 @@ En este punto nos queda calcular M y luego ordenar lo que ya calculamos, empecem
 \newline
 Ahora vamos a calcular RGB, en esta parte nos dedicamos a ver a que valor(r, g o b) corresponden X y C respectivamente, para esto preguntamos linealmente, aumentando de a 60 en que caso cae H, sumandole 60 y comparando contra H con comiss para luego efectuar un jb de ser necesario. Dentro de cada caso se tiene un registro xmm que contiene a c y un registro de proposito general que contiente a X y, dependiendo del caso, se shiftea c hasta el lugar que corresponda a la componente a la que debe ir y luego se aplica pinsrd para insertar X en la posicion que le corresponda.
 \newline
-Finalmente nos queda calcular la escala, para esto primero colocamos M en un registro xmm y lo copiamos dentro de si mismo hasta que queden tres valores iguales empaquetados en la posiciones donde deben ir r, g y b, a continuacion se suma este registro con addps al que contenia a C y X y se lo multiplica por 255 contra un registro que previamente habia levantado ese valor de memoria, para lograr (X + m) * 255 en cada una de las componentes. Luego se inserta A en la ultima posicion y se convierte a entero truncando el valor.
+Finalmente nos queda calcular la escala, para esto primero colocamos M en un registro xmm, lo shifteamos y sumamos con pslldq y addps contra m hasta que queden tres valores iguales empaquetados en la posiciones donde deben ir r, g y b, a continuacion se suma este registro con addps al que contenia a C y X y se lo multiplica por 255 contra un registro que previamente habia levantado ese valor de memoria, para lograr (X + m) * 255 en cada una de las componentes. Luego se inserta A en la ultima posicion y se convierte a entero truncando el valor, se tomo esta decisión ya que la conversión normal redondeaba al entero más cercano.
 \newline
-finalmente se aplica pshufb sobre el registro que contiene RGBA para pasarlos a valores de 1B en sus posiciones adecuadas y se lo mueve a memoria. 
+Para ordenar los datos(ya que deben tener 1B cada uno y a esta altura tienen 4B) aplicamos pshufb sobre el registro que contiene RGBA para pasar dichos valores a 1B(tomando solo el primer byte de estos) en sus posiciones finales y luego moverlo a memoria(figura 14).
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/shufle.png}
+\caption{Uso de pshufB}
+\label{lshValue}
+\end{figure}
 
 \section{Conclusiones y trabajo futuro}
 
