@@ -60,7 +60,7 @@ def processblur(folder):
 def processmerge(folder, val):
     ou = open(outpdir + "merge-"+ folder + "-" + val.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
-    total = len(listfile)*3 
+    total = len(listfile)*len(IMPLEMENTACIONES) 
     done = 0
     #Para cada implementacion
     for impl in IMPLEMENTACIONES:
@@ -84,7 +84,7 @@ def processmerge(folder, val):
 def processhsl(folder, h, s, l):
     ou = open(outpdir + "hsl-"+ folder + "-" + h.replace('.', '_') + "-" + s.replace('.', '_') + "-" + l.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
-    total = len(listfile)*3 
+    total = len(listfile)*len(IMPLEMENTACIONES)
     done = 0
     #Para cada implementacion
     for impl in IMPLEMENTACIONES:

@@ -24,10 +24,10 @@ for filen in os.listdir(datadir):
 			if sample[0] == "cO3":
 				cO3size.append(int(sample[1]))
 				cO3time.append(int(sample[2][:-2]))
-			if sample[0] == "asm1":
+			if sample[0][:4] == "asm1":
 				asm1size.append(int(sample[1]))
 				asm1time.append(int(sample[2][:-2]))
-			if sample[0] == "asm2":
+			if sample[0][:4] == "asm2":
 				asm2size.append(int(sample[1]))
 				asm2time.append(int(sample[2][:-2]))
 	plot(cO3size, cO3time, color='red', lw=2, label='CO3')
