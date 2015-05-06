@@ -9,10 +9,13 @@ import subprocess
 
 PRECISION = 100
 IMPLEMENTACIONES = [["c", "O0"], ["c", "O3"],["asm1", "O3"], ["asm2", "O3"]]
+outpdir = os.path.expanduser('~') + "/outputdata/"
+#outpdir = "./outputdata/"
+
 
 def main():
-  if not os.path.exists("./outputdata/"):
-    os.makedirs("./outputdata/")
+  if not os.path.exists(outpdir):
+    os.makedirs(outpdir)
   processblur("normal")
   processblur("black")
   processblur("white")
@@ -33,7 +36,7 @@ def trimmean(arr, percent):
     return mean(arr[k+1:n-k])
 
 def processblur(folder):
-    ou = open("./outputdata/blur-"+ folder + ".csv", "w")
+    ou = open(outpdir + "blur-"+ folder + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
     total = len(listfile)*len(IMPLEMENTACIONES) 
     done = 0
@@ -55,7 +58,7 @@ def processblur(folder):
     ou.close()
 
 def processmerge(folder, val):
-    ou = open("./outputdata/merge-"+ folder + "-" + val.replace('.', '_') + ".csv", "w")
+    ou = open(outpdir + "merge-"+ folder + "-" + val.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
     total = len(listfile)*3 
     done = 0
@@ -79,7 +82,7 @@ def processmerge(folder, val):
     ou.close()
 
 def processhsl(folder, h, s, l):
-    ou = open("./outputdata/hsl-"+ folder + "-" + h.replace('.', '_') + "-" + s.replace('.', '_') + "-" + l.replace('.', '_') + ".csv", "w")
+    ou = open(outpdir + "hsl-"+ folder + "-" + h.replace('.', '_') + "-" + s.replace('.', '_') + "-" + l.replace('.', '_') + ".csv", "w")
     listfile = getfiles("./testimgs/"+ folder + "/")
     total = len(listfile)*3 
     done = 0
