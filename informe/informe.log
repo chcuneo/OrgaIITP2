@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  6 MAY 2015 14:58
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  6 MAY 2015 19:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -691,6 +691,25 @@ File: lstlang1.sty 2013/06/27 1.5pre1 listings language file
 (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
 LaTeX Info: Redefining \% on input line 7.
+
+
+LaTeX Warning: Label `256value' multiply defined.
+
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
 )
 \openout1 = `informe.aux'.
 
@@ -816,242 +835,266 @@ Overfull \hbox (22.76358pt too wide) in paragraph at lines 96--96
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./imagenes/logodc.jpg> <./
-imagenes/logouba.jpg>] [2] (./informe.toc
+imagenes/logouba.jpg>] (./informe.toc
 LaTeX Info: Redefining \. on input line 1.
 LaTeX Info: Redefining \% on input line 1.
 )
 \tf@toc=\write5
 \openout5 = `informe.toc'.
 
- [3] (./informe.toc)
-\tf@toc=\write6
-\openout6 = `informe.toc'.
-
- [4]
-LaTeX Info: Redefining \. on input line 130.
-LaTeX Info: Redefining \% on input line 130.
- [5]
-LaTeX Info: Redefining \. on input line 153.
-LaTeX Info: Redefining \% on input line 153.
-
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 214--216
+ [2]
+LaTeX Info: Redefining \. on input line 132.
+LaTeX Info: Redefining \% on input line 132.
+ [1]
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 217--219
+Underfull \hbox (badness 10000) in paragraph at lines 196--198
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 220--222
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--225
+Underfull \hbox (badness 10000) in paragraph at lines 202--204
 
  []
 
-LaTeX Info: Redefining \. on input line 225.
-LaTeX Info: Redefining \% on input line 225.
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 226--228
+LaTeX Info: Redefining \. on input line 204.
+LaTeX Info: Redefining \% on input line 204.
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 205--207
 
  []
 
-<imagenes/256value.png, id=36, 533.995pt x 47.377pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--210
+
+ []
+
+<imagenes/256value.png, id=26, 533.995pt x 47.377pt>
 File: imagenes/256value.png Graphic file (type png)
 
 <use imagenes/256value.png>
-Package pdftex.def Info: imagenes/256value.png used on input line 237.
+Package pdftex.def Info: imagenes/256value.png used on input line 219.
 (pdftex.def)             Requested size: 427.19658pt x 37.90163pt.
-
-<imagenes/primerXmm.png, id=38, 413.545pt x 16.06pt>
+LaTeX Info: Redefining \. on input line 234.
+LaTeX Info: Redefining \% on input line 234.
+ [3 <./imagenes/256value.png>]
+<imagenes/primerXmm.png, id=32, 413.545pt x 16.06pt>
 File: imagenes/primerXmm.png Graphic file (type png)
 
 <use imagenes/primerXmm.png>
-Package pdftex.def Info: imagenes/primerXmm.png used on input line 261.
+Package pdftex.def Info: imagenes/primerXmm.png used on input line 237.
 (pdftex.def)             Requested size: 330.83644pt x 12.848pt.
-LaTeX Info: Redefining \. on input line 264.
-LaTeX Info: Redefining \% on input line 264.
- [8 <./imagenes/256value.png>]
-<imagenes/segundoXmm.png, id=43, 411.939pt x 16.06pt>
+
+<imagenes/segundoXmm.png, id=33, 411.939pt x 16.06pt>
 File: imagenes/segundoXmm.png Graphic file (type png)
 
 <use imagenes/segundoXmm.png>
-Package pdftex.def Info: imagenes/segundoXmm.png used on input line 270.
+Package pdftex.def Info: imagenes/segundoXmm.png used on input line 246.
 (pdftex.def)             Requested size: 329.55162pt x 12.848pt.
 
-<imagenes/tecerXmm.png, id=44, 411.939pt x 47.377pt>
+<imagenes/tecerXmm.png, id=34, 411.939pt x 47.377pt>
 File: imagenes/tecerXmm.png Graphic file (type png)
 
 <use imagenes/tecerXmm.png>
-Package pdftex.def Info: imagenes/tecerXmm.png used on input line 280.
+Package pdftex.def Info: imagenes/tecerXmm.png used on input line 256.
 (pdftex.def)             Requested size: 329.55162pt x 37.90163pt.
 
-<imagenes/cuartoXmm.png, id=45, 411.939pt x 107.602pt>
+<imagenes/cuartoXmm.png, id=35, 411.939pt x 107.602pt>
 File: imagenes/cuartoXmm.png Graphic file (type png)
 
 <use imagenes/cuartoXmm.png>
-Package pdftex.def Info: imagenes/cuartoXmm.png used on input line 290.
+Package pdftex.def Info: imagenes/cuartoXmm.png used on input line 266.
 (pdftex.def)             Requested size: 329.55162pt x 86.08171pt.
- <imagenes/value.png, id=46, 411.939pt x 39.347pt>
+ <imagenes/value.png, id=36, 411.939pt x 39.347pt>
 File: imagenes/value.png Graphic file (type png)
 
 <use imagenes/value.png>
-Package pdftex.def Info: imagenes/value.png used on input line 299.
+Package pdftex.def Info: imagenes/value.png used on input line 275.
 (pdftex.def)             Requested size: 329.55162pt x 31.47762pt.
-LaTeX Info: Redefining \. on input line 308.
-LaTeX Info: Redefining \% on input line 308.
- [9 <./imagenes/primerXmm.png> <./imagenes/segundoXmm.png> <./imagenes/tecerXmm
+LaTeX Info: Redefining \. on input line 284.
+LaTeX Info: Redefining \% on input line 284.
+ [4 <./imagenes/primerXmm.png> <./imagenes/segundoXmm.png> <./imagenes/tecerXmm
 .png> <./imagenes/cuartoXmm.png> <./imagenes/value.png>]
 File: imagenes/256value.png Graphic file (type png)
  <use imagenes/256value.png>
-Package pdftex.def Info: imagenes/256value.png used on input line 317.
+Package pdftex.def Info: imagenes/256value.png used on input line 293.
 (pdftex.def)             Requested size: 427.19658pt x 37.90163pt.
 
+<imagenes/xmmAsm2.png, id=45, 414.348pt x 76.285pt>
+File: imagenes/xmmAsm2.png Graphic file (type png)
+ <use imagenes/xmmAsm2.png>
+Package pdftex.def Info: imagenes/xmmAsm2.png used on input line 302.
+(pdftex.def)             Requested size: 331.47885pt x 61.02808pt.
+LaTeX Info: Redefining \. on input line 311.
+LaTeX Info: Redefining \% on input line 311.
 
-LaTeX Warning: Reference `xmmAsm2' on page 10 undefined on input line 322.
+[5 <./imagenes/xmmAsm2.png>]
+LaTeX Info: Redefining \. on input line 312.
+LaTeX Info: Redefining \% on input line 312.
+ [6]
+Underfull \hbox (badness 10000) in paragraph at lines 315--318
+
+ []
 
 
-LaTeX Warning: File `imagenes/xmmAsm2.png' not found on input line 326.
+Underfull \hbox (badness 10000) in paragraph at lines 320--326
+
+ []
 
 
-! Package pdftex.def Error: File `imagenes/xmmAsm2.png' not found.
+Underfull \hbox (badness 10000) in paragraph at lines 327--328
 
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.326 ...graphics[scale=0.8]{imagenes/xmmAsm2.png}
-                                                  
-Using draft setting for this image.
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+ []
 
-LaTeX Info: Redefining \. on input line 336.
-LaTeX Info: Redefining \% on input line 336.
-[10]
 
-! LaTeX Error: There's no line here to end.
+Underfull \hbox (badness 10000) in paragraph at lines 329--333
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.345 \newline
-              
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+ []
 
-<imagenes/llsshh.png, id=58, 118.844pt x 18.469pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--335
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 337--341
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--346
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 347--351
+
+ []
+
+LaTeX Info: Redefining \. on input line 353.
+LaTeX Info: Redefining \% on input line 353.
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 356--363
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 364--368
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--373
+
+ []
+
+<imagenes/llsshh.png, id=59, 118.844pt x 18.469pt>
 File: imagenes/llsshh.png Graphic file (type png)
  <use imagenes/llsshh.png>
-Package pdftex.def Info: imagenes/llsshh.png used on input line 352.
+Package pdftex.def Info: imagenes/llsshh.png used on input line 387.
 (pdftex.def)             Requested size: 95.0753pt x 14.77519pt.
 
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.359 \newline
-              
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-<imagenes/lsh.png, id=59, 118.844pt x 18.469pt>
+<imagenes/lsh.png, id=60, 118.844pt x 18.469pt>
 File: imagenes/lsh.png Graphic file (type png)
  <use imagenes/lsh.png>
-Package pdftex.def Info: imagenes/lsh.png used on input line 365.
+Package pdftex.def Info: imagenes/lsh.png used on input line 400.
 (pdftex.def)             Requested size: 95.0753pt x 14.77519pt.
 
-<imagenes/sumahsl.png, id=60, 411.136pt x 15.257pt>
+<imagenes/sumahsl.png, id=61, 411.136pt x 15.257pt>
 File: imagenes/sumahsl.png Graphic file (type png)
  <use imagenes/sumahsl.png>
-Package pdftex.def Info: imagenes/sumahsl.png used on input line 374.
+Package pdftex.def Info: imagenes/sumahsl.png used on input line 409.
 (pdftex.def)             Requested size: 328.90924pt x 12.20561pt.
+LaTeX Info: Redefining \. on input line 415.
+LaTeX Info: Redefining \% on input line 415.
 
-<imagenes/caso1hsumahsl.png, id=61, 411.939pt x 202.356pt>
+[8 <./imagenes/llsshh.png> <./imagenes/lsh.png> <./imagenes/sumahsl.png>]
+<imagenes/caso1hsumahsl.png, id=68, 411.939pt x 202.356pt>
 File: imagenes/caso1hsumahsl.png Graphic file (type png)
 
 <use imagenes/caso1hsumahsl.png>
-Package pdftex.def Info: imagenes/caso1hsumahsl.png used on input line 383.
+Package pdftex.def Info: imagenes/caso1hsumahsl.png used on input line 418.
 (pdftex.def)             Requested size: 329.55162pt x 161.88501pt.
-LaTeX Info: Redefining \. on input line 387.
-LaTeX Info: Redefining \% on input line 387.
- [11 <./imagenes/llsshh.png> <./imagenes/lsh.png> <./imagenes/sumahsl.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 391--406
+
+Underfull \hbox (badness 10000) in paragraph at lines 426--441
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 391--406
+Underfull \hbox (badness 10000) in paragraph at lines 426--441
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 391--406
+Underfull \hbox (badness 10000) in paragraph at lines 426--441
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 391--406
+Underfull \hbox (badness 10000) in paragraph at lines 426--441
 
  []
 
-<imagenes/resultH.png, id=68, 118.041pt x 11.242pt>
+LaTeX Info: Redefining \. on input line 441.
+LaTeX Info: Redefining \% on input line 441.
+[9 <./imagenes/caso1hsumahsl.png>]
+<imagenes/resultH.png, id=73, 118.041pt x 11.242pt>
 File: imagenes/resultH.png Graphic file (type png)
  <use imagenes/resultH.png>
-Package pdftex.def Info: imagenes/resultH.png used on input line 409.
+Package pdftex.def Info: imagenes/resultH.png used on input line 444.
 (pdftex.def)             Requested size: 94.4329pt x 8.99359pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 414--420
+Underfull \hbox (badness 10000) in paragraph at lines 449--455
 
  []
 
-LaTeX Info: Redefining \. on input line 420.
-LaTeX Info: Redefining \% on input line 420.
-[12 <./imagenes/caso1hsumahsl.png> <./imagenes/resultH.png>]
 <imagenes/representacionfloat.png, id=74, 371.789pt x 31.317pt>
 File: imagenes/representacionfloat.png Graphic file (type png)
 
 <use imagenes/representacionfloat.png>
-Package pdftex.def Info: imagenes/representacionfloat.png used on input line 42
-3.
+Package pdftex.def Info: imagenes/representacionfloat.png used on input line 45
+8.
 (pdftex.def)             Requested size: 297.4316pt x 25.05362pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--430
+Underfull \hbox (badness 10000) in paragraph at lines 463--465
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 428--430
+Underfull \hbox (badness 10000) in paragraph at lines 463--465
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--433
+Underfull \hbox (badness 10000) in paragraph at lines 466--468
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--433
+Underfull \hbox (badness 10000) in paragraph at lines 466--468
 
  []
 
-LaTeX Info: Redefining \. on input line 452.
-LaTeX Info: Redefining \% on input line 452.
-[13 <./imagenes/representacionfloat.png>]
-LaTeX Info: Redefining \. on input line 452.
-LaTeX Info: Redefining \% on input line 452.
- [14] (./informe.aux
+LaTeX Info: Redefining \. on input line 482.
+LaTeX Info: Redefining \% on input line 482.
+[10 <./imagenes/resultH.png> <./imagenes/representacionfloat.png>]
+<imagenes/shufle.png, id=80, 513.92pt x 75.482pt>
+File: imagenes/shufle.png Graphic file (type png)
+ <use imagenes/shufle.png>
+Package pdftex.def Info: imagenes/shufle.png used on input line 485.
+(pdftex.def)             Requested size: 411.13655pt x 60.38567pt.
+LaTeX Info: Redefining \. on input line 505.
+LaTeX Info: Redefining \% on input line 505.
+
+[11 <./imagenes/shufle.png>] (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
 LaTeX Info: Redefining \% on input line 7.
 )
@@ -1059,31 +1102,30 @@ LaTeX Info: Redefining \% on input line 7.
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14718 strings out of 494969
- 255749 string characters out of 6179592
+ 14728 strings out of 494969
+ 255970 string characters out of 6179592
  361880 words of memory out of 5000000
- 17613 multiletter control sequences out of 15000+600000
- 21453 words of font info for 36 fonts, out of 8000000 for 9000
+ 17625 multiletter control sequences out of 15000+600000
+ 19522 words of font info for 34 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
  56i,12n,55p,1594b,1147s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/bitstrea/charter/bchb8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/bitstrea/charter/bchr8a.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmtt9.pfb>
-Output written on informe.pdf (14 pages, 517357 bytes).
+ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
+t9.pfb>
+Output written on informe.pdf (13 pages, 573287 bytes).
 PDF statistics:
- 105 PDF objects out of 1000 (max. 8388607)
- 56 compressed objects within 1 object stream
+ 114 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 83 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
 

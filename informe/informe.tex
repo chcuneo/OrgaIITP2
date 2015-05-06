@@ -88,7 +88,7 @@
 \materia{Organización del Computador II}
 \submateria{Primer Cuatrimestre - 2015}
 \titulo{Trabajo Práctico II}
-\subtitulo{Filtros de Imagen}
+\subtitulo{Filtros de Imágen}
 \integrante{Christian Cuneo}{755/13}{chriscuneo93@gmail.com}
 \integrante{Ignacio Lebrero}{751/13}{ignaciolebrero@gmail.com}
 \integrante{Jorge Porto}{376/11}{cuanto.p.p@gmail.com}
@@ -96,37 +96,11 @@
 \maketitle
 \newpage
 
-\thispagestyle{empty}
-\vfill
-\begin{abstract}
-Los filtros de imagen son una herramienta poderosa a la hora de retocar una imagen, usados ampliamente en fotografia, publicidad, videojuegos, etc.
-Su uso brinda una gamma de opciones para modificar las imagenes de manera que sea mas flexible su edicion o analisis.\\
-En este trabajo practico presentamos los metodos blur, merge y hsl ya existentes y los implementamos en lenguaje de ensamblador.
-Damos dos implementaciones de cada filtro siendo la segunda una optimizacion de la primera en merge y blur, y una variacion de implementacion C/Assembler a Assembler en hsl.\\
-Nuestros experimentos demuestran.....
-\end{abstract}
 
-\newpage
-
-\thispagestyle{empty}
 \vspace{3cm}
 \tableofcontents
-\newpage
-
 \thispagestyle{empty}
-\vfill
 
-
-\thispagestyle{empty}
-\vspace{3cm}
-\tableofcontents
-\newpage
-
-\begin{abstract}
-En el presente trabajo se describe la problemática de ...
-\end{abstract}
-
-%\normalsize
 \newpage
 
 
@@ -143,12 +117,17 @@ struct Pepe {
 \end{verbatim}
 \end{codesnippet}
 \end{comment}
+\setcounter{page}{1}
 
 \section{Intoducción}
 
-El lenguaje C es uno de los más eficientes en cuestión de performance, pero esto no quiere decir que..
+Los filtros de imagen son una herramienta poderosa a la hora de retocar una imagen, usados ampliamente en fotografia, publicidad, videojuegos, etc.
+Su uso brinda una gamma de opciones para modificar las imagenes de manera que sea mas flexible su edicion o analisis.\\
+En este trabajo practico presentamos los metodos blur, merge y hsl ya existentes y los implementamos en lenguaje de ensamblador.
+Damos dos implementaciones de cada filtro siendo la segunda una optimizacion de la primera en merge y blur, y una variacion de implementacion C/Assembler a Assembler en hsl.\\
+Finalmente realizamos experimentos para comparar el tiempo de computo de los mismos. 
+El lenguaje C es uno de los más eficientes en cuestión de performance, pero es posible mejorarla implementando las funciones directamente en assembler. En este trabajo se pondra enfasis en las posible ventajas que puede tener un codigo en assembler con respecto a uno en C, y también las ventajas de usar las e instrucciones SIMD de la arquitectura x86-64.
 
-En este trabajo practico se realizan implementaciones en asembler..
 
 \newpage 
 
@@ -161,7 +140,7 @@ En este trabajo practico se realizan implementaciones en asembler..
 
 El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus pixeles vecinos y se guarda ese resultado en el mismo pixel.
 
-\subsubsection{Implementación en Assembler 1}
+\subsubsection{Implementación en assembler 1}
 
 El principio basico de la implementacion en assembler es que el barrido que se le hace a la imagen se realiza de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
 
@@ -231,7 +210,7 @@ Una cuestion a tener en cuenta de esta implementacion es que, al ser el array "i
 
 Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre carga de a 4 pixeles, descartando el cuarto pixel en el proceso posterior. Esto va a comportarse de forma no deseada al llegar al x = n - 2, ya que al cargar el registro estarias agarrando datos que no pertenecen a la fila deseada, esto no es un problema al principio, ya que se estaria cargando el primer pixel de la siguiente fila, lo cual esta permitido. Pero al llegar tambien al y = n - 2 uno estaria tratando de cargar algo que no nos pertenece, ya que estariamos en la ultima fila de la imagen. Para esto la implementacion se encarga de detectar cuando se llega a este caso en particular (etiqueta "lastpixel") y simplemente se cargan los ultimos 4 pixeles, y se realiza un PSRLDQ para luego seguir normalmente con el algoritmo.
 
-\subsubsection{Implementación 2}
+\subsubsection{Implementación en assembler 2}
 
 Es...
 
@@ -245,17 +224,11 @@ Es...
 El...
 
 
-
-\subsubsection{Implementación en C}
-%
-% BLUR
-%
-
 \subsection{Merge}
 
 El merge nos permite a partir de dos imágenes y un valor entre cero y uno, obtener una combinación de estas ultimas según la proporción indicada por el valor.
 
-\subsubsection{Implementación en Assembler 1}
+\subsubsection{Implementación en assembler 1}
 
 Se recibe por parámetro dos punteros a dos imágenes almacenadas en memoria como una matriz de pixeles. Como los pixeles de estas imágenes ocupan 4 byte, y la cantidad de pixeles de las mismas es multiplo de 4,  utilizando los registros xmm podemos traer de a 4 pixeles. Luego incrementamos los punteros a la imagen en 16 bytes y volvemos a traer los pixeles de memoria. De esta manera tenemos un ciclo principal cuya cantidad de iteraciones es la cantidad de pixeles dividido cuatro. Cada una de estas consiste en levantar de memoria cuatro pixeles y almacenarlos en un registro xmm, cuyo contenido puede verse en la figura \ref{primerXmm}
 
@@ -309,7 +282,7 @@ Utilizando la instrucción de simd mulps, multiplicamos los colores transformado
 
 Se repite el procedimiento para la segunda imagen, excepto que no se desempaqueta el byte de trasparencia(A), ya que solo interesa el byte de trasparencia de la primera imagen. En este caso multiplicamos por 1-value. Sumamos con la instruccion addps los valores obtenidos en la multiplicación, para los colores azul, verde y rojo. Luego convertimos a enteros de 32 bit, y con la instrucciones packusdw, y packuswb empaquetamos de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Este ultimo se consideran los bytes de la primera imagen almacenados en un registro xmm como se muestra la figura \ref{cuartoXmm}. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
 
-\subsubsection{Implementación 2}
+\subsubsection{Implementación en assembler 2}
 
 Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño. Para esto la para obtener el mismo resultado(aunque se pierdan decimales) es multiplicar a todo por 256, hacer las multiplicaciones en enteros y finalmente dividir por 256.
 
@@ -401,10 +374,10 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 
 \end{enumerate}
 
-\subsubsection{Implementacion 1}
+\subsubsection{Implementacion en assembler 1}
 OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 3).
 
-\newline
+
 
 Recibimos como parametros una imagen representada en memoria de la misma manera que en los anteriores filtros, ancho, alto y tres valores hh, ss y ll, los cuales modificaran los 3 elementos de la representacion HSL del pixel.
 Primero acomodamos los datos de entrada de manera que nos queden dentro de un registro xmm, dado que cada dato ocupa 16bits los acomodaremos de manera tal que los 3 elementos queden empaquetados.
@@ -418,7 +391,7 @@ Primero acomodamos los datos de entrada de manera que nos queden dentro de un re
 
 A continuación movemos a un registro xmm el valor que usaremos como limite superior de la suma para h por un lado y s y l por otro ya que las modificaciones seran diferentes para los dos casos, como limite inferior simplemente colocaremos 0 en un registro usando pxor.
 
-\newline
+
 
 Dado que la imagen está representada linealmente en memoria vamos a recorrerla como un vector dentro de un ciclo principal que se movera de a un pixel. Una vez dentro del ciclo procecedemos a llamar a rgbTOhsl y movemos el pixel resultante a un registro xmm.
 
@@ -449,7 +422,7 @@ Para realizar las comparaciones correspondientes primero generamos los vectores 
 
 Para s y l, como su resultado debe ser 1 en caso de pasar el limite, simplemente colocamos s+ss-1 y l+ll-1 empaquetados en un registro aparte pero en las mismas posiciones que s+ss y l+ll respectivamente, luego aplicamos la misma idea que en la figura 10 pero comparando contra 1 en lugar de 360 y finalmente sumando s+ss-1 o l l+ll-1 según corresponda para lograr que quede 1 ó s+ss/l+ll en los valores finales. Los casos de los limites inferiores que se realizan inmediatamente despues en el codigo son analogos pero comparando contra 0s, dando una sucesion de estados con la cual al llegar al final, (1) tendra los valores l+ll ó 1 ó 0, s+ss ó 1 ó 0,  h+hh ó h+hh+360 ó h+hh-360 y 0 respectivamente en sus posiciones empaquetadas.
 
-\subsubsection{implementación 2}
+\subsubsection{Implementación en assembler 2}
 Para esta implementación reutilizamos el codigo de la primera y nos concentramos en implementar (1) y (3), cuyas reglas son las siguientes:
 \newline\newline
 reglas.....
@@ -513,6 +486,18 @@ Para ordenar los datos(ya que deben tener 1B cada uno y a esta altura tienen 4B)
 \caption{Uso de pshufB}
 \label{lshValue}
 \end{figure}
+
+
+
+\section{Experimentación}
+
+Se llevan a cabo experimentos para comparar el tiempo de computo de las distintas versiones de los filtros, en assembler y en C.
+
+
+
+
+
+
 
 \section{Conclusiones y trabajo futuro}
 
