@@ -308,22 +308,30 @@ Se repite el procedimiento para la segunda imagen, excepto que no se desempaquet
 
 \subsubsection{Implementación 2}
 
-Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño.
+Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño. Para esto la para obtener el mismo resultado(aunque se pierdan decimales) es multiplicar a todo por 256, hacer las multiplicaciones en enteros y finalmente dividir por 256.
 
 Antes de empezar el ciclo, multiplicamos en punto flotante 256 y value, y al resultado lo convertimos a enteros. En este proceso se pierden decimales. Como value es un numero entre cero y uno, al multiplicar por 256 y pasarlo a enteros, tenemos un valor entre 0 y 256, con lo que ocupa menos de un byte de tamaño. Utilizando la instrucción pshufb y una mascara, almacenamos en un registro xmm 8 replicas de este valor. Luego hacemos la resta en enteros entre 256 y el valor obtenido en la multiplicación. Nuevamente tenemos un valor entero entre 0 y 256 que entra en un byte, almacenamos 8 replicas del mismo en un registro xmm tal como se ve en la figura \ref{256value}. Estos registros seran utilizados para multiplicar los colores.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{imagenes/256value.png}
-\caption{Contenido de los registros utilizados para multiplicar}
+\caption{Contenido de los registros utilizados para multiplicar en enteros}
 \label{256value}
 \end{figure}
 
-El ciclo comienza igual que la implementación anterior, trayendo a un registro xmm 4 pixeles de memoria, ordenandolos con pshufb con una mascara 
+El ciclo comienza igual que la implementación anterior, trayendo a un registro xmm 4 pixeles de la primer imagen desde memoria, ordenandolos con pshufb con una mascara para que queden como se indica en la figura~\ref{segundoXmm}. Utilizando punpcklbw y punpckhbw y un registro lleno de ceros obtenemos dos registros xmm, como pueden verse en a figura~\ref{tercerXmm}. Utilizando punpcklwd y psrldq, obtenemos finalmente tres registros xmm con el contenido tal como se indica en la figura~\ref{xmmAsm2}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/xmmAsm2.png}
+\caption{Contenido de los registros luego de hacer operaciones de desempaquetado}
+\label{xmmAsm2}
+\end{figure}
 
 
+Utilizamos las instrucciones pmullw y pmulhuw para obtener las partes altas y bajas de la multiplicación de los colores(sin contar la transparencia) con el valor 256*value(convertido a entero) que se encuentra almacenado en un registro como se indica en la figura~\ref{256value}. Finalmente utilizamos la instrucción punpcklwd y punpckhwd para obtener el resultado final de la multiplicación. De esta manera realizamos multiplicaciones de enteros de 16 bit, con lo que obtenemos enteros de 32 bit. El registro que contiene los bytes de transparencia queda inalterado.
 
-\subsubsection{Implementación en C}
+Se repite el procedimiento para la segunda imagen, pero sin guardar los bytes de transparencia. Dividimos los enteros por 256 utlizando un corrimiento a derecha de 8 bit con la instrucción "psrld xmm, 8". Y luego sumamos en enteros con las instrucciones paddd. Se decide dividir primero y luego sumar para evitar una posible saturación. Con las instrucciones packusdw y packuswb empaquetamos el resultado, de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
 
 \newpage
 
