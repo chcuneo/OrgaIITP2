@@ -9,6 +9,8 @@ if not os.path.exists(plotdir + "noCO0/"):
     os.makedirs(plotdir + "noCO0/")
 if not os.path.exists(plotdir + "noASM1/"):
     os.makedirs(plotdir + "noASM1/")
+if not os.path.exists(plotdir + "noASM2/"):
+    os.makedirs(plotdir + "noASM2/")
 for filen in os.listdir(datadir):
 	cO0time = []
 	cO0size = []
@@ -52,6 +54,17 @@ for filen in os.listdir(datadir):
 
 	plot(cO3size, cO3time, color='red', lw=2, label='CO3')
 	plot(asm1size, asm1time, color='green', lw=2, label='ASM1')
+	plot(cO0size, cO0time, color='orange', lw=2, label='CO0')
+	legend(loc='upper left')
+	xlabel('Width in pixels')
+	ylabel('Cicles')
+	title(getdataname[0])
+	grid(True)
+	savefig(plotdir + "noASM2/" + getdataname[0] + "--noASM2"+ ".png")
+	clf()
+
+	plot(cO3size, cO3time, color='red', lw=2, label='CO3')
+	plot(asm1size, asm1time, color='green', lw=2, label='ASM1')
 	plot(asm2size, asm2time, color='blue', lw=2, label='ASM2')
 	legend(loc='upper left')
 	xlabel('Ancho de imagen (pixels)')
@@ -69,5 +82,5 @@ for filen in os.listdir(datadir):
 	ylabel('Ciclos')
 	title(titlee)
 	grid(True)
-	savefig(plotdir + "noASM1/" + filename + "--noASM1" + ".png")
+	savefig(plotdir + "noASM1/" + getdataname[0] + "--noASM1" + ".png")
 	clf()
