@@ -9,14 +9,15 @@ import subprocess
 
 PRECISION = 100
 IMPLEMENTACIONES = [["c", "O0"], ["c", "O3"],["asm1", "O3"], ["asm2", "O3"]]
-outpdir = os.path.expanduser('~') + "/outputdata/"
-#outpdir = "./outputdata/"
+#Para correr en milagro y no perder los datos!
+#outpdir = os.path.expanduser('~') + "/outputdata/"
+outpdir = "./outputdata/"
 
 
 def main():
   if not os.path.exists(outpdir):
     os.makedirs(outpdir)
-  # processblur("normal")
+  processblur("normal")
   # processblur("black")
   # processblur("white")
 
@@ -33,8 +34,8 @@ def main():
   # processhsl("white", "360", "1", "0.1")
   # for x in xrange(0, 361, 60):
   #   processhsl("normal", str(x), "1", "0.1")
-  processblur("rectangularW")
-  processblur("rectangularH")
+  #processblur("rectangularW")
+  #processblur("rectangularH")
 
 
 
@@ -57,7 +58,7 @@ def processblur(folder):
         time = []
         #Corro p veces y me quedo con el minimo tiempo de ejecucion
         for x in range(0,PRECISION+1):
-          ticks = int(subprocess.check_output(["./runtest"+impl[1], impl[0], "blur", "./testimgs/"+ folder + "/"+filen, "n", str(0)]))
+          ticks = int(subprocess.check_output(["./" +impl[1] +"/runtest", impl[0], "blur", "./testimgs/"+ folder + "/"+filen, "n", str(0)]))
           if (ticks != 0):
               time.append(ticks)
         ou.write(impl[0] + impl[1] + ', ' + str(size) + ', ' + str(int(trimmean(sorted(time), 0.25))) + "\n")
@@ -81,7 +82,7 @@ def processmerge(folder, val):
         #Corro p veces y me quedo con el minimo tiempo de ejecucion
         for x in range(0,PRECISION+1):
           #print(["./runtest"+impl[1], impl[0], "blur", "./testimgs/"+ folder + "/"+filen, "n", str(0)])
-          ticks = int(subprocess.check_output(["./runtest"+impl[1], impl[0], "merge", "./testimgs/"+ folder + "/"+filen, "./testimgs/"+ folder + "/"+filen2, "n", val, str(0)]))
+          ticks = int(subprocess.check_output(["./" +impl[1] +"/runtest", impl[0], "merge", "./testimgs/"+ folder + "/"+filen, "./testimgs/"+ folder + "/"+filen2, "n", val, str(0)]))
           if (ticks != 0):
             time.append(ticks)
         ou.write(impl[0] + impl[1] + ', ' + str(size) + ', ' + str(int(trimmean(sorted(time), 0.25))) + "\n")
@@ -103,7 +104,7 @@ def processhsl(folder, h, s, l):
         time = []
         #Corro p veces y me quedo con el minimo tiempo de ejecucion
         for x in range(0,PRECISION+1):
-          ticks = int(subprocess.check_output(["./runtest"+impl[1], impl[0], "hsl", "./testimgs/"+ folder + "/"+filen, "n", h, s, l, str(0)]))
+          ticks = int(subprocess.check_output(["./" +impl[1] +"/runtest", impl[0], "hsl", "./testimgs/"+ folder + "/"+filen, "n", h, s, l, str(0)]))
           if (ticks != 0):
               time.append(ticks)
         ou.write(impl[0] + impl[1] + ', ' + str(size) + ', ' + str(int(trimmean(sorted(time), 0.25))) + "\n")

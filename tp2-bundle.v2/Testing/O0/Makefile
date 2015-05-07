@@ -5,24 +5,23 @@
 #                                                                           #
 # ************************************************************************* #
 
-all: makes tp2
+all: clean makes tp2
 
 CFLAGS=-Wall -Wextra -pedantic -O0 -ggdb -lm -std=c99
 
 makes:
-	make -C bmp
-	make -C tools
-	make -C filters
+	make -C ../../src/bmp
+	make -C ../../src/tools
+	make -C ../../src/filters
 
-%.o: %.c run.h 
+%.o: %.c ../../src/runtest.h 
 	gcc $(CFLAGS) -c -o $@ $<
 	
-tp2: run.o tp2.o makes
-	gcc $(CFLAGS) tp2.o run.o filters/*.o bmp/*.o -o tp2 -lm
-	cp tp2 ../bin/
-	
+tp2: ../../src/runtest.o ../../src/tests.o makes
+	gcc $(CFLAGS) ../../src/tests.o ../../src/runtest.o ../../src/filters/*.o ../../src/bmp/*.o -o runtest -lm
+
 clean:
-	make -C bmp clean
-	make -C tools clean
-	make -C filters clean
-	rm  -f *.o tp2
+	make -C ../../src/bmp clean
+	make -C ../../src/tools clean
+	make -C ../../src/filters clean
+	rm  -f *.o runtestO0
