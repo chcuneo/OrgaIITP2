@@ -738,11 +738,12 @@ Como segunda variacion decidimos cambiar la manera en que esta implementada la f
     Implementar parteentera en la variacion2, eliminando la parte decimal de la mantisa de la representación en punto flotante del numero a mano podria aumentar bastante el rendimiento.
 \end{enumerate}
 
-\section{Conclusiones}
+\section{Conclusiones y trabajo futuro}
 
 Pudimos corroborar el uso del assembler para conseguir algoritmos mas eficientes temporalmente, aunque al ser un lenguaje de mas bajo nivel sea mas difiil de escribir. En este sentido se utilizaron las instrucciones SIMD de assembler, permitiendonos mejorar la eficiencia, al efectuar varias operaciones juntas. Sin embargo muchas veces es necesario preparar los registros para efectuar estas instrucciones y esto puede no ser sencilllo, o tener un costo temporal elevado.
 
 Además la ganancia en rendimiento de efectuar operaciones SIMD no es tan importante como reducir la cantidad de accesos a memoria. Se pudo apreciar que al reducir la cantidad de estos ultimos, se logra una mejora en el rendimiento significativa.
 
+Como trabajo pendiente queda la implementación de una variante de la primera implementación de HSL en donde para sumar las componentes hh, ss y ll en lugar de agarrar un solo pixel, ordenar los datos de manera que podamos tener 4 h's, l's y s's a la vez y procesar 4 pixeles al mismo tiempo.
 \end{document}
 
