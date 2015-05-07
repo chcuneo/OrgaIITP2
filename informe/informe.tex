@@ -138,11 +138,11 @@ El lenguaje C es uno de los más eficientes en cuestión de performance, pero es
 %
 \subsection{Blur}
 
-El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus pixeles vecinos y se guarda ese resultado en el mismo pixel.
+El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus 8 pixeles vecinos y se guarda ese resultado en el mismo pixel.
 
 \subsubsection{Implementación en assembler 1}
 
-El principio basico de la implementacion en assembler es que el barrido que se le hace a la imagen se realiza de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
+El principio basico de la implementacion en assembler es que se itera la imagen de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
 
 % \begin{algorithm}%[t]
 % \caption{Blur}
@@ -193,36 +193,32 @@ end
 Cada pixel contiene 4 valores de 1 byte (R, G, B y A), por lo tanto entran 4 pixels en un registro xmm, entonces cargo directamente 4 pixels de memoria. Hay que tener en cuenta que se cargan los pixels del [x-1] al [x+2], pero en el registro van a quedar al revez, siendo primero el [x+2].
 \newline
 
-La funcion "borrarprimero" va a utilizar la instruccion PINSRD para insertar 0 en los primeros 4 bytes, eliminando asi los datos de el primer pixel en el registro, que seria el pixel x+2, ya que es el pixel que no nos interesa, porque solo hay que promediar con los vecinos del pixel img[x][y], es decir los pixeles img[i][j] con i$\in$(x-1, x , x+1) y j$\in$(y-1, y , y+1).
+La funcion 'borrarprimero' va a utilizar la instruccion PINSRD para insertar 0 en los primeros 4 bytes, eliminando asi los datos de el primer pixel en el registro, que seria el pixel x+2, ya que es el pixel que no nos interesa, porque solo hay que promediar con los vecinos del pixel img[x][y], es decir los pixeles img[i][j] con i$\in$(x-1, x , x+1) y j$\in$(y-1, y , y+1).
 \newline
 
-La funcion "sumarpixels" va a sumar los pixeles dentro del registro por valor (R, G, B y A). Para lograr esto sin saturacion se necesita extender (con ceros) los valores de 1 byte a 2 bytes, para poder representar sin nungun problema la suma de todos los valores posibles. Para esto se utiliza la instruccion PUNPCKLBW y PUNPCKHBW (ambas con un registro nulo como source), para guardar en un registro los 2 pixels menos significativos y los 2 pixels mas significativos respectivamente. Se necesita guardar en dos registros ya que al ocupar cada dato el doble, van a entrar la mitad de datos en el registro. Luego de extender los valores se procede a sumar horizontalmente cada registro y luego se suman de forma empaquetada a word los dos registros, y nos queda en el qword menos significativo el pixel suma de los pixels que habia originalmente en el registro.
+La funcion 'sumarpixels' va a sumar los pixeles dentro del registro por valor (R, G, B y A). Para lograr esto sin saturacion se necesita extender (con ceros) los valores de 1 byte a 2 bytes, para poder representar sin nungun problema la suma de todos los valores posibles. Para esto se utiliza la instruccion PUNPCKLBW y PUNPCKHBW (ambas con un registro nulo como source), para guardar en un registro los 2 pixels menos significativos y los 2 pixels mas significativos respectivamente. Se necesita guardar en dos registros ya que al ocupar cada dato el doble, van a entrar la mitad de datos en el registro. Luego de extender los valores se procede a sumar horizontalmente cada registro y luego se suman de forma empaquetada a word los dos registros, y nos queda en el qword menos significativo el pixel suma de los pixels que habia originalmente en el registro.
 \newline
 
-La funcion "promedio", dado un registro con la suma (de todos los pixeles a promediar) en el qword menos significativo, va a devolver un pixel con cada valor original dividido por 9, y va a devolver este pixel de forma que quede listo para ser grabado a memoria (quiere decir los R, G, B y A de 1 byte cada uno y ordenados). Para ello primero extiende (con ceros) de word a dword cada valor del pixel, utilizando la instruccion PUNPCKLWD con un registro nulo como source. Luego se convierte cada valor de entero de 32 bits a single-precision floating point, que es tambien de 32 bits, con la instruccion CVTDQ2PS. Entonces se procede a dividirlos por 9 en forma empaquetada utilizando la instruccion DIVPS, usando como source un registro previamente cargado con cuatro "9" en float. Luego se van a convertir de nuevo a enteros utilizando la instruccion CVTPS2DQ. En este punto ya sabemos que no importe que valores hayan tenido los 9 pixeles sumados, al promediarlos van a dar numeros entre 255 y 0 unicamente, entonces al convertirlos de nuevo a enteros sabemos que van a quedar valores que van a ocupar como mucho los 8 bits menos significativos de cada dword. Teniendo en cuenta esa informacion se puede proceder a hacer un shuffle (con la instruccion PSHUFB) para mover cada byte menos significativo de cada dword a la posicion correcta del registro, quedando en el dword menos significativo del registro el pixel a guardar, con sus valores en el orden correcto. En esta instruccion se utiliza una mascara especifica que se puede ver en la implementacion.
-\newline
-
-Finalmente se graba a memoria el resultado utilizando la instruccion PEXTRD [mmx], xmm, 00b, siendo mmx el puntero al destino donde guardar los datos y xmm el resultado del promedio, se utiliza "00b" ya que el resultado de calcular el promedio se encuentra en el dword menos significativo.
-\newline
-
-Una cuestion a tener en cuenta de esta implementacion es que, al ser el array "img" la imagen a procesar y el destino donde guardar el resultado, se tuvo que asignar un espacio de igual tamaño al de "img" para guardar el resultado en ese espacio, ya que si se guarda en el mismo "img" se estarian promediando los pixels con pixels que son un promedio de por si. Entonces se guarda el resultado en este espacio pedido usando malloc, y luego de procesar toda la image, se copia todo el contenido de este resultado a la imagen original usando un loop construido con jumps condicionales, y luego se hace un free de esta memoria.
-\newline
-
-Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre carga de a 4 pixeles, descartando el cuarto pixel en el proceso posterior. Esto va a comportarse de forma no deseada al llegar al x = n - 2, ya que al cargar el registro estarias agarrando datos que no pertenecen a la fila deseada, esto no es un problema al principio, ya que se estaria cargando el primer pixel de la siguiente fila, lo cual esta permitido. Pero al llegar tambien al y = n - 2 uno estaria tratando de cargar algo que no nos pertenece, ya que estariamos en la ultima fila de la imagen. Para esto la implementacion se encarga de detectar cuando se llega a este caso en particular (etiqueta "lastpixel") y simplemente se cargan los ultimos 4 pixeles, y se realiza un PSRLDQ para luego seguir normalmente con el algoritmo.
-
-\subsubsection{Implementación en assembler 2}
-
-Es...
+La funcion 'promedio', dado un registro con la suma (de todos los pixeles a promediar) en el qword menos significativo, va a devolver un pixel con cada valor original dividido por 9, y va a devolver este pixel de forma que quede listo para ser grabado a memoria (quiere decir los R, G, B y A de 1 byte cada uno y ordenados). Para ello primero extiende (con ceros) de word a dword cada valor del pixel, utilizando la instruccion PUNPCKLWD con un registro nulo como source. Luego se convierte cada valor de entero de 32 bits a single-precision floating point, que es tambien de 32 bits, con la instruccion CVTDQ2PS. Entonces se procede a dividirlos por 9 en forma empaquetada utilizando la instruccion DIVPS, usando como source un registro previamente cargado con cuatro 9 en float. Luego se van a convertir de nuevo a enteros utilizando la instruccion CVTPS2DQ. En este punto ya sabemos que no importe que valores hayan tenido los 9 pixeles sumados, al promediarlos van a dar numeros entre 255 y 0 unicamente, entonces al convertirlos de nuevo a enteros sabemos que van a quedar valores que van a ocupar como mucho los 8 bits menos significativos de cada dword. Teniendo en cuenta esa informacion se puede proceder a hacer un shuffle (con la instruccion PSHUFB y una mascara) para mover cada byte de esta forma:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{imagenes/256value.png}
-\caption{Contenido de los registros utilizados para multiplicar}
-\label{256value}
+\includegraphics[scale=0.8]{imagenes/blurshuffle.png}
+\caption{Resultado del PSHUFB con el primer registro como destino y el segundo como fuente}
+\label{bshuffle}
 \end{figure}
 
-El...
+Finalmente se graba a memoria el resultado utilizando la instruccion PEXTRD [mmx], xmm, 00b, siendo mmx el puntero al destino donde guardar los datos y xmm el resultado del promedio, se utiliza '00b' ya que el resultado de calcular el promedio se encuentra en el dword menos significativo.
+\newline
 
+Una cuestion a tener en cuenta de esta implementacion es que, al ser el array 'img' la imagen a procesar y el destino donde guardar el resultado, se tuvo que asignar un espacio de igual tamaño al de 'img' para guardar el resultado en ese espacio, ya que si se guarda en el mismo 'img' se estarian promediando los pixels con pixels que son un promedio de por si. Entonces se guarda el resultado en este espacio, y luego de procesar toda la image, se copia todo este bloque de memoria al bloque de la imagen original usando un ciclo simple, y luego se hace un free del bloque temporal.
+\newline
+
+Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre carga de a 4 pixeles, descartando el cuarto pixel. Esto va a comportarse de forma no deseada al llegar al x = n - 2, ya que al cargar el registro estarias agarrando datos que no pertenecen a la fila actual, esto no es un problema al principio, ya que se estaria cargando el primer pixel de la siguiente fila, lo cual esta permitido. Pero al llegar tambien al y = n - 2 uno estaria tratando de cargar algo que no nos pertenece, ya que estariamos en la ultima fila de la imagen. Para esto la implementacion se encarga de detectar cuando se llega a este caso en particular (etiqueta 'lastpixel') y simplemente se cargan los ultimos 4 pixeles, y se realiza un PSRLDQ para luego seguir normalmente con el algoritmo.
+
+\subsubsection{Implementación en assembler 2}
+
+La implementacio numero 2 cumple el mismo principio que la implementacion 1, solo que busca procesar de a 4 pixeles por iteracion, para esto se van a necesitar cargar 6 pixeles de la fila de pixeles a procesar, de la siguiente y la anterior, como se ve en la siguiente imagen:
 
 \subsection{Merge}
 
