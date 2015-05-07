@@ -27,13 +27,16 @@ def main():
   #   processmerge("normal", str(x/10.0))
 
   #HSL Cambiando H
-  processhsl("black", "0", "1", "0.1")
-  processhsl("white", "0", "1", "0.1")
-  processhsl("black", "360", "1", "0.1")
-  processhsl("white", "360", "1", "0.1")
-  for x in xrange(0, 361, 60):
-    processhsl("normal", str(x), "1", "0.1")
-  
+  # processhsl("black", "0", "1", "0.1")
+  # processhsl("white", "0", "1", "0.1")
+  # processhsl("black", "360", "1", "0.1")
+  # processhsl("white", "360", "1", "0.1")
+  # for x in xrange(0, 361, 60):
+  #   processhsl("normal", str(x), "1", "0.1")
+  processblur("rectangularW")
+  processblur("rectangularH")
+
+
 
 def trimmean(arr, percent):
     n = len(arr)
