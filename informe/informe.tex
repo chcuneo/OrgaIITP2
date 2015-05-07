@@ -213,17 +213,45 @@ Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre c
 
 \subsubsection{Implementación en assembler 2}
 
-Es...
+La implementacio numero 2 hace el mismo procedimiento que la implementacion 1, solo que procesa de a 4 pixeles por iteracion, para esto se van a necesitar cargar 6 pixeles de la fila de pixeles a procesar, de la siguiente y la anterior, como se ve en la siguiente imagen:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{imagenes/256value.png}
-\caption{Contenido de los registros utilizados para multiplicar}
-\label{256value2}
+\includegraphics[scale=0.8]{imagenes/blur2pixels.png}
+\caption{Los pixeles que se deberan cargar al procesar los pixeles marcados con rojo. Se cargaran en 6 xmm como se muestra a la derecha}
+\label{b2pixels}
 \end{figure}
 
-El...
+Luego estos registros se va a extender con ceros los valores de todos los pixeles (con las instrucciones PUNPCKLBW y PUNPCKHBW con source un registro xmm nulo), para ello se usa PUNPCKLBW en los 3 registros de la izquierda; luego PUNPCKLBW y PUNPCKHBW en los de la izquierda, seria lo mismo al revez, ya que hay dos pixeles que se repiten para cada fila:
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/blur2unpack.png}
+\caption{Registros luego de desempaquetar}
+\label{b2unpack}
+\end{figure}
+
+Se extendieron los valores para poder sumarlos sin que se lleguen a saturar, luego se suman respetando las columnas usando PADDW de la siguiente manera:
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/blur2add.png}
+\caption{Registros luego de sumar, sumamos en xmm0, xmm1 y xmm2 ya que no se van a necesitar para el ciclo siguiente.}
+\label{b2unpack}
+\end{figure}
+
+A partir de esas sumas se pueden obtener los valores resultantes para los 4 pixeles de la iteracion de la siguiente forma:
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/blur2end.png}
+\caption{Pasos a seguir para cada pixel.}
+\label{b2endprocess}
+\end{figure}
+
+En el proceso para cada pixel, primero se extenderan los valores a dword con el mismo procedimiento explciado anteriormente (esto se hace para poder, mas adelante, pasarlo a single precision floating point in place). Luego se la operacion suma entre los registros se realiza con la instruccion PADDD, luego se convierten los valores a FP con CVTDQ2PS, se divide por 9 usando DIVPS, y se convierte de nuevo a enteros CVTPS2DQ. Por ultimo se hace el mismo shuffle que en la implementacion 1, para terminar grabando el resultado al bloque de memoria temporal.
+
+\newpage
 
 \subsection{Merge}
 
