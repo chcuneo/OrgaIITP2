@@ -1,6 +1,6 @@
 \select@language {spanish}
-\contentsline {section}{\numberline {1}Intoducci\IeC {\'o}n}{1}
-\contentsline {section}{\numberline {2}Desarollo}{2}
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{1}
+\contentsline {section}{\numberline {2}Desarrollo}{2}
 \contentsline {subsection}{\numberline {2.1}Blur}{2}
 \contentsline {subsubsection}{\numberline {2.1.1}Implementaci\IeC {\'o}n en assembler 1}{2}
 \contentsline {subsubsection}{\numberline {2.1.2}Implementaci\IeC {\'o}n en assembler 2}{3}
@@ -8,14 +8,14 @@
 \contentsline {subsubsection}{\numberline {2.2.1}Implementaci\IeC {\'o}n en assembler 1}{4}
 \contentsline {subsubsection}{\numberline {2.2.2}Implementaci\IeC {\'o}n en assembler 2}{6}
 \contentsline {subsection}{\numberline {2.3}HSL}{7}
-\contentsline {subsubsection}{\numberline {2.3.1}Implementacion en assembler 1}{8}
+\contentsline {subsubsection}{\numberline {2.3.1}implementaci\IeC {\'o}n en assembler 1}{8}
 \contentsline {subsubsection}{\numberline {2.3.2}Implementaci\IeC {\'o}n en assembler 2}{9}
 \contentsline {section}{\numberline {3}Experimentaci\IeC {\'o}n}{11}
 \contentsline {subsection}{\numberline {3.1}Blur}{11}
 \contentsline {subsection}{\numberline {3.2}Merge}{12}
 \contentsline {subsection}{\numberline {3.3}HSL}{13}
 \contentsline {subsubsection}{\numberline {3.3.1}implementaci\IeC {\'o}n}{14}
-\contentsline {subsubsection}{\numberline {3.3.2}variacion 1}{15}
-\contentsline {subsubsection}{\numberline {3.3.3}variacion 2}{15}
+\contentsline {subsubsection}{\numberline {3.3.2}Variaci\IeC {\'o}n 1}{15}
+\contentsline {subsubsection}{\numberline {3.3.3}Variaci\IeC {\'o}n 2}{15}
 \contentsline {subsubsection}{\numberline {3.3.4}Experimentos Futuros}{16}
 \contentsline {section}{\numberline {4}Conclusiones y trabajo futuro}{16}
