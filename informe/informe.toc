@@ -11,4 +11,5 @@
 \contentsline {subsubsection}{\numberline {2.3.1}Implementacion en assembler 1}{8}
 \contentsline {subsubsection}{\numberline {2.3.2}Implementaci\IeC {\'o}n en assembler 2}{9}
 \contentsline {section}{\numberline {3}Experimentaci\IeC {\'o}n}{11}
-\contentsline {section}{\numberline {4}Conclusiones y trabajo futuro}{11}
+\contentsline {subsection}{\numberline {3.1}Merge}{11}
+\contentsline {section}{\numberline {4}Conclusiones y trabajo futuro}{12}
