@@ -562,8 +562,30 @@ La implementación en C sin optimización resulta ser mucho mas costosa que las 
 
 
 
-Al no tener saltos condicionales, obtenemos el mismo rendimiento para los distintos tipos de imágenes. 
+Al no tener saltos condicionales, obtenemos el mismo rendimiento para los distintos tipos de imágenes como se puede ver en los gráficos 19, 20 y 21.
 
+Teniendo en cuenta la decisión de hacer una iteración de arriba a abajo y de izquierda a derecha de la imagen (para cargar solo una linea por pixel a procesar) se realizaron experimentos para ver si esta decisión realmente mejora el tiempo de procesamiento. Para esto se ejecutó el blur sobre dos image sets, uno ('rectangularH') de imágenes con w = 8*h y el otro ('rectangularW') con imagines con h = 8*w, quiere decir, un set con imágenes altas y delgadas, y otro con bajas y anchas. La hipótesis es que debería ser mas rápido el procesamiento de 'rectangularH' que el de 'rectangularW' ya que cuando la iteración llega a y = h-2 se aumenta x y hay que cargar las tres primeras filas (tres lecturas de memoria) de la siguiente columna para poder seguir con el procesamiento. Entonces rectangularH tendría que hacer menos veces ese proceso, y rectangularW mas. El resultado de esta experimentación es el siguiente:
+
+\begin{figure}[H]
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularH--noCO0.png}
+		\caption{Rendimiento para rectangularH}
+		\label{fig:blurRH}
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularW--noCO0.png}
+		\caption{Rendimiento para rectangularW}
+		\label{fig:blurRW}
+	\end{center}
+	\endminipage\hfill
+\end{figure}
+
+Como se ve no hay una diferencia importante en el tiempo de procesamiento final, de hecho procesar rectangularW termina tardando menos que Rendimiento para rectangularH. Como se ve también, rectangularW tiene mucho ruido, y es muy interesante ver como ASM1 tiene el mismo ruido que ASM2 pero amplificado, esto quiere decir que no es realmente ruido, sino que, analizando los datos de salida del experimento, estos picos se dan cuando las dimensiones de la imagen son múltiplo de 32, por lo tanto llegamos a la conclusión que por algún motivo baja el hit rate del cache, pero no se nos pudieron ocurrir otras pruebas para comprobar esto.
+
+Otra conclusión a la que llegamos es que la decisión sobre la forma de iterar la imagen fue equivocada, ya que si, se carga una sola linea de 4 pixeles por cada pixel a procesar, pero si se hiciera la iteración de izquierda a derecha y de arriba a abajo, se cargarían tres lineas de 4 pixeles por pixel a procesar, lo que es un mayor acceso a memoria, pero como siempre (excepto al llegar al final de la linea) se cargan tres lineas que empiezan en la columna siguiente a las de la iteración anterior, es seguro que van a estar en cache (si el cache copia bloques de 32 bits, va a haber 1 miss y 28 hits porque se carga de a 4 pixeles). Esto hace que sea muy probablemente mas eficiente que la iteración implementada.
 
 \subsection{Merge}
 
