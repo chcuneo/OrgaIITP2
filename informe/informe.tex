@@ -341,8 +341,8 @@ Se repite el procedimiento para la segunda imagen, pero sin guardar los bytes de
 \newpage
 
 \subsection{HSL}
-El espacio RGB que usamos hasta ahora esta dado por un cubo donde cada componente corresponde a la intensidad de los colores primarios de la luz(rojo, verde y azul), para este filtro nos trasladamos al espacio HSL, este esta dado por tres componentes: HUE(color), Saturation(Saturación) y Lightness(Luminosidad). Este espacio se representa graficamente como un bicono donde cada punto esta determinado con: altura de la circunferencia a la que pertenece, radio de dicha circunferencia y ángulo dentro de la circunferencia, donde el color corresponde al ángulo, la saturacion al radio y la luminosidad a la altura.
-El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel, (2)suma de componentes y (3)transformacion del espacio HSL a RGB cuyas formulas son las siguientes:
+El espacio RGB que usamos hasta ahora está dado por un cubo donde cada componente corresponde a la intensidad de los colores primarios de la luz(rojo, verde y azul), para este filtro nos trasladamos al espacio HSL, este está dado por tres componentes: HUE(color), Saturation(Saturación) y Lightness(Luminosidad). Este espacio se representa graficamente como un bicono donde cada punto esta determinado con: altura de la circunferencia a la que pertenece, radio de dicha circunferencia y ángulo dentro de la circunferencia, donde el color corresponde al ángulo, la saturacion al radio y la luminosidad a la altura.
+El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel, (2)suma de componentes y (3)transformación del espacio HSL a RGB cuyas formulas son las siguientes:
 \newline
 \begin{enumerate}
 	\item 
@@ -358,7 +358,7 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 		S:\newline
 		$0$ si $cmax == cmin$\newline
 		$d / ( 1 - fabs( 2*l - 1 ) ) / 255.0001f$ caso contrario\newline
-	  para este caso se debe dividir contra 255.0001f para evitar que s supere 1, evitando la propagación de errores.\newline
+	  para este caso se debe dividir contra 255.0001f para que s supere 1, evitando la propagación de errores.\newline
 
 		Donde $cmax = max(b,g,r)$, $min = min(b,g,r)$ y $d = cmax - cmin$\newline
 	
@@ -404,17 +404,17 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 \end{enumerate}
 
 \subsubsection{Implementacion en assembler 1}
-OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 3).
+OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 4).
 
 
 
 Recibimos como parametros una imagen representada en memoria de la misma manera que en los anteriores filtros, ancho, alto y tres valores hh, ss y ll, los cuales modificaran los 3 elementos de la representacion HSL del pixel.
-Primero acomodamos los datos de entrada de manera que nos queden dentro de un registro xmm, dado que cada dato ocupa 16bits los acomodaremos de manera tal que los 3 elementos queden empaquetados.
+Primero acomodamos los datos de entrada de manera que nos queden dentro de un registro xmm, dado que cada dato ocupa 16bits los acomodamos de manera tal que los 3 elementos queden empaquetados.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{imagenes/llsshh.png}
-\caption{Organizacion de valores de entrada}
+\caption{Organización de valores de entrada en registro XMM}
 \label{lshValue6}
 \end{figure}
 
