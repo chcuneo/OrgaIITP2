@@ -70,8 +70,8 @@ ASM_blur2:
 		lea r12, [rdx + r8*4] 
 		lea r12, [r12 + rbx*4 - 4] 			; r12 apunta a la misma columna de la siguiente fila
 
-		movdqu xmm6, [r12]	 		; xmm3 = |d[1][iw+2]|d[1][iw+1]|d[1][iw]	|d[1][iw-1]	| 
-		movdqu xmm7, [r12 + 8]		; xmm4 = |d[1][iw+4]|d[1][iw+3]|d[1][iw+2]	|d[1][iw+1]	|
+		movdqu xmm6, [r12]	 		; xmm6 = |d[1][iw+2]|d[1][iw+1]|d[1][iw]	|d[1][iw-1]	| 
+		movdqu xmm7, [r12 + 8]		; xmm7 = |d[1][iw+4]|d[1][iw+3]|d[1][iw+2]	|d[1][iw+1]	|
 
 		movdqu xmm5, xmm4  			; xmm5 = xmm4
 		punpcklbw xmm3, xmm15 		; xmm3 = |d[0][iw]	|d[0][iw-1]|
