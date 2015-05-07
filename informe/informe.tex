@@ -139,11 +139,11 @@ El lenguaje C es uno de los más eficientes en cuestión de performance, pero es
 %
 \subsection{Blur}
 
-El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus 8 pixeles vecinos y se guarda ese resultado en el mismo pixel.
+El filtro blur genera una imagen desenfocada artificialmente, que usa un metodo muy simple para lograrlo, a cada pixel se lo promedia con todos sus pixeles vecinos y se guarda ese resultado en el mismo pixel.
 
 \subsubsection{Implementación en assembler 1}
 
-El principio basico de la implementacion en assembler es que se itera la imagen de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
+El principio basico de la implementacion en assembler es que el barrido que se le hace a la imagen se realiza de arriba a abajo y de izquierda a derecha (viendo la imagen siempre como una matriz). Con este metodo se obtiene una ventaja muy interesante, uno reutiliza las filas ya cargadas a la hora de procesar el siguiente pixel, y solo tiene que cargar una fila mas por cada pixel a procesar, esto es una ventaja ya que uno busca una menor lectura de memoria, ya que es una tarea muy costosa. En el pseudocodigo siguiente se vera mas detalladamente el funcionamiento de este metodo:
 
 % \begin{algorithm}%[t]
 % \caption{Blur}
@@ -194,32 +194,36 @@ end
 Cada pixel contiene 4 valores de 1 byte (R, G, B y A), por lo tanto entran 4 pixels en un registro xmm, entonces cargo directamente 4 pixels de memoria. Hay que tener en cuenta que se cargan los pixels del [x-1] al [x+2], pero en el registro van a quedar al revez, siendo primero el [x+2].
 \newline
 
-La funcion 'borrarprimero' va a utilizar la instruccion PINSRD para insertar 0 en los primeros 4 bytes, eliminando asi los datos de el primer pixel en el registro, que seria el pixel x+2, ya que es el pixel que no nos interesa, porque solo hay que promediar con los vecinos del pixel img[x][y], es decir los pixeles img[i][j] con i$\in$(x-1, x , x+1) y j$\in$(y-1, y , y+1).
+La funcion "borrarprimero" va a utilizar la instruccion PINSRD para insertar 0 en los primeros 4 bytes, eliminando asi los datos de el primer pixel en el registro, que seria el pixel x+2, ya que es el pixel que no nos interesa, porque solo hay que promediar con los vecinos del pixel img[x][y], es decir los pixeles img[i][j] con i$\in$(x-1, x , x+1) y j$\in$(y-1, y , y+1).
 \newline
 
-La funcion 'sumarpixels' va a sumar los pixeles dentro del registro por valor (R, G, B y A). Para lograr esto sin saturacion se necesita extender (con ceros) los valores de 1 byte a 2 bytes, para poder representar sin nungun problema la suma de todos los valores posibles. Para esto se utiliza la instruccion PUNPCKLBW y PUNPCKHBW (ambas con un registro nulo como source), para guardar en un registro los 2 pixels menos significativos y los 2 pixels mas significativos respectivamente. Se necesita guardar en dos registros ya que al ocupar cada dato el doble, van a entrar la mitad de datos en el registro. Luego de extender los valores se procede a sumar horizontalmente cada registro y luego se suman de forma empaquetada a word los dos registros, y nos queda en el qword menos significativo el pixel suma de los pixels que habia originalmente en el registro.
+La funcion "sumarpixels" va a sumar los pixeles dentro del registro por valor (R, G, B y A). Para lograr esto sin saturacion se necesita extender (con ceros) los valores de 1 byte a 2 bytes, para poder representar sin nungun problema la suma de todos los valores posibles. Para esto se utiliza la instruccion PUNPCKLBW y PUNPCKHBW (ambas con un registro nulo como source), para guardar en un registro los 2 pixels menos significativos y los 2 pixels mas significativos respectivamente. Se necesita guardar en dos registros ya que al ocupar cada dato el doble, van a entrar la mitad de datos en el registro. Luego de extender los valores se procede a sumar horizontalmente cada registro y luego se suman de forma empaquetada a word los dos registros, y nos queda en el qword menos significativo el pixel suma de los pixels que habia originalmente en el registro.
 \newline
 
-La funcion 'promedio', dado un registro con la suma (de todos los pixeles a promediar) en el qword menos significativo, va a devolver un pixel con cada valor original dividido por 9, y va a devolver este pixel de forma que quede listo para ser grabado a memoria (quiere decir los R, G, B y A de 1 byte cada uno y ordenados). Para ello primero extiende (con ceros) de word a dword cada valor del pixel, utilizando la instruccion PUNPCKLWD con un registro nulo como source. Luego se convierte cada valor de entero de 32 bits a single-precision floating point, que es tambien de 32 bits, con la instruccion CVTDQ2PS. Entonces se procede a dividirlos por 9 en forma empaquetada utilizando la instruccion DIVPS, usando como source un registro previamente cargado con cuatro 9 en float. Luego se van a convertir de nuevo a enteros utilizando la instruccion CVTPS2DQ. En este punto ya sabemos que no importe que valores hayan tenido los 9 pixeles sumados, al promediarlos van a dar numeros entre 255 y 0 unicamente, entonces al convertirlos de nuevo a enteros sabemos que van a quedar valores que van a ocupar como mucho los 8 bits menos significativos de cada dword. Teniendo en cuenta esa informacion se puede proceder a hacer un shuffle (con la instruccion PSHUFB y una mascara) para mover cada byte de esta forma:
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.8]{imagenes/blurshuffle.png}
-\caption{Resultado del PSHUFB con el primer registro como destino y el segundo como fuente}
-\label{bshuffle}
-\end{figure}
-
-Finalmente se graba a memoria el resultado utilizando la instruccion PEXTRD [mmx], xmm, 00b, siendo mmx el puntero al destino donde guardar los datos y xmm el resultado del promedio, se utiliza '00b' ya que el resultado de calcular el promedio se encuentra en el dword menos significativo.
+La funcion "promedio", dado un registro con la suma (de todos los pixeles a promediar) en el qword menos significativo, va a devolver un pixel con cada valor original dividido por 9, y va a devolver este pixel de forma que quede listo para ser grabado a memoria (quiere decir los R, G, B y A de 1 byte cada uno y ordenados). Para ello primero extiende (con ceros) de word a dword cada valor del pixel, utilizando la instruccion PUNPCKLWD con un registro nulo como source. Luego se convierte cada valor de entero de 32 bits a single-precision floating point, que es tambien de 32 bits, con la instruccion CVTDQ2PS. Entonces se procede a dividirlos por 9 en forma empaquetada utilizando la instruccion DIVPS, usando como source un registro previamente cargado con cuatro ''9'' en float. Luego se van a convertir de nuevo a enteros utilizando la instruccion CVTPS2DQ. En este punto ya sabemos que no importe que valores hayan tenido los 9 pixeles sumados, al promediarlos van a dar numeros entre 255 y 0 unicamente, entonces al convertirlos de nuevo a enteros sabemos que van a quedar valores que van a ocupar como mucho los 8 bits menos significativos de cada dword. Teniendo en cuenta esa informacion se puede proceder a hacer un shuffle (con la instruccion PSHUFB) para mover cada byte menos significativo de cada dword a la posicion correcta del registro, quedando en el dword menos significativo del registro el pixel a guardar, con sus valores en el orden correcto. En esta instruccion se utiliza una mascara especifica que se puede ver en la implementacion.
 \newline
 
-Una cuestion a tener en cuenta de esta implementacion es que, al ser el array 'img' la imagen a procesar y el destino donde guardar el resultado, se tuvo que asignar un espacio de igual tamaño al de 'img' para guardar el resultado en ese espacio, ya que si se guarda en el mismo 'img' se estarian promediando los pixels con pixels que son un promedio de por si. Entonces se guarda el resultado en este espacio, y luego de procesar toda la image, se copia todo este bloque de memoria al bloque de la imagen original usando un ciclo simple, y luego se hace un free del bloque temporal.
+Finalmente se graba a memoria el resultado utilizando la instruccion PEXTRD [mmx], xmm, 00b, siendo mmx el puntero al destino donde guardar los datos y xmm el resultado del promedio, se utiliza ''00'' ya que el resultado de calcular el promedio se encuentra en el dword menos significativo.
 \newline
 
-Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre carga de a 4 pixeles, descartando el cuarto pixel. Esto va a comportarse de forma no deseada al llegar al x = n - 2, ya que al cargar el registro estarias agarrando datos que no pertenecen a la fila actual, esto no es un problema al principio, ya que se estaria cargando el primer pixel de la siguiente fila, lo cual esta permitido. Pero al llegar tambien al y = n - 2 uno estaria tratando de cargar algo que no nos pertenece, ya que estariamos en la ultima fila de la imagen. Para esto la implementacion se encarga de detectar cuando se llega a este caso en particular (etiqueta 'lastpixel') y simplemente se cargan los ultimos 4 pixeles, y se realiza un PSRLDQ para luego seguir normalmente con el algoritmo.
+Una cuestion a tener en cuenta de esta implementacion es que, al ser el array ''img'' la imagen a procesar y el destino donde guardar el resultado, se tuvo que asignar un espacio de igual tamaño al de ''img" para guardar el resultado en ese espacio, ya que si se guarda en el mismo ''img''  se estarian promediando los pixels con pixels que son un promedio de por si. Entonces se guarda el resultado en este espacio pedido usando malloc, y luego de procesar toda la image, se copia todo el contenido de este resultado a la imagen original usando un loop construido con jumps condicionales, y luego se hace un free de esta memoria.
+\newline
+
+Tambien algo muy importante es que, como se ve en el pseudocodigo, uno siempre carga de a 4 pixeles, descartando el cuarto pixel en el proceso posterior. Esto va a comportarse de forma no deseada al llegar al x = n - 2, ya que al cargar el registro estarias agarrando datos que no pertenecen a la fila deseada, esto no es un problema al principio, ya que se estaria cargando el primer pixel de la siguiente fila, lo cual esta permitido. Pero al llegar tambien al y = n - 2 uno estaria tratando de cargar algo que no nos pertenece, ya que estariamos en la ultima fila de la imagen. Para esto la implementacion se encarga de detectar cuando se llega a este caso en particular (etiqueta "lastpixel") y simplemente se cargan los ultimos 4 pixeles, y se realiza un PSRLDQ para luego seguir normalmente con el algoritmo.
 
 \subsubsection{Implementación en assembler 2}
 
-La implementacio numero 2 cumple el mismo principio que la implementacion 1, solo que busca procesar de a 4 pixeles por iteracion, para esto se van a necesitar cargar 6 pixeles de la fila de pixeles a procesar, de la siguiente y la anterior, como se ve en la siguiente imagen:
+Es...
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{imagenes/256value.png}
+\caption{Contenido de los registros utilizados para multiplicar}
+\label{256value2}
+\end{figure}
+
+El...
+
 
 \subsection{Merge}
 
@@ -227,7 +231,7 @@ El merge nos permite a partir de dos imágenes y un valor entre cero y uno, obte
 
 \subsubsection{Implementación en assembler 1}
 
-Se recibe por parámetro dos punteros a dos imágenes almacenadas en memoria como una matriz de pixeles. Como los pixeles de estas imágenes ocupan 4 byte, y la cantidad de pixeles de las mismas es multiplo de 4,  utilizando los registros xmm podemos traer de a 4 pixeles. Luego incrementamos los punteros a la imagen en 16 bytes y volvemos a traer los pixeles de memoria. De esta manera tenemos un ciclo principal cuya cantidad de iteraciones es la cantidad de pixeles dividido cuatro. Cada una de estas consiste en levantar de memoria cuatro pixeles y almacenarlos en un registro xmm, cuyo contenido puede verse en la figura \ref{primerXmm}
+Se recibe por parámetro dos punteros a dos imágenes almacenadas en memoria como una matriz de pixeles. Como los pixeles de estas imágenes ocupan 4 byte, y la cantidad de pixeles de las mismas es multiplo de 4,  utilizando los registros xmm podemos traer de a 4 pixeles. Luego incrementamos los punteros a la imagen en 16 bytes y volvemos a traer los pixeles de memoria. De esta manera tenemos un ciclo principal cuya cantidad de iteraciones es la cantidad de pixeles dividido cuatro. Cada una de estas consiste en levantar de memoria cuatro pixeles y almacenarlos en un registro xmm, cuyo contenido puede verse en la figura \ref{primerXmm}.
 
 \begin{figure}[H]
 \centering
@@ -383,7 +387,7 @@ Primero acomodamos los datos de entrada de manera que nos queden dentro de un re
 \centering
 \includegraphics[scale=0.8]{imagenes/llsshh.png}
 \caption{Organizacion de valores de entrada}
-\label{lshValue}
+\label{lshValue6}
 \end{figure}
 
 A continuación movemos a un registro xmm el valor que usaremos como limite superior de la suma para h por un lado y s y l por otro ya que las modificaciones seran diferentes para los dos casos, como limite inferior simplemente colocaremos 0 en un registro usando pxor.
@@ -396,7 +400,7 @@ Dado que la imagen está representada linealmente en memoria vamos a recorrerla 
 \centering
 \includegraphics[scale=0.8]{imagenes/lsh.png}
 \caption{Contenido del registro XMM}
-\label{lshValue}
+\label{lshValue5}
 \end{figure}
 
 Ahora sumamos los valores hsl con los que teniamos como parametro con addps(a) para luego revisar los limites.
@@ -405,7 +409,7 @@ Ahora sumamos los valores hsl con los que teniamos como parametro con addps(a) p
 \centering
 \includegraphics[scale=0.8]{imagenes/sumahsl.png}
 \caption{Contenido del registro XMM}
-\label{lshValue}
+\label{lshValue4}
 \end{figure}
 
 Para realizar las comparaciones correspondientes primero generamos los vectores que sumados o restados nos den los resultados que queremos en cada caso, para esto tomamos por un lado un registro con el valor 360(b) en la posicion de h y procedemos al primer caso de h, para esto aplicamos cmpleps para crear una mascara(c) en donde si h es mayor a 360 nos quedaran 1s en los valores donde se deberia ubicar h o 0s en caso contrario, luego aplicamos pand usando (b) y (c) para finalmente restarlo a (a), dando como resultado h + hh ó h + hh - 360 dependiendo del caso, a continuacion veremos como se aplica esta idea a s y a l.
@@ -414,7 +418,7 @@ Para realizar las comparaciones correspondientes primero generamos los vectores 
 \centering
 \includegraphics[scale=0.8]{imagenes/caso1hsumahsl.png}
 \caption{ejemplo de estados usando cmp y and para el caso h mayor a 360}
-\label{lshValue}
+\label{lshValue3}
 \end{figure}
 
 Para s y l, como su resultado debe ser 1 en caso de pasar el limite, simplemente colocamos s+ss-1 y l+ll-1 empaquetados en un registro aparte pero en las mismas posiciones que s+ss y l+ll respectivamente, luego aplicamos la misma idea que en la figura 10 pero comparando contra 1 en lugar de 360 y finalmente sumando s+ss-1 o l l+ll-1 según corresponda para lograr que quede 1 ó s+ss/l+ll en los valores finales. Los casos de los limites inferiores que se realizan inmediatamente despues en el codigo son analogos pero comparando contra 0s, dando una sucesion de estados con la cual al llegar al final, (1) tendra los valores l+ll ó 1 ó 0, s+ss ó 1 ó 0,  h+hh ó h+hh+360 ó h+hh-360 y 0 respectivamente en sus posiciones empaquetadas.
@@ -454,7 +458,7 @@ Por ultimo queda calcular S, en caso de que sea igual al minimo simplemente lo s
 \centering
 \includegraphics[scale=0.8]{imagenes/representacionfloat.png}
 \caption{Representación del punto flotante en memoria}
-\label{lshValue}
+\label{lshValue2}
 \end{figure}
 
 Terminado lo anterior procedemos a empaquetar los datos con punpckldq de manera que dentro del registro quede LHSA para que cuando lo volquemos a memoria sea de la forma ASHL.
@@ -489,6 +493,50 @@ Para ordenar los datos(ya que deben tener 1B cada uno y a esta altura tienen 4B)
 \section{Experimentación}
 
 Se llevaron a cabo experimentos para comparar el tiempo de computo de las distintas versiones de los filtros, en assembler y en C, con distintas optimizaciónes. Se estudio el tiempo de computo para distintos parámetros de los filtros, y utilizando distintos conjuntos de imágenes: Normal(incluyen todos los colores), Black(imágenes negras), White(imágenes blancas).
+
+
+\subsection{Blur}
+
+En las siguientes figuras encontramos los resultados obtenidos para el filtro blur:
+
+\begin{figure}[H]
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/blur-black--all.png}
+		\caption{Rendimiento del filtro blur para imágenes negras}
+		\label{fig:exp1-5}
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png}
+		\caption{Rendimiento del filtro blur para imágenes normales.}
+		\label{fig:exp1-2}
+	\end{center}
+	\endminipage\hfill
+\end{figure}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/blur-white--all.png}
+		\caption{Rendimiento del filtro blur para imágenes blancas.}
+		\label{fig:exp1-1}
+	\end{center}
+\end{figure}
+
+
+
+Las dos implementaciones en assembler, utilizan una memoria temporal del tamaño de la imagen para ir almacenando los resultados parciales. Como trabajamos con imágenes pequeñas, esto no resulta costoso, pero podria ser evitado con un algoritmo mas complejo.
+
+La segunda implementación en assembler en comparación con la primera resulta tener un rendimiento un poco mejor. Esto se debe a que esta ultima realiza tres lecturas de memoria y una escritura para escribir en la memoria temporal un pixel, en cambio la segunda utiliza cuatro lecturas y cuatro escrituras de memoria para escribir en la memoria temporal cuatro pixeles. Esta ultima podria ser mejorada para que con una escritura escribir los cuatro pixeles en memoria, en lugar de hacerlo con accesos separados.
+
+La implementacion en C sin optimización resulta ser mucho mas costosa que las otras, lo cual se puede deber a que por cada color realiza una suma y un acceso a memoria, lo que implica una cantidad de accesos a memoria muy grande. La implementación en C optimizada resulta tener un rendimiento mejor que una version de assembler, pero peor que el otro.
+
+
+
+
+
+
+Al no tener saltos condicionales, obtenemos el mismo rendimiento para los distintos tipos de imágenes. 
 
 
 \subsection{Merge}
@@ -543,6 +591,8 @@ En las siguientes figuras encontramos los resultados obtenidos para el filtro me
 \end{figure}
 
 Podemos ver que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles, en la implementación en assembler se traen desde memoria cuatro pixeles a un registro xmm, a diferencia la implementacion en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
+
+Tanto las implementaciones en C como en assembler de este filtro presentan el mismo rendimiento para los distintos tipos de imágenes, y solo dependen de la cantidad de pixeles a procesar. Esto se debe a que ambas implentaciones no presentan saltos condicionales.
 
 Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. La imagen resultante para enteros tiene un error un poco mayor, pero esta diferencia no es apreciable a simple vista.
 
