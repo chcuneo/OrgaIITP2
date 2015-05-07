@@ -450,9 +450,7 @@ Para realizar las comparaciones correspondientes primero generamos los vectores 
 Para s y l, como su resultado debe ser 1 en caso de pasar el limite, simplemente colocamos s+ss-1 y l+ll-1 empaquetados en un registro aparte pero en las mismas posiciones que s+ss y l+ll respectivamente, luego aplicamos la misma idea que en la figura 10 pero comparando contra 1 en lugar de 360 y finalmente sumando s+ss-1 o l l+ll-1 según corresponda para lograr que quede 1 ó s+ss/l+ll en los valores finales. Los casos de los limites inferiores que se realizan inmediatamente después en el código son análogos pero comparando contra 0s, dando una sucesión de estados con la cual al llegar al final, (1) tendrá los valores l+ll ó 1 ó 0, s+ss ó 1 ó 0,  h+hh ó h+hh+360 ó h+hh-360 y 0 respectivamente en sus posiciones empaquetadas.
 
 \subsubsection{Implementación en assembler 2}
-Para esta implementación reutilizamos el código de la primera y nos concentramos en implementar (1) y (3), cuyas reglas son las siguientes:
-\newline\newline
-reglas.....
+Para esta implementación reutilizamos el código de la primera y nos concentramos en implementar (1) y (3)
 \newline\newline
 \textbf{Transformación del espacio RGB a HSL}
 \newline\newline
