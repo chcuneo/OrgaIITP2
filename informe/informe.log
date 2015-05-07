@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  6 MAY 2015 19:55
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  6 MAY 2015 19:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -710,6 +710,9 @@ LaTeX Warning: Label `lshValue' multiply defined.
 
 LaTeX Warning: Label `lshValue' multiply defined.
 
+
+LaTeX Warning: Label `lshValue' multiply defined.
+
 )
 \openout1 = `informe.aux'.
 
@@ -1108,7 +1111,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  14728 strings out of 494969
  255970 string characters out of 6179592
- 361880 words of memory out of 5000000
+ 362880 words of memory out of 5000000
  17625 multiletter control sequences out of 15000+600000
  19522 words of font info for 34 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
@@ -1122,7 +1125,7 @@ ic/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
 t9.pfb>
-Output written on informe.pdf (13 pages, 573287 bytes).
+Output written on informe.pdf (13 pages, 573056 bytes).
 PDF statistics:
  114 PDF objects out of 1000 (max. 8388607)
  60 compressed objects within 1 object stream

@@ -125,7 +125,8 @@ Los filtros de imagen son una herramienta poderosa a la hora de retocar una imag
 Su uso brinda una gamma de opciones para modificar las imagenes de manera que sea mas flexible su edicion o analisis.\\
 En este trabajo practico presentamos los metodos blur, merge y hsl ya existentes y los implementamos en lenguaje de ensamblador.
 Damos dos implementaciones de cada filtro siendo la segunda una optimizacion de la primera en merge y blur, y una variacion de implementacion C/Assembler a Assembler en hsl.\\
-Finalmente realizamos experimentos para comparar el tiempo de computo de los mismos. 
+Finalmente realizamos experimentos para comparar el tiempo de computo de los mismos.
+ 
 El lenguaje C es uno de los más eficientes en cuestión de performance, pero es posible mejorarla implementando las funciones directamente en assembler. En este trabajo se pondra enfasis en las posible ventajas que puede tener un codigo en assembler con respecto a uno en C, y también las ventajas de usar las e instrucciones SIMD de la arquitectura x86-64.
 
 
@@ -491,7 +492,63 @@ Para ordenar los datos(ya que deben tener 1B cada uno y a esta altura tienen 4B)
 
 \section{Experimentación}
 
-Se llevan a cabo experimentos para comparar el tiempo de computo de las distintas versiones de los filtros, en assembler y en C.
+Se llevaron a cabo experimentos para comparar el tiempo de computo de las distintas versiones de los filtros, en assembler y en C, con distintas optimizaciónes. Se estudio el tiempo de computo para distintos parámetros de los filtros, y utilizando distintos conjuntos de imágenes: Normal(incluyen todos los colores), Black(imágenes negras), White(imágenes blancas).
+
+
+\subsection{Merge}
+
+En las siguientes figuras encontramos los resultados:
+
+\begin{figure}[H]
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png}
+		\caption{Rendimiento para un value de 0.5, imágenes negras.}
+		\label{fig:exp1-5}
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png}
+		\caption{Rendimiento para un value de 0.0, imágenes normales.}
+		\label{fig:exp1-2}
+	\end{center}
+	\endminipage\hfill
+\end{figure}
+\begin{figure}[H]
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png}
+		\caption{Rendimiento para un value de 0.3, imágenes normales.}
+		\label{fig:exp1-1}
+	\end{center}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png}
+		\caption{Rendimiento para un value de 0.5, imágenes normales.}
+		\label{fig:exp1-0.5}
+	\end{center}
+	\endminipage\hfill
+		\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png}
+		\caption{Rendimiento para un value de 0.8, imágenes normales.}
+		\label{fig:exp1-0.5}
+	\end{center}
+	\endminipage\hfill
+		\minipage{0.5\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.4]{../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png}
+		\caption{Rendimiento para un value de 0.5, imágenes blancas.}
+		\label{fig:exp1-0.5}
+	\end{center}
+	\endminipage\hfill
+\end{figure}
+
+
+
+
 
 
 
