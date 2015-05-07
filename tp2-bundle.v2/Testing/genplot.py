@@ -82,10 +82,5 @@ for filen in os.listdir(datadir):
 	ylabel('Ciclos')
 	title(titlee)
 	grid(True)
-<<<<<<< HEAD
 	savefig(plotdir + "noASM1/" + getdataname[0] + "--noASM1" + ".png")
 	clf()
-=======
-	savefig(plotdir + "noASM1/" + filename + "--noASM1" + ".png")
-	clf()
->>>>>>> 3806b2d468c9302e29201087f9fe2b17b7aa3511
