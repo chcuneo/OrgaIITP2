@@ -401,7 +401,7 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 
 \end{enumerate}
 
-\subsubsection{implementación en assembler 1}
+\subsubsection{Implementación en assembler 1}
 OBS: Para esta implementación usamos dos funciones provistas por la cátedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformándolo a HSL, luego procesándolo y finalmente transformándolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 4).
 
 
@@ -454,7 +454,7 @@ Para esta implementación reutilizamos el código de la primera y nos concentram
 \newline\newline
 reglas.....
 \newline\newline
-Transformación del espacio RGB a HSL
+\textbf{Transformación del espacio RGB a HSL}
 \newline\newline
 Como parámetros tenemos el puntero al pixel de la matriz que queremos convertir y un vector de floats donde guardar la versión hsl del pixel.
 Primero levantamos el pixel a un registro de propósito general y lo movemos de a bytes a otros registros para separar los elementos RGBA del pixel, como cada uno ocupa 1B  simplemente movemos entre registros de 1B y luego shifteamos al que contiene todo el pixel 1B a la derecha hasta que queden todos separados.
@@ -490,7 +490,7 @@ Por ultimo queda calcular S, en caso de que sea igual al mínimo simplemente lo 
 Terminado lo anterior procedemos a empaquetar los datos con punpckldq de manera que dentro del registro quede LHSA para que cuando lo volquemos a memoria sea de la forma ASHL.
 \newline\newline
 
-Transformación del espacio HSL a RGB
+\textbf{Transformación del espacio HSL a RGB}
 \newline\newline
 
 Como parámetros tenemos un vector de floats donde se encuentra la versión hsl del pixel y el puntero al pixel de la matriz donde queremos colocar su versión RGB. Primero levantamos el pixel a un registro xmm y separamos sus componentes entre otros registros xmm usando punpckldq, punpckhdq, psrldq y pslldq.
