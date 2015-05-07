@@ -5,7 +5,7 @@
 #                                                                           #
 # ************************************************************************* #
 
-all: makes tp2
+all: clean makes tp2
 
 CFLAGS=-Wall -Wextra -pedantic -O0 -ggdb -lm -std=c99
 CFLAGS3=-Wall -Wextra -pedantic -O3 -ggdb -lm -std=c99
@@ -31,7 +31,7 @@ tp2: run.o tp2.o runtest.o tests.o makes
 	cp tp2 ../bin/
 	cp runtestO0 ../Testing/
 	cp runtestO3 ../Testing/
-	
+
 clean:
 	make -C bmp clean
 	make -C tools clean
