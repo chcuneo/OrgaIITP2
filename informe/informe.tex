@@ -251,7 +251,6 @@ A partir de esas sumas se pueden obtener los valores resultantes para los 4 pixe
 
 En el proceso para cada pixel, primero se extenderan los valores a dword con el mismo procedimiento explciado anteriormente (esto se hace para poder, mas adelante, pasarlo a single precision floating point in place). Luego se la operacion suma entre los registros se realiza con la instruccion PADDD, luego se convierten los valores a FP con CVTDQ2PS, se divide por 9 usando DIVPS, y se convierte de nuevo a enteros CVTPS2DQ. Por ultimo se hace el mismo shuffle que en la implementacion 1, para terminar grabando el resultado al bloque de memoria temporal.
 
-\newpage
 
 \subsection{Merge}
 
@@ -277,7 +276,7 @@ Luego utilizando la instrucción pshufb y una masara apropiada ordenamos su cont
 \label{segundoXmm}
 \end{figure}
 
-Utilizamos las instrucciones de desempaquetado de SIMD y un registro xmm lleno de ceros, para desempaquetar la parte alta y baja, obteniendo registros xmm con el contenido como se muestra en la figura \ref{tercerXmm}.
+Utilizamos las instrucciones de desempaquetado de SIMD y un registro xmm lleno de ceros, para desempaquetar la parte alta y baja, obtenemos registros xmm con el contenido como se muestra en la figura \ref{tercerXmm}.
 
 
 \begin{figure}[H]
@@ -297,7 +296,7 @@ Luego volvemos a desempaquetar parte alta y baja de los dos registros obtenidos,
 \label{cuartoXmm}
 \end{figure}
 
-Utilizando la instrucción cvtdq2ps convertimos los cuatro valores de los registros \ref{cuartoXmm}, excepto el que contiene los bytes de trasparencia(A), a tipo flotante. El objetivo es multiplicar cada color por value. Para hacer esto, previo al ciclo, utilizando la instrucción shufps, conseguimos en un registro xmm cuatro valores de tipo flotante con el valor que indica el índice de combinación de imágenes pasado por parametro, y en otro cuatro valores con 1-value tal como se indica en la figura \ref{value}.
+Utilizando la instrucción cvtdq2ps convertimos los cuatro valores de los registros de la figura ~\ref{cuartoXmm}, excepto el que contiene los bytes de trasparencia(A), a tipo flotante. El objetivo es multiplicar cada color por value. Para hacer esto, previo al ciclo, utilizando la instrucción shufps, conseguimos en un registro xmm cuatro valores de tipo flotante con el valor que indica el índice de combinación de imágenes pasado por parametro, y en otro cuatro valores con 1-value tal como se indica en la figura \ref{value}.
 
 \begin{figure}[H]
 \centering
@@ -309,11 +308,11 @@ Utilizando la instrucción cvtdq2ps convertimos los cuatro valores de los regist
 
 Utilizando la instrucción de simd mulps, multiplicamos los colores transformados a tipo flotante por value.
 
-Se repite el procedimiento para la segunda imagen, excepto que no se desempaqueta el byte de trasparencia(A), ya que solo interesa el byte de trasparencia de la primera imagen. En este caso multiplicamos por 1-value. Sumamos con la instruccion addps los valores obtenidos en la multiplicación, para los colores azul, verde y rojo. Luego convertimos a enteros de 32 bit, y con la instrucciones packusdw, y packuswb empaquetamos de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Este ultimo se consideran los bytes de la primera imagen almacenados en un registro xmm como se muestra la figura \ref{cuartoXmm}. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
+Se repite el procedimiento para la segunda imagen, excepto que no se desempaqueta el byte de trasparencia(A), ya que solo interesa los bytes de trasparencia de la primera imagen. En este caso multiplicamos por 1-value. Sumamos con la instruccion addps los valores obtenidos en la multiplicación, para los colores azul, verde y rojo. Luego convertimos a enteros de 32 bit, y con la instrucciones packusdw, y packuswb empaquetamos de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Este ultimo se consideran los bytes de la primera imagen almacenados en un registro xmm como se muestra la figura \ref{cuartoXmm}. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
 
 \subsubsection{Implementación en assembler 2}
 
-Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño. Para esto la para obtener el mismo resultado(aunque se pierdan decimales) es multiplicar a todo por 256, hacer las multiplicaciones en enteros y finalmente dividir por 256.
+Es analoga a la implementación anterior, pero en este caso se hacen la suma y multiplicación en numeros enteros. Se tiene en cuenta que la multiplicación de dos enteros, da como resultado un entero que puede ocupar el doble de tamaño. Para conseguir implementar el algoritmo con instrucciones enteras y obtener el mismo resultado(aunque se pierdan decimales), el metodo es multiplicar a todo por 256, hacer las multiplicaciones en enteros y finalmente dividir por 256.
 
 Antes de empezar el ciclo, multiplicamos en punto flotante 256 y value, y al resultado lo convertimos a enteros. En este proceso se pierden decimales. Como value es un numero entre cero y uno, al multiplicar por 256 y pasarlo a enteros, tenemos un valor entre 0 y 256, con lo que ocupa menos de un byte de tamaño. Utilizando la instrucción pshufb y una mascara, almacenamos en un registro xmm 8 replicas de este valor. Luego hacemos la resta en enteros entre 256 y el valor obtenido en la multiplicación. Nuevamente tenemos un valor entero entre 0 y 256 que entra en un byte, almacenamos 8 replicas del mismo en un registro xmm tal como se ve en la figura \ref{256value}. Estos registros seran utilizados para multiplicar los colores.
 
@@ -338,11 +337,10 @@ Utilizamos las instrucciones pmullw y pmulhuw para obtener las partes altas y ba
 
 Se repite el procedimiento para la segunda imagen, pero sin guardar los bytes de transparencia. Dividimos los enteros por 256 utlizando un corrimiento a derecha de 8 bit con la instrucción "psrld xmm, 8". Y luego sumamos en enteros con las instrucciones paddd. Se decide dividir primero y luego sumar para evitar una posible saturación. Con las instrucciones packusdw y packuswb empaquetamos el resultado, de forma que queden en un xmm los bytes en orden azul, verde, rojo y trasparencia. Finalmente con la instrucción pshufb ordenamos los colores para que queden en el mismo orden en que ingresaron, y escribimos en memoria el resultado.
 
-\newpage
 
 \subsection{HSL}
-El espacio RGB que usamos hasta ahora esta dado por un cubo donde cada componente corresponde a la intensidad de los colores primarios de la luz(rojo, verde y azul), para este filtro nos trasladamos al espacio HSL, este esta dado por tres componentes: HUE(color), Saturation(Saturación) y Lightness(Luminosidad). Este espacio se representa graficamente como un bicono donde cada punto esta determinado con: altura de la circunferencia a la que pertenece, radio de dicha circunferencia y ángulo dentro de la circunferencia, donde el color corresponde al ángulo, la saturacion al radio y la luminosidad a la altura.
-El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel, (2)suma de componentes y (3)transformacion del espacio HSL a RGB cuyas formulas son las siguientes:
+El espacio RGB que usamos hasta ahora está dado por un cubo donde cada componente corresponde a la intensidad de los colores primarios de la luz(rojo, verde y azul), para este filtro nos trasladamos al espacio HSL, este está dado por tres componentes: HUE(color), Saturation(Saturación) y Lightness(Luminosidad). Este espacio se representa graficamente como un bicono donde cada punto esta determinado con: altura de la circunferencia a la que pertenece, radio de dicha circunferencia y ángulo dentro de la circunferencia, donde el color corresponde al ángulo, la saturacion al radio y la luminosidad a la altura.
+El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel, (2)suma de componentes y (3)transformación del espacio HSL a RGB cuyas formulas son las siguientes:
 \newline
 \begin{enumerate}
 	\item 
@@ -358,7 +356,7 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 		S:\newline
 		$0$ si $cmax == cmin$\newline
 		$d / ( 1 - fabs( 2*l - 1 ) ) / 255.0001f$ caso contrario\newline
-	  para este caso se debe dividir contra 255.0001f para evitar que s supere 1, evitando la propagación de errores.\newline
+	  para este caso se debe dividir contra 255.0001f para que s supere 1, evitando la propagación de errores.\newline
 
 		Donde $cmax = max(b,g,r)$, $min = min(b,g,r)$ y $d = cmax - cmin$\newline
 	
@@ -404,17 +402,17 @@ El filtro consta de 3 etapas: (1)Transformación del espacio RGB a HSL del pixel
 \end{enumerate}
 
 \subsubsection{Implementacion en assembler 1}
-OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 3).
+OBS: Para esta implementación usamos dos funciones provistas por la catedra(rgbTOhsl | hslTOrgb) y nos concentramos en (2), donde el algoritmo general va a recorrer la imagen como si fuera un vector, tomando pixel por pixel, transformandolo a HSL, luego procesandolo y finalmente transformandolo a RGB para devolverlo a memoria(para mas información sobre otras posibles implementaciones ver sección 4).
 
 
 
 Recibimos como parametros una imagen representada en memoria de la misma manera que en los anteriores filtros, ancho, alto y tres valores hh, ss y ll, los cuales modificaran los 3 elementos de la representacion HSL del pixel.
-Primero acomodamos los datos de entrada de manera que nos queden dentro de un registro xmm, dado que cada dato ocupa 16bits los acomodaremos de manera tal que los 3 elementos queden empaquetados.
+Primero acomodamos los datos de entrada de manera que nos queden dentro de un registro xmm, dado que cada dato ocupa 16bits los acomodamos de manera tal que los 3 elementos queden empaquetados.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{imagenes/llsshh.png}
-\caption{Organizacion de valores de entrada}
+\caption{Organización de valores de entrada en registro XMM}
 \label{lshValue6}
 \end{figure}
 
@@ -738,11 +736,12 @@ Como segunda variacion decidimos cambiar la manera en que esta implementada la f
     Implementar parteentera en la variacion2, eliminando la parte decimal de la mantisa de la representación en punto flotante del numero a mano podria aumentar bastante el rendimiento.
 \end{enumerate}
 
-\section{Conclusiones}
+\section{Conclusiones y trabajo futuro}
 
 Pudimos corroborar el uso del assembler para conseguir algoritmos mas eficientes temporalmente, aunque al ser un lenguaje de mas bajo nivel sea mas difiil de escribir. En este sentido se utilizaron las instrucciones SIMD de assembler, permitiendonos mejorar la eficiencia, al efectuar varias operaciones juntas. Sin embargo muchas veces es necesario preparar los registros para efectuar estas instrucciones y esto puede no ser sencilllo, o tener un costo temporal elevado.
 
 Además la ganancia en rendimiento de efectuar operaciones SIMD no es tan importante como reducir la cantidad de accesos a memoria. Se pudo apreciar que al reducir la cantidad de estos ultimos, se logra una mejora en el rendimiento significativa.
 
+Como trabajo pendiente queda la implementación de una variante de la primera implementación de HSL en donde para sumar las componentes hh, ss y ll en lugar de agarrar un solo pixel, ordenar los datos de manera que podamos tener 4 h's, l's y s's a la vez y procesar 4 pixeles al mismo tiempo.
 \end{document}
 
