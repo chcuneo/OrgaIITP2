@@ -497,7 +497,7 @@ Se llevaron a cabo experimentos para comparar el tiempo de computo de las distin
 
 \subsection{Merge}
 
-En las siguientes figuras encontramos los resultados:
+En las siguientes figuras encontramos los resultados obtenidos para el filtro merge:
 
 \begin{figure}[H]
 	\minipage{0.5\textwidth}
@@ -546,8 +546,9 @@ En las siguientes figuras encontramos los resultados:
 	\endminipage\hfill
 \end{figure}
 
+Podemos ver que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles, en la implementación en assembler se traen desde memoria cuatro pixeles a un registro xmm, a diferencia la implementacion en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
 
-
+Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. La imagen resultante para enteros tiene un error un poco mayor, pero esta diferencia no es apreciable a simple vista.
 
 
 
