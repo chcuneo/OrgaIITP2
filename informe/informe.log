@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  6 MAY 2015 23:21
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  7 MAY 2015 05:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -713,6 +713,12 @@ LaTeX Warning: Label `lshValue' multiply defined.
 
 LaTeX Warning: Label `lshValue' multiply defined.
 
+
+LaTeX Warning: Label `fig:exp1-0.5' multiply defined.
+
+
+LaTeX Warning: Label `fig:exp1-0.5' multiply defined.
+
 )
 \openout1 = `informe.aux'.
 
@@ -1095,13 +1101,13 @@ File: imagenes/shufle.png Graphic file (type png)
 Package pdftex.def Info: imagenes/shufle.png used on input line 486.
 (pdftex.def)             Requested size: 411.13655pt x 60.38567pt.
 
-<../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png, id=81, 578.16pt x 
-433.62pt>
-File: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png Graphic file (
-type png)
- <use ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png>
-Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all
-.png used on input line 505.
+<../tp2-bundle.v2/Testing/plots/all/blur-black--all.png, id=81, 578.16pt x 433.
+62pt>
+File: ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png Graphic file (type
+ png)
+ <use ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png>
+Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png
+ used on input line 505.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
 Overfull \hbox (3.63786pt too wide) in paragraph at lines 505--506
@@ -1109,13 +1115,13 @@ Overfull \hbox (3.63786pt too wide) in paragraph at lines 505--506
  []
 
 
-<../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png, id=82, 578.16pt x
- 433.62pt>
-File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png Graphic file 
-(type png)
- <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png>
-Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--al
-l.png used on input line 512.
+<../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png, id=82, 578.16pt x 433
+.62pt>
+File: ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png Graphic file (typ
+e png)
+ <use ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png>
+Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.pn
+g used on input line 512.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
 Overfull \hbox (3.63786pt too wide) in paragraph at lines 512--513
@@ -1123,72 +1129,115 @@ Overfull \hbox (3.63786pt too wide) in paragraph at lines 512--513
  []
 
 
-<../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png, id=83, 578.16pt x
+<../tp2-bundle.v2/Testing/plots/all/blur-white--all.png, id=83, 578.16pt x 433.
+62pt>
+File: ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png Graphic file (type
+ png)
+ <use ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png>
+Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png
+ used on input line 520.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+LaTeX Info: Redefining \. on input line 525.
+LaTeX Info: Redefining \% on input line 525.
+ [11 <./imagenes/shufle.png> <../tp2-bundle.v2/Testing/plots/all/blur-black--al
+l.png> <../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png>]
+<../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png, id=91, 578.16pt x 
+433.62pt>
+File: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png Graphic file (
+type png)
+ <use ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png>
+Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all
+.png used on input line 549.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 549--550
+ [] 
+ []
+
+
+<../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png, id=92, 578.16pt x
+ 433.62pt>
+File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png Graphic file 
+(type png)
+ <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png>
+Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--al
+l.png used on input line 556.
+(pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
+
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 556--557
+ [] 
+ []
+
+
+<../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png, id=93, 578.16pt x
  433.62pt>
 File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png Graphic file 
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--al
-l.png used on input line 521.
+l.png used on input line 565.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 521--522
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 565--566
  [] 
  []
 
 
-<../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png, id=84, 578.16pt x
+<../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png, id=94, 578.16pt x
  433.62pt>
 File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png Graphic file 
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--al
-l.png used on input line 528.
+l.png used on input line 572.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 528--529
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 572--573
  [] 
  []
 
 
-<../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png, id=85, 578.16pt x
+<../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png, id=95, 578.16pt x
  433.62pt>
 File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png Graphic file 
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--al
-l.png used on input line 535.
+l.png used on input line 579.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 535--536
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 579--580
  [] 
  []
 
 
-<../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png, id=86, 578.16pt x 
+<../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png, id=96, 578.16pt x 
 433.62pt>
 File: ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png Graphic file (
 type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all
-.png used on input line 542.
+.png used on input line 586.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 542--543
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 586--587
  [] 
  []
 
-LaTeX Info: Redefining \. on input line 548.
-LaTeX Info: Redefining \% on input line 548.
-[11 <./imagenes/shufle.png> <../tp2-bundle.v2/Testing/plots/all/merge-black-05-
--all.png> <../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png>]
-LaTeX Info: Redefining \. on input line 565.
-LaTeX Info: Redefining \% on input line 565.
-
-[12 <../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png> <../tp2-bundl
-e.v2/Testing/plots/all/merge-normal-05--all.png> <../tp2-bundle.v2/Testing/plot
-s/all/merge-normal-08--all.png> <../tp2-bundle.v2/Testing/plots/all/merge-white
--05--all.png>] (./informe.aux
+LaTeX Info: Redefining \. on input line 592.
+LaTeX Info: Redefining \% on input line 592.
+[12 <../tp2-bundle.v2/Testing/plots/all/blur-white--all.png> <../tp2-bundle.v2/
+Testing/plots/all/merge-black-05--all.png> <../tp2-bundle.v2/Testing/plots/all/
+merge-normal-00--all.png>]
+LaTeX Info: Redefining \. on input line 605.
+LaTeX Info: Redefining \% on input line 605.
+ [13 <../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png> <../tp2-bund
+le.v2/Testing/plots/all/merge-normal-05--all.png> <../tp2-bundle.v2/Testing/plo
+ts/all/merge-normal-08--all.png> <../tp2-bundle.v2/Testing/plots/all/merge-whit
+e-05--all.png>]
+LaTeX Info: Redefining \. on input line 608.
+LaTeX Info: Redefining \% on input line 608.
+ [14] (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
 LaTeX Info: Redefining \% on input line 7.
 )
@@ -1200,13 +1249,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14763 strings out of 494969
- 257719 string characters out of 6179592
- 361880 words of memory out of 5000000
- 17653 multiletter control sequences out of 15000+600000
+ 14782 strings out of 494969
+ 258522 string characters out of 6179592
+ 361875 words of memory out of 5000000
+ 17669 multiletter control sequences out of 15000+600000
  19522 words of font info for 34 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 56i,12n,55p,1594b,1147s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,12n,55p,1596b,1147s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/bitstrea/charter/bchb8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/bitstrea/charter/bchr8a.pfb></usr/share/texlive/texmf-dist/fon
@@ -1216,10 +1265,10 @@ ic/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
 t9.pfb>
-Output written on informe.pdf (14 pages, 797765 bytes).
+Output written on informe.pdf (16 pages, 922937 bytes).
 PDF statistics:
- 129 PDF objects out of 1000 (max. 8388607)
- 62 compressed objects within 1 object stream
+ 141 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 123 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 138 words of extra memory for PDF output out of 10000 (max. 10000000)
 

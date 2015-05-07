@@ -599,14 +599,11 @@ Para las implementaciones en assembler, no se aprecia una diferencia significati
 Cuando la cantidad de pixeles a procesar es grande, la diferencia de tiempo de computo entre la implementación en C y su version en assembler.
 
 
+\section{Conclusiones}
 
+Pudimos corroborar el uso del assembler para conseguir algoritmos mas eficientes temporalmente, aunque al ser un lenguaje de mas bajo nivel sea mas difiil de escribir. En este sentido se utilizaron las instrucciones SIMD de assembler, permitiendonos mejorar la eficiencia, al efectuar varias operaciones juntas. Sin embargo muchas veces es necesario preparar los registros para efectuar estas instrucciones y esto puede no ser sencilllo, o tener un costo temporal elevado.
 
-
-
-
-
-\section{Conclusiones y trabajo futuro}
-
+Además la ganancia en rendimiento de efectuar operaciones SIMD no es tan importante como reducir la cantidad de accesos a memoria. Se pudo apreciar que al reducir la cantidad de estos ultimos, se logra una mejora en el rendimiento significativa.
 
 \end{document}
 
