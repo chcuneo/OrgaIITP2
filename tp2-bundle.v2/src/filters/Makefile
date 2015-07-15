@@ -5,16 +5,24 @@
 #                                                                           #
 # ************************************************************************* #
 
-all: C_blur.o ASM_blur1.o ASM_blur2.o C_merge.o ASM_merge1.o ASM_merge2.o C_hsl.o ASM_hsl1.o ASM_hsl2.o filter_toX.o aux.o 
+all: makes tp2
 
 CFLAGS=-Wall -Wextra -pedantic -O0 -ggdb -lm -std=c99
-NASMFLAGS=-f elf64 -g -F DWARF
 
-%.o: %.c filters.h
+makes:
+	make -C bmp
+	make -C tools
+	make -C filters
+
+%.o: %.c run.h 
 	gcc $(CFLAGS) -c -o $@ $<
 	
-%.o: %.asm
-	nasm $(NASMFLAGS) -o $@ $<
-
+tp2: run.o tp2.o makes
+	gcc $(CFLAGS) tp2.o run.o filters/*.o bmp/*.o -o tp2 -lm
+	cp tp2 ../bin/
+	
 clean:
-	rm  -f *.o
+	make -C bmp clean
+	make -C tools clean
+	make -C filters clean
+	rm  -f *.o tp2

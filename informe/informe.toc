@@ -16,7 +16,7 @@
 \contentsline {subsection}{\numberline {3.2}Merge}{14}
 \contentsline {subsection}{\numberline {3.3}HSL}{15}
 \contentsline {subsubsection}{\numberline {3.3.1}Implementaci\IeC {\'o}n}{15}
-\contentsline {subsubsection}{\numberline {3.3.2}Variaci\IeC {\'o}n 1}{16}
+\contentsline {subsubsection}{\numberline {3.3.2}Variaci\IeC {\'o}n 1}{17}
 \contentsline {subsubsection}{\numberline {3.3.3}Variaci\IeC {\'o}n 2}{17}
-\contentsline {subsubsection}{\numberline {3.3.4}Experimentos Futuros}{17}
+\contentsline {subsubsection}{\numberline {3.3.4}Experimentos Futuros}{18}
 \contentsline {section}{\numberline {4}Conclusiones y trabajo futuro}{18}

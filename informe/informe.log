@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.5.6)  7 MAY 2015 14:45
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.15)  15 JUL 2015 04:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **informe.tex
 (./informe.tex
 LaTeX2e <2011/06/27>
-Babel <3.9h> and hyphenation patterns for 5 languages loaded.
+Babel <3.9f> and hyphenation patterns for 5 languages loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
@@ -24,23 +24,23 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \bibindent=\dimen102
 )
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2013/12/03 3.9h The Babel package
+Package: babel 2013/05/16 v3.9f The Babel package
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel-spanish/spanish.ldf
-Language: spanish.ldf 2014/01/29 v5.0m Spanish support from the babel system
+Language: spanish.ldf 2010/05/23 v5.0j Spanish support from the babel system
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2013/12/03 3.9h Babel common definitions
+File: babel.def 2013/05/16 v3.9f Babel common definitions
 \babel@savecnt=\count87
 \U@D=\dimen103
 )
 \es@datefmt=\count88
 \es@quottoks=\toks14
 \es@quotdepth=\count89
-Package babel Info: Making " an active character on input line 496.
-Package babel Info: Making . an active character on input line 599.
-Package babel Info: Making < an active character on input line 644.
-Package babel Info: Making > an active character on input line 644.
+Package babel Info: Making " an active character on input line 495.
+Package babel Info: Making . an active character on input line 588.
+Package babel Info: Making < an active character on input line 633.
+Package babel Info: Making > an active character on input line 633.
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
@@ -350,15 +350,15 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \lst@maxwidth=\dimen117
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2013/08/26 1.5b (Carsten Heinz)
+File: lstmisc.sty 2013/07/10 1.5 (Carsten Heinz)
 \c@lstnumber=\count106
 \lst@skipnumbers=\count107
 \lst@framebox=\box29
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
-File: listings.cfg 2013/08/26 1.5b listings configuration
+File: listings.cfg 2013/06/27 1.5pre1 listings configuration
 ))
-Package: listings 2013/08/26 1.5b (Carsten Heinz)
+Package: listings 2013/07/10 1.5 (Carsten Heinz)
 
 (./codesnippet.tex (/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
@@ -407,7 +407,7 @@ Cargando package 'caratula' v0.3 (2005/08/09)
 \intlist=\toks25
 ) (/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty
 Package: alltt 1997/06/16 v2.0g defines alltt environment
@@ -686,7 +686,7 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2013/08/26 1.5b listings language file
+File: lstlang1.sty 2013/06/27 1.5pre1 listings language file
 )
 (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
@@ -1079,35 +1079,30 @@ File: imagenes/caso1hsumahsl.png Graphic file (type png)
 Package pdftex.def Info: imagenes/caso1hsumahsl.png used on input line 445.
 (pdftex.def)             Requested size: 329.55162pt x 161.88501pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 453--468
+Underfull \hbox (badness 10000) in paragraph at lines 453--466
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 453--468
+Underfull \hbox (badness 10000) in paragraph at lines 453--466
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 453--468
+Underfull \hbox (badness 10000) in paragraph at lines 453--466
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 453--468
-
- []
-
-LaTeX Info: Redefining \. on input line 468.
-LaTeX Info: Redefining \% on input line 468.
-[9 <./imagenes/caso1hsumahsl.png>]
-<imagenes/resultH.png, id=81, 118.041pt x 11.242pt>
+<imagenes/resultH.png, id=77, 118.041pt x 11.242pt>
 File: imagenes/resultH.png Graphic file (type png)
  <use imagenes/resultH.png>
-Package pdftex.def Info: imagenes/resultH.png used on input line 471.
+Package pdftex.def Info: imagenes/resultH.png used on input line 469.
 (pdftex.def)             Requested size: 94.4329pt x 8.99359pt.
+LaTeX Info: Redefining \. on input line 473.
+LaTeX Info: Redefining \% on input line 473.
 
-Underfull \hbox (badness 10000) in paragraph at lines 476--482
+[9 <./imagenes/caso1hsumahsl.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 474--480
 
  []
 
@@ -1116,38 +1111,38 @@ File: imagenes/representacionfloat.png Graphic file (type png)
 
 <use imagenes/representacionfloat.png>
 Package pdftex.def Info: imagenes/representacionfloat.png used on input line 48
-5.
+3.
 (pdftex.def)             Requested size: 297.4316pt x 25.05362pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 490--492
+Underfull \hbox (badness 10000) in paragraph at lines 488--490
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 490--492
+Underfull \hbox (badness 10000) in paragraph at lines 488--490
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 493--495
+Underfull \hbox (badness 10000) in paragraph at lines 491--493
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 493--495
+Underfull \hbox (badness 10000) in paragraph at lines 491--493
 
  []
 
-LaTeX Info: Redefining \. on input line 509.
-LaTeX Info: Redefining \% on input line 509.
+LaTeX Info: Redefining \. on input line 507.
+LaTeX Info: Redefining \% on input line 507.
 [10 <./imagenes/resultH.png> <./imagenes/representacionfloat.png>]
 <imagenes/shufle.png, id=88, 513.92pt x 75.482pt>
 File: imagenes/shufle.png Graphic file (type png)
  <use imagenes/shufle.png>
-Package pdftex.def Info: imagenes/shufle.png used on input line 512.
+Package pdftex.def Info: imagenes/shufle.png used on input line 510.
 (pdftex.def)             Requested size: 411.13655pt x 60.38567pt.
-LaTeX Info: Redefining \. on input line 517.
-LaTeX Info: Redefining \% on input line 517.
+LaTeX Info: Redefining \. on input line 515.
+LaTeX Info: Redefining \% on input line 515.
 
 [11 <./imagenes/shufle.png>]
 <../tp2-bundle.v2/Testing/plots/all/blur-black--all.png, id=94, 578.16pt x 433.
@@ -1156,10 +1151,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png Graphic file (type
  png)
  <use ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-black--all.png
- used on input line 532.
+ used on input line 530.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 532--533
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 530--531
  [] 
  []
 
@@ -1170,10 +1165,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png Graphic file (typ
 e png)
  <use ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-normal--all.pn
-g used on input line 539.
+g used on input line 537.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 539--540
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 537--538
  [] 
  []
 
@@ -1184,10 +1179,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png Graphic file (type
  png)
  <use ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/blur-white--all.png
- used on input line 547.
+ used on input line 545.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
-LaTeX Info: Redefining \. on input line 560.
-LaTeX Info: Redefining \% on input line 560.
+LaTeX Info: Redefining \. on input line 558.
+LaTeX Info: Redefining \% on input line 558.
  [12 <../tp2-bundle.v2/Testing/plots/all/blur-black--all.png> <../tp2-bundle.v2
 /Testing/plots/all/blur-normal--all.png> <../tp2-bundle.v2/Testing/plots/all/bl
 ur-white--all.png>]
@@ -1198,10 +1193,10 @@ File: ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularH--noCO0.png Graphic
 
 <use ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularH--noCO0.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularH
---noCO0.png used on input line 575.
+--noCO0.png used on input line 573.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 575--576
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 573--574
  [] 
  []
 
@@ -1213,15 +1208,15 @@ File: ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularW--noCO0.png Graphic
 
 <use ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularW--noCO0.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularW
---noCO0.png used on input line 582.
+--noCO0.png used on input line 580.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 582--583
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 580--581
  [] 
  []
 
-LaTeX Info: Redefining \. on input line 592.
-LaTeX Info: Redefining \% on input line 592.
+LaTeX Info: Redefining \. on input line 590.
+LaTeX Info: Redefining \% on input line 590.
 [13 <../tp2-bundle.v2/Testing/plots/noCO0/blur-rectangularH--noCO0.png> <../tp2
 -bundle.v2/Testing/plots/noCO0/blur-rectangularW--noCO0.png>]
 <../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png, id=110, 578.16pt x
@@ -1230,10 +1225,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png Graphic file (
 type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-black-05--all
-.png used on input line 601.
+.png used on input line 599.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 601--602
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 599--600
  [] 
  []
 
@@ -1244,10 +1239,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png Graphic file
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-00--al
-l.png used on input line 608.
+l.png used on input line 606.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 608--609
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 606--607
  [] 
  []
 
@@ -1258,10 +1253,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png Graphic file
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-03--al
-l.png used on input line 617.
+l.png used on input line 615.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 617--618
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 615--616
  [] 
  []
 
@@ -1272,10 +1267,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png Graphic file
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-05--al
-l.png used on input line 624.
+l.png used on input line 622.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 624--625
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 622--623
  [] 
  []
 
@@ -1286,10 +1281,10 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png Graphic file
 (type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-normal-08--al
-l.png used on input line 631.
+l.png used on input line 629.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 631--632
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 629--630
  [] 
  []
 
@@ -1300,15 +1295,15 @@ File: ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png Graphic file (
 type png)
  <use ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all.png>
 Package pdftex.def Info: ../tp2-bundle.v2/Testing/plots/all/merge-white-05--all
-.png used on input line 638.
+.png used on input line 636.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 638--639
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 636--637
  [] 
  []
 
-LaTeX Info: Redefining \. on input line 646.
-LaTeX Info: Redefining \% on input line 646.
+LaTeX Info: Redefining \. on input line 644.
+LaTeX Info: Redefining \% on input line 644.
 [14 <../tp2-bundle.v2/Testing/plots/all/merge-black-05--all.png> <../tp2-bundle
 .v2/Testing/plots/all/merge-normal-00--all.png> <../tp2-bundle.v2/Testing/plots
 /all/merge-normal-03--all.png> <../tp2-bundle.v2/Testing/plots/all/merge-normal
@@ -1317,124 +1312,124 @@ LaTeX Info: Redefining \% on input line 646.
 <imagenes/hsl1.png, id=125, 578.16pt x 433.62pt>
 File: imagenes/hsl1.png Graphic file (type png)
  <use imagenes/hsl1.png>
-Package pdftex.def Info: imagenes/hsl1.png used on input line 662.
+Package pdftex.def Info: imagenes/hsl1.png used on input line 668.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 662--663
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 668--669
  [] 
  []
 
 <imagenes/hsl2.png, id=126, 578.16pt x 433.62pt>
 File: imagenes/hsl2.png Graphic file (type png)
  <use imagenes/hsl2.png>
-Package pdftex.def Info: imagenes/hsl2.png used on input line 669.
+Package pdftex.def Info: imagenes/hsl2.png used on input line 675.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 669--670
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 675--676
  [] 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 676--677
+LaTeX Info: Redefining \. on input line 681.
+LaTeX Info: Redefining \% on input line 681.
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 682--683
 
  []
 
-LaTeX Info: Redefining \. on input line 679.
-LaTeX Info: Redefining \% on input line 679.
-[15 <./imagenes/hsl1.png> <./imagenes/hsl2.png>]
-<imagenes/hsl3.png, id=132, 578.16pt x 433.62pt>
+<imagenes/hsl3.png, id=130, 578.16pt x 433.62pt>
 File: imagenes/hsl3.png Graphic file (type png)
  <use imagenes/hsl3.png>
-Package pdftex.def Info: imagenes/hsl3.png used on input line 683.
+Package pdftex.def Info: imagenes/hsl3.png used on input line 689.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 683--684
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 689--690
  [] 
  []
 
-<imagenes/hsl4.png, id=133, 578.16pt x 433.62pt>
+<imagenes/hsl4.png, id=131, 578.16pt x 433.62pt>
 File: imagenes/hsl4.png Graphic file (type png)
  <use imagenes/hsl4.png>
-Package pdftex.def Info: imagenes/hsl4.png used on input line 690.
+Package pdftex.def Info: imagenes/hsl4.png used on input line 696.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 690--691
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 696--697
  [] 
  []
 
-<imagenes/hsl6.png, id=134, 578.16pt x 433.62pt>
+<imagenes/hsl6.png, id=132, 578.16pt x 433.62pt>
 File: imagenes/hsl6.png Graphic file (type png)
  <use imagenes/hsl6.png>
-Package pdftex.def Info: imagenes/hsl6.png used on input line 702.
+Package pdftex.def Info: imagenes/hsl6.png used on input line 708.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 702--703
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 708--709
  [] 
  []
 
-<imagenes/hsl5.png, id=135, 578.16pt x 433.62pt>
+<imagenes/hsl5.png, id=133, 578.16pt x 433.62pt>
 File: imagenes/hsl5.png Graphic file (type png)
  <use imagenes/hsl5.png>
-Package pdftex.def Info: imagenes/hsl5.png used on input line 709.
+Package pdftex.def Info: imagenes/hsl5.png used on input line 715.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 709--710
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 715--716
  [] 
  []
 
+LaTeX Info: Redefining \. on input line 721.
+LaTeX Info: Redefining \% on input line 721.
+[16 <./imagenes/hsl1.png> <./imagenes/hsl2.png> <./imagenes/hsl3.png> <./imagen
+es/hsl4.png>]
 File: imagenes/hsl5.png Graphic file (type png)
-<use imagenes/hsl5.png>
-Package pdftex.def Info: imagenes/hsl5.png used on input line 722.
+ <use imagenes/hsl5.png>
+Package pdftex.def Info: imagenes/hsl5.png used on input line 728.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 722--723
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 728--729
  [] 
  []
 
-<imagenes/hsl8.png, id=136, 578.16pt x 433.62pt>
+<imagenes/hsl8.png, id=141, 578.16pt x 433.62pt>
 File: imagenes/hsl8.png Graphic file (type png)
  <use imagenes/hsl8.png>
-Package pdftex.def Info: imagenes/hsl8.png used on input line 729.
+Package pdftex.def Info: imagenes/hsl8.png used on input line 735.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 729--730
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 735--736
  [] 
  []
 
-LaTeX Info: Redefining \. on input line 735.
-LaTeX Info: Redefining \% on input line 735.
-[16 <./imagenes/hsl3.png> <./imagenes/hsl4.png> <./imagenes/hsl6.png> <./imagen
-es/hsl5.png>]
-Overfull \hbox (15.7452pt too wide) in paragraph at lines 737--738
+
+Overfull \hbox (15.7452pt too wide) in paragraph at lines 743--744
 []\OT1/bch/m/n/10 Como se-gun-da va-ria-ci[]on de-ci-di-mos cam-biar la ma-ne-r
 a en que es-ta im-ple-men-ta-da la fun-ci[]on "fmod"dentro
  []
 
 File: imagenes/hsl5.png Graphic file (type png)
 <use imagenes/hsl5.png>
-Package pdftex.def Info: imagenes/hsl5.png used on input line 742.
+Package pdftex.def Info: imagenes/hsl5.png used on input line 748.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 742--743
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 748--749
  [] 
  []
 
-<imagenes/hsl9.png, id=144, 578.16pt x 433.62pt>
+<imagenes/hsl9.png, id=142, 578.16pt x 433.62pt>
 File: imagenes/hsl9.png Graphic file (type png)
  <use imagenes/hsl9.png>
-Package pdftex.def Info: imagenes/hsl9.png used on input line 749.
+Package pdftex.def Info: imagenes/hsl9.png used on input line 755.
 (pdftex.def)             Requested size: 231.2599pt x 173.44492pt.
 
-Overfull \hbox (3.63786pt too wide) in paragraph at lines 749--750
+Overfull \hbox (3.63786pt too wide) in paragraph at lines 755--756
  [] 
  []
 
-LaTeX Info: Redefining \. on input line 768.
-LaTeX Info: Redefining \% on input line 768.
-[17 <./imagenes/hsl8.png> <./imagenes/hsl9.png>]
-LaTeX Info: Redefining \. on input line 772.
-LaTeX Info: Redefining \% on input line 772.
- [18] (./informe.aux
+LaTeX Info: Redefining \. on input line 761.
+LaTeX Info: Redefining \% on input line 761.
+[17 <./imagenes/hsl6.png> <./imagenes/hsl5.png> <./imagenes/hsl8.png>]
+LaTeX Info: Redefining \. on input line 778.
+LaTeX Info: Redefining \% on input line 778.
+ [18 <./imagenes/hsl9.png>] (./informe.aux
 LaTeX Info: Redefining \. on input line 7.
 LaTeX Info: Redefining \% on input line 7.
 )
@@ -1446,13 +1441,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14977 strings out of 494966
- 261818 string characters out of 6179560
- 363459 words of memory out of 5000000
- 17852 multiletter control sequences out of 15000+600000
+ 14860 strings out of 494969
+ 260515 string characters out of 6179592
+ 363875 words of memory out of 5000000
+ 17732 multiletter control sequences out of 15000+600000
  19522 words of font info for 34 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 56i,12n,55p,1608b,1250s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,12n,55p,1608b,1147s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/bitstrea/charter/bchb8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/bitstrea/charter/bchr8a.pfb></usr/share/texlive/texmf-dist/fon
@@ -1462,7 +1457,7 @@ ic/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
 t9.pfb>
-Output written on informe.pdf (20 pages, 1398704 bytes).
+Output written on informe.pdf (20 pages, 1399136 bytes).
 PDF statistics:
  182 PDF objects out of 1000 (max. 8388607)
  75 compressed objects within 1 object stream
