@@ -647,13 +647,13 @@ En base a estos resultados, podemos decir que la implementación en C tiene un r
 
 Tanto las implementaciones en C como en assembler de este filtro presentan el mismo rendimiento para los distintos tipos de imágenes, y solo dependen de la cantidad de pixeles a procesar. Esto se debe a que ambas implementaciones no presentan saltos condicionales. Tampoco hay diferencia apreciable para los distintos valores de value.
 
-Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. A pesar de que en teoría trabajar con los primeros se tiene un costo computacional menor, al haber involucradas multiplicaciones con instrucciones SIMD, también hubo que utilizar instrucciones de empaquetado-desempaquetado para efectuar multiplicaciones con enteros. 
+Para las implementaciones en assembler, no hay grandes diferencias entre el tiempo de computo al operar con enteros o con floats. A pesar de que en teoría trabajar con los primeros se tiene un costo computacional menor, al haber involucradas multiplicaciones con instrucciones SIMD, también hubo que utilizar instrucciones de empaquetado-desempaquetado para efectuar multiplicaciones con enteros, lo conlleva lleva un costo que debe considerarse. En la figura~\ref{zoomMerge} se puede apreciar como la versión en enteros tiene un costo computacional ligeramente mayor.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{imagenes/merge-asms.png}
 \caption{Merge: ASM1 vs ASM2}
-\label{lshValue}
+\label{zoomMerge}
 \end{figure}
 
 A pesar de que los algoritmos utilizados no son probabilísticos, es decir que para la misma entrada se obtiene siempre la misma salida, hay diferencias entre la imagen generada por el ejecutable elaborado por nosotros, y la obtenida mediante el provisto por la cátedra. Esto se debe a que los algoritmos utilizados por los ejecutables, a pesar de cumplir la misma función, son distintos, y van acumulando fuentes de error. Para la implementación en floats, las operaciones aritméticas generan errores numéricos de redondeo, lo cual produce que a pesar de que semanticámente se llegue a la misma salida a partir de una dada entrada, halla diferencias debido a la propagación de errores numéricos.
