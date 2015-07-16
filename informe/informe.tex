@@ -643,17 +643,22 @@ En las siguientes figuras encontramos los resultados obtenidos para el filtro me
 Para todas las implementaciones el tiempo de computo con respecto a la cantidad de pixeles crece según la curva indicada en el gráfico, lo cual indica un ritmo de crecimiento bien marcado, que podría ser definido matemáticamente.
 
 
-En base a estos resultados, podemos decir que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles, en la implementación en assembler se traen desde memoria cuatro pixeles a un registro xmm, a diferencia la implementación en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
+En base a estos resultados, podemos decir que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles y, en la implementación en assembler, se traen desde memoria cuatro pixeles a un registro xmm, a diferencia de la implementación en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
 
 Tanto las implementaciones en C como en assembler de este filtro presentan el mismo rendimiento para los distintos tipos de imágenes, y solo dependen de la cantidad de pixeles a procesar. Esto se debe a que ambas implementaciones no presentan saltos condicionales. Tampoco hay diferencia apreciable para los distintos valores de value.
 
+Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. A pesar de que en teoría trabajar con los primeros se tiene un costo computacional menor, al haber involucradas multiplicaciones con instrucciones SIMD, también hubo que utilizar instrucciones de empaquetado-desempaquetado para efectuar multiplicaciones con enteros. 
 
-Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. A pesar de que en teoría trabajar con los primeros tiene un costo computacional menor, al haber involucradas multiplicaciones con instrucciones SIMD, también hubo que utilizar instrucciones de empaquetado-desempaquetado para efectuar multiplicaciones con enteros. 
-
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{imagenes/merge-asms.png}
+\caption{Merge: ASM1 vs ASM2}
+\label{lshValue}
+\end{figure}
 
 A pesar de que los algoritmos utilizados no son probabilísticos, es decir que para la misma entrada se obtiene siempre la misma salida, hay diferencias entre la imagen generada por el ejecutable elaborado por nosotros, y la obtenida mediante el provisto por la cátedra. Esto se debe a que los algoritmos utilizados por los ejecutables, a pesar de cumplir la misma función, son distintos, y van acumulando fuentes de error. Para la implementación en floats, las operaciones aritméticas generan errores numéricos de redondeo, lo cual produce que a pesar de que semanticámente se llegue a la misma salida a partir de una dada entrada, halla diferencias debido a la propagación de errores numéricos.
 
-En el caso de la implementación en enteros, la fuente de error ocurre cuando se convierte a entero ''value*256'', en lo cual se pueden perder decimales. Luego las operaciones son efectuadas en enteros, con lo que se descartan errores numéricos. Esto significa que si en la implementación elaborada por la cátedra se utilizo la misma técnica para trabajar con enteros, debería haber diferencia cero entre las distintas salidas para una misma entrada. En los experimentos esto no se observa, por lo que es de esperar que se halla utilizado otra técnica similar.
+En el caso de la implementación en enteros, la fuente de error ocurre cuando se convierte a entero  $value*256$, en lo cual se pueden perder decimales. Luego las operaciones son efectuadas en enteros, con lo que se descartan errores numéricos. Esto significa que si en la implementación elaborada por la cátedra se utilizo la misma técnica para trabajar con enteros, debería haber diferencia cero entre las distintas salidas para una misma entrada. En los experimentos esto no se observa, por lo que es de esperar que se halla utilizado otra técnica similar.
 
 
 \subsection{HSL}
