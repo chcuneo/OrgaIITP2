@@ -640,13 +640,21 @@ En las siguientes figuras encontramos los resultados obtenidos para el filtro me
 	\endminipage\hfill
 \end{figure}
 
-Podemos ver que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles, en la implementación en assembler se traen desde memoria cuatro pixeles a un registro xmm, a diferencia la implementación en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
+Para todas las implementaciones el tiempo de computo con respecto a la cantidad de pixeles crece según la curva indicada en el gráfico, lo cual indica un ritmo de crecimiento bien marcado, que podría ser definido matemáticamente.
 
-Tanto las implementaciones en C como en assembler de este filtro presentan el mismo rendimiento para los distintos tipos de imágenes, y solo dependen de la cantidad de pixeles a procesar. Esto se debe a que ambas implementaciones no presentan saltos condicionales.
 
-Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. La imagen resultante para enteros tiene un error un poco mayor, pero esta diferencia no es apreciable a simple vista.
+En base a estos resultados, podemos decir que la implementación en C tiene un rendimiento menor, aun utilizando un compilador que optimiza. Esto se debe a que la imágenes se encuentran almacenadas en memoria en forma de matrices de pixeles, en la implementación en assembler se traen desde memoria cuatro pixeles a un registro xmm, a diferencia la implementación en C, en la cual se hace un acceso a memoria por color. Con lo que la cantidad de accesos a memoria es mucho menor en la implementación en assembler, lo que implica un tiempo de computo mucho menor. Además en la implementación en assembler, utilizando las instrucciones simd se hacen multiplicaciones y sumas de a cuatro colores, a diferencia de la C, en la estas operaciones se hacen color por color.
 
-Cuando la cantidad de pixeles a procesar es grande, la diferencia de tiempo de computo entre la implementación en C y su versión en assembler.
+Tanto las implementaciones en C como en assembler de este filtro presentan el mismo rendimiento para los distintos tipos de imágenes, y solo dependen de la cantidad de pixeles a procesar. Esto se debe a que ambas implementaciones no presentan saltos condicionales. Tampoco hay diferencia apreciable para los distintos valores de value.
+
+
+Para las implementaciones en assembler, no se aprecia una diferencia significativa en el tiempo de computo al operar con enteros o con floats. A pesar de que en teoría trabajar con los primeros tiene un costo computacional menor, al haber involucradas multiplicaciones con instrucciones SIMD, también hubo que utilizar instrucciones de empaquetado-desempaquetado para efectuar multiplicaciones con enteros. 
+
+
+A pesar de que los algoritmos utilizados no son probabilísticos, es decir que para la misma entrada se obtiene siempre la misma salida, hay diferencias entre la imagen generada por el ejecutable elaborado por nosotros, y la obtenida mediante el provisto por la cátedra. Esto se debe a que los algoritmos utilizados por los ejecutables, a pesar de cumplir la misma función, son distintos, y van acumulando fuentes de error. Para la implementación en floats, las operaciones aritméticas generan errores numéricos de redondeo, lo cual produce que a pesar de que semanticámente se llegue a la misma salida a partir de una dada entrada, halla diferencias debido a la propagación de errores numéricos.
+
+En el caso de la implementación en enteros, la fuente de error ocurre cuando se convierte a entero ''value*256'', en lo cual se pueden perder decimales. Luego las operaciones son efectuadas en enteros, con lo que se descartan errores numéricos. Esto significa que si en la implementación elaborada por la cátedra se utilizo la misma técnica para trabajar con enteros, debería haber diferencia cero entre las distintas salidas para una misma entrada. En los experimentos esto no se observa, por lo que es de esperar que se halla utilizado otra técnica similar.
+
 
 \subsection{HSL}
 Para experimentar con este filtro primero analizamos un poco el código. Este se divide en 3 etapas: (1)RGB a HSL, (2)suma y (3)HSL a RGB.
@@ -757,7 +765,7 @@ Como segunda variación decidimos cambiar la manera en que esta implementada la 
     Si observamos (3) podemos llegar a tener mas operaciones mientras h sea mayor ya que la función "calcRGB" pregunta linealmente si h pertenece a un intervalo determinado, incrementándolo de a 60 y volviendo a preguntar, entonces si $0<=h<60$ debería entrar mas rápido que si $300<=h<360$, para esto se podría usar una imagen que tengo uno de los colores(ej: solo rojo) y comparar los tiempos contra una que tenga solo blanco.
 
   \item
-    Implementar parteentera en la variación 2, eliminando la parte decimal de la mantisa de la representación en punto flotante del numero a mano podría aumentar bastante el rendimiento.
+    Implementar parte entera en la variación 2, eliminando la parte decimal de la mantisa de la representación en punto flotante del numero a mano podría aumentar bastante el rendimiento.
 \end{enumerate}
 
 \section{Conclusiones y trabajo futuro}
