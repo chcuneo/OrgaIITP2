@@ -12,6 +12,9 @@ if not os.path.exists(plotdir + "noASM1/"):
 if not os.path.exists(plotdir + "noASM2/"):
     os.makedirs(plotdir + "noASM2/")
 for filen in os.listdir(datadir):
+	#Genera solo los de hsl:
+	if not (filen[0:3] == 'hsl'):
+		continue
 	cO0time = []
 	cO0size = []
 	cO3time = []
